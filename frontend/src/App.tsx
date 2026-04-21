@@ -213,13 +213,13 @@ function App() {
             <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
               {state?.users.map((user) => (
                 <div key={user.name} className="p-4 flex justify-between items-center group">
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
                       user.name === name ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
                     }`}>
                       {user.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className={`font-medium truncate max-w-[120px] ${user.name === name ? 'text-blue-600' : 'text-gray-900'}`}>
+                    <span className={`font-medium truncate ${user.name === name ? 'text-blue-600' : 'text-gray-900'}`}>
                       {user.name} {user.name === name && <span className="text-[10px] text-gray-400">(You)</span>}
                     </span>
                   </div>
