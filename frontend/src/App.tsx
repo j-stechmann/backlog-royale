@@ -136,7 +136,7 @@ function App() {
                 <h1 className="text-xl font-bold text-gray-900">
                   Scrum Poker
                 </h1>
-                <span className="text-gray-300 hidden sm:block">|</span>
+                <span className="text-gray-300">|</span>
                 <span className="text-gray-600 font-medium">{roomID}</span>
               </div>
             </div>
