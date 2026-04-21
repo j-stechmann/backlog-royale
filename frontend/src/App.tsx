@@ -199,7 +199,7 @@ function App() {
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleReveal}
-                  disabled={state?.reveal || !state?.users.some(u => u.hasVoted)}
+                  disabled={state?.reveal || !state?.users.every(u => u.hasVoted)}
                   className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all text-sm font-bold disabled:opacity-50 active:scale-95 shadow-sm"
                 >
                   <Eye size={18} /> Reveal Results
