@@ -1,6 +1,7 @@
 # Binaries
 backlog-server
 poker-server
+backlog-royale
 *.exe
 *.exe~
 *.dll
