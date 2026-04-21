@@ -181,43 +181,36 @@ function App() {
             </div>
           </div>
 
-          {/* Control Panel */}
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="text-sm">
-                <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">Progress</p>
-                <p className="text-lg font-bold text-gray-700">
-                  {state?.users.filter(u => u.hasVoted).length} / {state?.users.length} Voted
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={handleReveal}
-                disabled={state?.reveal || !state?.users.some(u => u.hasVoted)}
-                className="flex items-center gap-2 bg-white text-gray-700 border-2 border-gray-200 px-6 py-2.5 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all font-bold disabled:opacity-50 disabled:hover:border-gray-200 disabled:hover:text-gray-700"
-              >
-                <Eye size={18} /> Reveal Results
-              </button>
-              <button
-                onClick={handleReset}
-                className="flex items-center gap-2 bg-gray-900 text-white px-6 py-2.5 rounded-xl hover:bg-black transition-all font-bold shadow-lg shadow-gray-200"
-              >
-                <RotateCcw size={18} /> Next Round
-              </button>
-            </div>
-          </div>
-
           {/* Participants */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Users size={18} className="text-gray-400" />
-                <h2 className="font-bold text-gray-700 uppercase text-xs tracking-wider">Participants</h2>
+            <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center justify-between sm:justify-start gap-4">
+                <div className="flex items-center gap-2">
+                  <Users size={20} className="text-blue-600" />
+                  <h2 className="font-bold text-gray-900 text-sm">Participants</h2>
+                </div>
+                <div className="px-3 py-1 bg-blue-50 border border-blue-100 rounded-lg">
+                  <span className="text-xs font-bold text-blue-700">
+                    {state?.users.filter(u => u.hasVoted).length} / {state?.users.length} Voted
+                  </span>
+                </div>
               </div>
-              <span className="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                {state?.users.length || 0}
-              </span>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleReveal}
+                  disabled={state?.reveal || !state?.users.some(u => u.hasVoted)}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all text-sm font-bold disabled:opacity-50 active:scale-95 shadow-sm"
+                >
+                  <Eye size={18} /> Reveal Results
+                </button>
+                <button
+                  onClick={handleReset}
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 transition-all text-sm font-bold active:scale-95 shadow-lg shadow-blue-100"
+                >
+                  <RotateCcw size={18} /> Next Round
+                </button>
+              </div>
             </div>
             <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
               {state?.users.map((user) => (
