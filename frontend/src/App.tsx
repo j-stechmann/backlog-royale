@@ -239,37 +239,12 @@ function App() {
                   />
                 ))}
               </div>
-              
-              {state?.reveal && (
-                <div className="mt-16 pt-16 border-t border-gray-100 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-                  <p className="text-gray-400 font-bold uppercase text-xs tracking-[0.2em] mb-6">Consensus Result</p>
-                  <div className="flex justify-center items-center gap-8">
-                    <div className="text-center">
-                      <div className="text-7xl font-black text-blue-600 mb-2 drop-shadow-sm">
-                        {calculateAverage(state.users)}
-                      </div>
-                      <div className="text-blue-500 font-bold text-sm uppercase tracking-wider">Average Points</div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>
       </main>
     </div>
   );
-}
-
-
-function calculateAverage(users: any[]) {
-  const votes = users
-    .map(u => parseInt(u.vote))
-    .filter(v => !isNaN(v));
-  
-  if (votes.length === 0) return 'N/A';
-  const sum = votes.reduce((a, b) => a + b, 0);
-  return (sum / votes.length).toFixed(1);
 }
 
 export default App;
