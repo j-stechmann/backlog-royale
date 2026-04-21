@@ -227,13 +227,23 @@ function App() {
                   </div>
                   <div>
                     {user.hasVoted ? (
-                      <div className={`flex items-center justify-center w-10 h-10 rounded-xl font-bold transition-all ${
-                        state.reveal 
-                          ? 'bg-blue-100 text-blue-700 scale-110 shadow-sm' 
-                          : 'bg-green-500 text-white animate-bounce-subtle'
-                      }`}>
-                        {state.reveal ? user.vote : '✓'}
-                      </div>
+                      state.reveal ? (
+                        <div className={`
+                          w-10 h-14 rounded-lg border-2 flex items-center justify-center font-black text-lg relative shadow-sm transition-all scale-110
+                          ${user.vote === '?' ? 'bg-gray-50 border-gray-200 text-gray-400' : 
+                            user.vote && parseInt(user.vote) <= 3 ? 'bg-emerald-50 border-emerald-200 text-emerald-600' :
+                            user.vote && parseInt(user.vote) <= 8 ? 'bg-blue-50 border-blue-200 text-blue-600' :
+                            'bg-rose-50 border-rose-200 text-rose-600'}
+                        `}>
+                          <span className="absolute top-0.5 left-1 text-[8px] opacity-70">{user.vote}</span>
+                          <span className="absolute bottom-0.5 right-1 text-[8px] opacity-70 rotate-180">{user.vote}</span>
+                          {user.vote}
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 bg-green-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-green-100 animate-bounce-subtle">
+                          <span className="font-bold">✓</span>
+                        </div>
+                      )
                     ) : (
                       <div className="w-10 h-10 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
                         <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
