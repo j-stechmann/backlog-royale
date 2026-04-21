@@ -1,4 +1,4 @@
-# Backlog Royale
+# <img src="assets/logo.svg" width="48" height="48" align="center" /> Backlog Royale
 
 A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast, beautiful, and simple.
 
