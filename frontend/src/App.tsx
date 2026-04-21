@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useBacklogRoyale } from './hooks/useBacklogRoyale';
 import { Card } from './components/Card';
+import { Logo } from './components/Logo';
 import { Users, Eye, RotateCcw, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -80,9 +81,7 @@ function App() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-md border border-white/50 backdrop-blur-sm">
           <div className="flex justify-center mb-6">
-            <div className="bg-blue-600 p-3 rounded-2xl shadow-lg">
-              <Users size={32} className="text-white" />
-            </div>
+            <Logo size={64} />
           </div>
           <h1 className="text-3xl font-black text-gray-900 mb-2 text-center tracking-tight">Backlog Royale</h1>
           <p className="text-gray-500 text-center mb-8">Real-time story pointing for teams</p>
@@ -129,9 +128,7 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3">
-              <div className="bg-blue-600 p-1.5 rounded-lg">
-                <Users size={20} className="text-white" />
-              </div>
+              <Logo size={32} />
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-gray-900">
                   Backlog Royale
