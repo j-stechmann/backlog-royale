@@ -74,4 +74,4 @@ docker-compose up --build
 
 ## License
 
-MIT
+GPLv2
