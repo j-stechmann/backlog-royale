@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { usePoker } from './hooks/usePoker';
 import { Card } from './components/Card';
 import { Users, Eye, RotateCcw, Share2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const CARD_VALUES = ['1', '2', '3', '5', '8', '13', '21', '?'];
 
@@ -51,7 +52,7 @@ function App() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert('Room link copied!');
+    toast.success('Room link copied!');
   };
 
   if (!isJoined) {
