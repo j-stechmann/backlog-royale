@@ -36,7 +36,7 @@ type Room struct {
 	hub          *Hub
 	mu           sync.Mutex
 	isRevealed   bool
-	participants map[string]string // Name -> Vote
+	participants map[string]string // ID -> Vote
 }
 
 func NewRoom(id string, hub *Hub) *Room {
@@ -59,6 +59,7 @@ type RoomState struct {
 }
 
 type User struct {
+	ID       string `json:"id"`
 	Name     string `json:"name"`
 	HasVoted bool   `json:"hasVoted"`
 	Vote     string `json:"vote,omitempty"`
@@ -76,14 +77,9 @@ func (r *Room) Run() {
 				delete(r.clients, client)
 				close(client.send)
 				r.mu.Lock()
-				delete(r.participants, client.name)
+				delete(r.participants, client.ID)
 				r.mu.Unlock()
 				r.broadcastState()
-			}
-			if len(r.clients) == 0 {
-				slog.Info("Room closing", "id", r.ID)
-				r.hub.RemoveRoom(r.ID)
-				return
 			}
 		case message := <-r.broadcast:
 			var action ActionMessage
@@ -94,6 +90,12 @@ func (r *Room) Run() {
 
 			r.handleAction(action, message.client)
 		}
+
+		if len(r.clients) == 0 {
+			slog.Info("Room closing", "id", r.ID)
+			r.hub.RemoveRoom(r.ID)
+			return
+		}
 	}
 }
 
@@ -101,12 +103,12 @@ func (r *Room) handleAction(action ActionMessage, client *Client) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	slog.Debug("Handling action", "room", r.ID, "type", action.Type, "user", client.name)
+	slog.Debug("Handling action", "room", r.ID, "type", action.Type, "user", client.name, "id", client.ID)
 
 	switch action.Type {
 	case "VOTE":
 		if allowedVotes[action.Vote] {
-			r.participants[client.name] = action.Vote
+			r.participants[client.ID] = action.Vote
 		}
 	case "REVEAL":
 		r.isRevealed = true
@@ -128,8 +130,9 @@ func (r *Room) broadcastState() {
 func (r *Room) broadcastStateLocked() {
 	var users []User
 	for client := range r.clients {
-		vote := r.participants[client.name]
+		vote := r.participants[client.ID]
 		users = append(users, User{
+			ID:       client.ID,
 			Name:     client.name,
 			HasVoted: vote != "",
 			Vote:     r.getVisibleVote(vote),
@@ -143,7 +146,12 @@ func (r *Room) broadcastStateLocked() {
 		Reveal: r.isRevealed,
 	}
 
-	data, _ := json.Marshal(state)
+	data, err := json.Marshal(state)
+	if err != nil {
+		slog.Error("failed to marshal state", "error", err)
+		return
+	}
+
 	for client := range r.clients {
 		select {
 		case client.send <- data:

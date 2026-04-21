@@ -3,11 +3,11 @@ import { expect, test, vi, beforeEach } from 'vitest';
 import { useBacklogRoyale } from './useBacklogRoyale';
 
 // Mock WebSocket
-let lastWsInstance: any = null;
+let lastWsInstance: MockWebSocket | null = null;
 
 class MockWebSocket {
   onopen: () => void = () => {};
-  onmessage: (event: any) => void = () => {};
+  onmessage: (event: { data: string }) => void = () => {};
   onclose: () => void = () => {};
   send = vi.fn();
   close = vi.fn();
@@ -16,6 +16,7 @@ class MockWebSocket {
 
   constructor(url: string) {
     this.url = url;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     lastWsInstance = this;
     setTimeout(() => this.onopen(), 0);
   }
@@ -49,7 +50,7 @@ test('should handle STATE updates', async () => {
   const mockState = {
     type: 'STATE',
     id: 'test-room',
-    users: [{ name: 'Alice', hasVoted: false }],
+    users: [{ id: '1', name: 'Alice', hasVoted: false }],
     reveal: false
   };
 

@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"time"
 )
 
 type Config struct {
@@ -40,7 +41,15 @@ func main() {
 	})
 
 	slog.Info("Server starting", "port", config.Port)
-	err := http.ListenAndServe(":"+config.Port, nil)
+	server := &http.Server{
+		Addr:              ":" + config.Port,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       120 * time.Second,
+	}
+
+	err := server.ListenAndServe()
 	if err != nil {
 		slog.Error("ListenAndServe failed", "error", err)
 		os.Exit(1)

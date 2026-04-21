@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
 export interface User {
+  id: string;
   name: string;
   hasVoted: boolean;
   vote?: string;
@@ -18,9 +19,14 @@ export const useBacklogRoyale = (roomID: string, userName: string) => {
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
   const connectRef = useRef<() => void>(() => {});
+  const reconnectTimeoutRef = useRef<number | null>(null);
 
   const connect = useCallback(() => {
     if (ws.current) return;
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+      reconnectTimeoutRef.current = null;
+    }
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const defaultHost = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
@@ -42,7 +48,7 @@ export const useBacklogRoyale = (roomID: string, userName: string) => {
       setConnected(false);
       ws.current = null;
       // Reconnect after a delay
-      setTimeout(() => connectRef.current(), 3000);
+      reconnectTimeoutRef.current = window.setTimeout(() => connectRef.current(), 3000);
     };
 
     ws.current = socket;
@@ -58,6 +64,9 @@ export const useBacklogRoyale = (roomID: string, userName: string) => {
     }
     return () => {
       ws.current?.close();
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
     };
   }, [roomID, userName, connect]);
 

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"time"
@@ -21,6 +23,7 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
+	ID   string
 	room *Room
 	conn *websocket.Conn
 	send chan []byte
@@ -80,6 +83,12 @@ func (c *Client) writePump() {
 	}
 }
 
+func generateID() string {
+	b := make([]byte, 8)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
+}
+
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin string) {
 	roomID := r.URL.Query().Get("room")
 	name := r.URL.Query().Get("name")
@@ -102,7 +111,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 	}
 
 	room := hub.GetOrCreateRoom(roomID)
-	client := &Client{room: room, conn: conn, send: make(chan []byte, 256), name: name}
+	client := &Client{ID: generateID(), room: room, conn: conn, send: make(chan []byte, 256), name: name}
 	client.room.register <- client
 
 	go client.writePump()
