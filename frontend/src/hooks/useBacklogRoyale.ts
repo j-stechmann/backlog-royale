@@ -14,7 +14,7 @@ export interface RoomState {
   reveal: boolean;
 }
 
-export const useBacklogRoyale = (roomID: string, userName: string) => {
+export const useBacklogRoyale = (roomID: string, userName: string, userID: string) => {
   const [state, setState] = useState<RoomState | null>(null);
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
@@ -31,7 +31,7 @@ export const useBacklogRoyale = (roomID: string, userName: string) => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const defaultHost = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
     const host = import.meta.env.VITE_WS_URL || `${protocol}//${defaultHost}`;
-    const socket = new WebSocket(`${host}/ws?room=${roomID}&name=${userName}`);
+    const socket = new WebSocket(`${host}/ws?room=${roomID}&name=${userName}&id=${userID}`);
 
     socket.onopen = () => {
       setConnected(true);
@@ -52,7 +52,7 @@ export const useBacklogRoyale = (roomID: string, userName: string) => {
     };
 
     ws.current = socket;
-  }, [roomID, userName]);
+  }, [roomID, userName, userID]);
 
   useEffect(() => {
     connectRef.current = connect;

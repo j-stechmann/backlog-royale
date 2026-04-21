@@ -15,6 +15,14 @@ function App() {
   const [name, setName] = useState(() => {
     return localStorage.getItem('backlog_royale_name') || '';
   });
+  const [userID] = useState(() => {
+    let id = localStorage.getItem('backlog_royale_id');
+    if (!id) {
+      id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('backlog_royale_id', id);
+    }
+    return id;
+  });
   const [isJoined, setIsJoined] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const room = params.get('room');
@@ -27,7 +35,7 @@ function App() {
     // Initial state is set via lazy initializers above
   }, []);
 
-  const { state, connected, sendAction } = useBacklogRoyale(isJoined ? roomID : '', isJoined ? name : '');
+  const { state, connected, sendAction } = useBacklogRoyale(isJoined ? roomID : '', isJoined ? name : '', userID);
 
   const prevVotedCount = useRef(0);
   const prevReveal = useRef(false);
@@ -212,7 +220,7 @@ function App() {
             </div>
             <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
               {state?.users.map((user) => (
-                <div key={user.name} className="p-4 flex justify-between items-center group">
+                <div key={user.id} className="p-4 flex justify-between items-center group">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
                       user.name === name ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'

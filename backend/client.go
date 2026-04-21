@@ -92,9 +92,14 @@ func generateID() string {
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin string) {
 	roomID := r.URL.Query().Get("room")
 	name := r.URL.Query().Get("name")
+	id := r.URL.Query().Get("id")
 	if roomID == "" || name == "" {
 		http.Error(w, "Missing room or name", http.StatusBadRequest)
 		return
+	}
+
+	if id == "" {
+		id = generateID()
 	}
 
 	upgrader.CheckOrigin = func(r *http.Request) bool {
@@ -111,7 +116,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 	}
 
 	room := hub.GetOrCreateRoom(roomID)
-	client := &Client{ID: generateID(), room: room, conn: conn, send: make(chan []byte, 256), name: name}
+	client := &Client{ID: id, room: room, conn: conn, send: make(chan []byte, 256), name: name}
 	client.room.register <- client
 
 	go client.writePump()

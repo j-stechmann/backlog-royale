@@ -29,7 +29,7 @@ type ClientMessage struct {
 
 type Room struct {
 	ID           string
-	clients      map[*Client]bool
+	clients      map[string]*Client // Changed from map[*Client]bool to map[string]*Client
 	broadcast    chan ClientMessage
 	register     chan *Client
 	unregister   chan *Client
@@ -42,7 +42,7 @@ type Room struct {
 func NewRoom(id string, hub *Hub) *Room {
 	return &Room{
 		ID:           id,
-		clients:      make(map[*Client]bool),
+		clients:      make(map[string]*Client),
 		broadcast:    make(chan ClientMessage),
 		register:     make(chan *Client),
 		unregister:   make(chan *Client),
@@ -70,11 +70,18 @@ func (r *Room) Run() {
 	for {
 		select {
 		case client := <-r.register:
-			r.clients[client] = true
+			// If client with same ID already exists, close the old one
+			if oldClient, ok := r.clients[client.ID]; ok {
+				close(oldClient.send)
+				if oldClient.conn != nil {
+					oldClient.conn.Close()
+				}
+			}
+			r.clients[client.ID] = client
 			r.broadcastState()
 		case client := <-r.unregister:
-			if _, ok := r.clients[client]; ok {
-				delete(r.clients, client)
+			if current, ok := r.clients[client.ID]; ok && current == client {
+				delete(r.clients, client.ID)
 				close(client.send)
 				r.mu.Lock()
 				delete(r.participants, client.ID)
@@ -129,7 +136,7 @@ func (r *Room) broadcastState() {
 
 func (r *Room) broadcastStateLocked() {
 	var users []User
-	for client := range r.clients {
+	for _, client := range r.clients {
 		vote := r.participants[client.ID]
 		users = append(users, User{
 			ID:       client.ID,
@@ -152,12 +159,12 @@ func (r *Room) broadcastStateLocked() {
 		return
 	}
 
-	for client := range r.clients {
+	for id, client := range r.clients {
 		select {
 		case client.send <- data:
 		default:
 			close(client.send)
-			delete(r.clients, client)
+			delete(r.clients, id)
 		}
 	}
 }

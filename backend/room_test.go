@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+	"time"
 )
 
 func TestRoomVoting(t *testing.T) {
@@ -11,8 +12,8 @@ func TestRoomVoting(t *testing.T) {
 	client1 := &Client{ID: "1", name: "Alice", send: make(chan []byte, 1)}
 	client2 := &Client{ID: "2", name: "Bob", send: make(chan []byte, 1)}
 
-	room.clients[client1] = true
-	room.clients[client2] = true
+	room.clients[client1.ID] = client1
+	room.clients[client2.ID] = client2
 
 	// Test VOTE
 	room.handleAction(ActionMessage{Type: "VOTE", Vote: "5"}, client1)
@@ -43,8 +44,8 @@ func TestNameCollision(t *testing.T) {
 	client1 := &Client{ID: "1", name: "Alice", send: make(chan []byte, 1)}
 	client2 := &Client{ID: "2", name: "Alice", send: make(chan []byte, 1)}
 
-	room.clients[client1] = true
-	room.clients[client2] = true
+	room.clients[client1.ID] = client1
+	room.clients[client2.ID] = client2
 
 	// Alice 1 votes 5
 	room.handleAction(ActionMessage{Type: "VOTE", Vote: "5"}, client1)
@@ -63,7 +64,7 @@ func TestAllowedVotes(t *testing.T) {
 	hub := NewHub()
 	room := NewRoom("test-room", hub)
 	client := &Client{ID: "1", name: "Alice", send: make(chan []byte, 1)}
-	room.clients[client] = true
+	room.clients[client.ID] = client
 
 	// Valid vote
 	room.handleAction(ActionMessage{Type: "VOTE", Vote: "13"}, client)
@@ -75,5 +76,26 @@ func TestAllowedVotes(t *testing.T) {
 	room.handleAction(ActionMessage{Type: "VOTE", Vote: "100"}, client)
 	if room.participants[client.ID] != "13" {
 		t.Errorf("expected invalid vote 100 to be ignored, kept 13")
+	}
+}
+
+func TestReconnectDeduplication(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+	go room.Run()
+
+	// Mocking enough of client to avoid panics
+	client1 := &Client{ID: "user-1", name: "Alice", send: make(chan []byte, 1)}
+	room.register <- client1
+
+	// Simulate reconnect with same ID
+	client2 := &Client{ID: "user-1", name: "Alice-New", send: make(chan []byte, 1)}
+	room.register <- client2
+
+	// Give it a moment to process the channel
+	time.Sleep(10 * time.Millisecond)
+
+	if room.clients["user-1"] != client2 {
+		t.Errorf("expected client2 to replace client1")
 	}
 }

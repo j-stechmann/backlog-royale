@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 test('should connect to websocket', async () => {
-  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice', 'user-123'));
 
   await vi.waitFor(() => {
     expect(result.current.connected).toBe(true);
@@ -38,10 +38,11 @@ test('should connect to websocket', async () => {
   
   expect(lastWsInstance.url).toContain('room=test-room');
   expect(lastWsInstance.url).toContain('name=Alice');
+  expect(lastWsInstance.url).toContain('id=user-123');
 });
 
 test('should handle STATE updates', async () => {
-  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice', 'user-123'));
 
   await vi.waitFor(() => {
     expect(result.current.connected).toBe(true);
