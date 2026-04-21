@@ -1,0 +1,5 @@
+poker-server
+vendor/
+.git/
+.gitignore
+Dockerfile

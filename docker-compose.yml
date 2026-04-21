@@ -1,0 +1,22 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    networks:
+      - poker-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - poker-network
+
+networks:
+  poker-network:
+    driver: bridge
