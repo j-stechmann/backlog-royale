@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { usePoker } from './hooks/usePoker';
+import { useBacklogRoyale } from './hooks/useBacklogRoyale';
 import { Card } from './components/Card';
 import { Users, Eye, RotateCcw, Share2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -15,7 +15,7 @@ function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const room = params.get('room');
-    const savedName = localStorage.getItem('poker_name');
+    const savedName = localStorage.getItem('backlog_royale_name');
 
     if (room) setRoomID(room);
     if (savedName) setName(savedName);
@@ -25,7 +25,7 @@ function App() {
     }
   }, []);
 
-  const { state, connected, sendAction } = usePoker(isJoined ? roomID : '', isJoined ? name : '');
+  const { state, connected, sendAction } = useBacklogRoyale(isJoined ? roomID : '', isJoined ? name : '');
 
   const prevVotedCount = useRef(0);
   const prevReveal = useRef(false);
@@ -50,7 +50,7 @@ function App() {
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
     if (roomID && name) {
-      localStorage.setItem('poker_name', name);
+      localStorage.setItem('backlog_royale_name', name);
       const url = new URL(window.location.href);
       url.searchParams.set('room', roomID);
       window.history.pushState({}, '', url);
@@ -84,7 +84,7 @@ function App() {
               <Users size={32} className="text-white" />
             </div>
           </div>
-          <h1 className="text-3xl font-black text-gray-900 mb-2 text-center tracking-tight">Scrum Poker</h1>
+          <h1 className="text-3xl font-black text-gray-900 mb-2 text-center tracking-tight">Backlog Royale</h1>
           <p className="text-gray-500 text-center mb-8">Real-time story pointing for teams</p>
           
           <form onSubmit={handleJoin} className="space-y-6">
@@ -134,7 +134,7 @@ function App() {
               </div>
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-gray-900">
-                  Scrum Poker
+                  Backlog Royale
                 </h1>
                 <span className="text-gray-300">|</span>
                 <span className="text-gray-600 font-medium">{roomID}</span>

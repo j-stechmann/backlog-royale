@@ -5,7 +5,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - poker-network
+      - backlog-network
 
   frontend:
     build:
@@ -15,8 +15,8 @@ services:
     depends_on:
       - backend
     networks:
-      - poker-network
+      - backlog-network
 
 networks:
-  poker-network:
+  backlog-network:
     driver: bridge

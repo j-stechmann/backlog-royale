@@ -1,4 +1,4 @@
-module github.com/username/scrumpoker
+module github.com/username/backlog-royale
 
 go 1.26.1
 

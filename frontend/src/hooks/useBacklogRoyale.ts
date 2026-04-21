@@ -13,7 +13,7 @@ export interface RoomState {
   reveal: boolean;
 }
 
-export const usePoker = (roomID: string, userName: string) => {
+export const useBacklogRoyale = (roomID: string, userName: string) => {
   const [state, setState] = useState<RoomState | null>(null);
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);

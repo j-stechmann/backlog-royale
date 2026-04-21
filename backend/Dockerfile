@@ -11,7 +11,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -o poker-server .
+RUN CGO_ENABLED=0 GOOS=linux go build -o backlog-server .
 
 # Final stage
 FROM alpine:latest
@@ -19,9 +19,9 @@ FROM alpine:latest
 WORKDIR /root/
 
 # Copy the binary from the builder stage
-COPY --from=builder /app/poker-server .
+COPY --from=builder /app/backlog-server .
 
 # Expose port (adjust if necessary, checking main.go for port)
 EXPOSE 8080
 
-CMD ["./poker-server"]
+CMD ["./backlog-server"]
