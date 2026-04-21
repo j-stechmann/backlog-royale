@@ -6,10 +6,26 @@ import (
 	"sync"
 )
 
+var allowedVotes = map[string]bool{
+	"1":  true,
+	"2":  true,
+	"3":  true,
+	"5":  true,
+	"8":  true,
+	"13": true,
+	"21": true,
+	"?":  true,
+}
+
+type ClientMessage struct {
+	client  *Client
+	payload []byte
+}
+
 type Room struct {
 	ID           string
 	clients      map[*Client]bool
-	broadcast    chan []byte
+	broadcast    chan ClientMessage
 	register     chan *Client
 	unregister   chan *Client
 	hub          *Hub
@@ -22,7 +38,7 @@ func NewRoom(id string, hub *Hub) *Room {
 	return &Room{
 		ID:           id,
 		clients:      make(map[*Client]bool),
-		broadcast:    make(chan []byte),
+		broadcast:    make(chan ClientMessage),
 		register:     make(chan *Client),
 		unregister:   make(chan *Client),
 		hub:          hub,
@@ -64,7 +80,7 @@ func (r *Room) Run() {
 			}
 		case message := <-r.broadcast:
 			var msg map[string]interface{}
-			if err := json.Unmarshal(message, &msg); err != nil {
+			if err := json.Unmarshal(message.payload, &msg); err != nil {
 				fmt.Printf("error: %v\n", err)
 				continue
 			}
@@ -74,21 +90,20 @@ func (r *Room) Run() {
 				continue
 			}
 
-			r.handleAction(action, msg)
+			r.handleAction(action, msg, message.client)
 		}
 	}
 }
 
-func (r *Room) handleAction(action string, msg map[string]interface{}) {
+func (r *Room) handleAction(action string, msg map[string]interface{}, client *Client) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
 	switch action {
 	case "VOTE":
-		name, _ := msg["name"].(string)
 		vote, _ := msg["vote"].(string)
-		if name != "" {
-			r.participants[name] = vote
+		if allowedVotes[vote] {
+			r.participants[client.name] = vote
 		}
 	case "REVEAL":
 		r.isRevealed = true

@@ -46,7 +46,7 @@ func (c *Client) readPump() {
 			}
 			break
 		}
-		c.room.broadcast <- message
+		c.room.broadcast <- ClientMessage{client: c, payload: message}
 	}
 }
 

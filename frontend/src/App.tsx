@@ -8,22 +8,23 @@ import { toast } from 'sonner';
 const CARD_VALUES = ['1', '2', '3', '5', '8', '13', '21', '?'];
 
 function App() {
-  const [roomID, setRoomID] = useState('');
-  const [name, setName] = useState('');
-  const [isJoined, setIsJoined] = useState(false);
-  const [selectedVote, setSelectedVote] = useState<string | null>(null);
-
-  useEffect(() => {
+  const [roomID, setRoomID] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('room') || '';
+  });
+  const [name, setName] = useState(() => {
+    return localStorage.getItem('backlog_royale_name') || '';
+  });
+  const [isJoined, setIsJoined] = useState(() => {
     const params = new URLSearchParams(window.location.search);
     const room = params.get('room');
     const savedName = localStorage.getItem('backlog_royale_name');
+    return !!(room && savedName);
+  });
+  const [selectedVote, setSelectedVote] = useState<string | null>(null);
 
-    if (room) setRoomID(room);
-    if (savedName) setName(savedName);
-
-    if (room && savedName) {
-      setIsJoined(true);
-    }
+  useEffect(() => {
+    // Initial state is set via lazy initializers above
   }, []);
 
   const { state, connected, sendAction } = useBacklogRoyale(isJoined ? roomID : '', isJoined ? name : '');
