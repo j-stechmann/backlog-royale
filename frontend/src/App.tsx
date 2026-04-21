@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { usePoker } from './hooks/usePoker';
 import { Card } from './components/Card';
 import { Users, Eye, RotateCcw, Share2 } from 'lucide-react';
@@ -26,6 +26,26 @@ function App() {
   }, []);
 
   const { state, connected, sendAction } = usePoker(isJoined ? roomID : '', isJoined ? name : '');
+
+  const prevVotedCount = useRef(0);
+  const prevReveal = useRef(false);
+
+  useEffect(() => {
+    if (state) {
+      const votedCount = state.users.filter(u => u.hasVoted).length;
+      // Clear selection if votes were reset (voted count dropped to 0) 
+      // or if transitioning from reveal to hidden state (next round)
+      const resetHappened = (votedCount === 0 && prevVotedCount.current > 0) || 
+                           (prevReveal.current && !state.reveal);
+      
+      if (resetHappened) {
+        setSelectedVote(null);
+      }
+      
+      prevVotedCount.current = votedCount;
+      prevReveal.current = state.reveal;
+    }
+  }, [state]);
 
   const handleJoin = (e: React.FormEvent) => {
     e.preventDefault();
