@@ -111,9 +111,13 @@ function App() {
               <div className="bg-blue-600 p-1.5 rounded-lg">
                 <Users size={20} className="text-white" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900 hidden sm:block">
-                Scrum Poker
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-bold text-gray-900">
+                  Scrum Poker
+                </h1>
+                <span className="text-gray-300 hidden sm:block">|</span>
+                <span className="text-gray-600 font-medium">{roomID}</span>
+              </div>
             </div>
             
             <div className="flex items-center gap-2">
@@ -180,14 +184,6 @@ function App() {
               </div>
             </div>
 
-            {/* Room Info */}
-            <div className="bg-indigo-600 rounded-2xl p-6 text-white shadow-lg shadow-indigo-100">
-              <h3 className="text-indigo-100 text-xs font-bold uppercase tracking-wider mb-2">Active Room</h3>
-              <p className="text-xl font-black truncate">{roomID}</p>
-              <div className="mt-4 pt-4 border-t border-indigo-500/50 flex justify-between items-center">
-                <span className="text-indigo-200 text-sm">Waiting for votes...</span>
-              </div>
-            </div>
           </div>
 
           {/* Main Area: Cards and Actions */}
