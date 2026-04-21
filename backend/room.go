@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"log/slog"
+	"sort"
+	"strings"
 	"sync"
 )
 
@@ -145,6 +147,10 @@ func (r *Room) broadcastStateLocked() {
 			Vote:     r.getVisibleVote(vote),
 		})
 	}
+
+	sort.Slice(users, func(i, j int) bool {
+		return strings.ToLower(users[i].Name) < strings.ToLower(users[j].Name)
+	})
 
 	state := RoomState{
 		Type:   "STATE",
