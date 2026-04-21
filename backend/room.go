@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
+	"log/slog"
 	"sync"
 )
 
@@ -15,6 +15,11 @@ var allowedVotes = map[string]bool{
 	"13": true,
 	"21": true,
 	"?":  true,
+}
+
+type ActionMessage struct {
+	Type string `json:"type"`
+	Vote string `json:"vote,omitempty"`
 }
 
 type ClientMessage struct {
@@ -60,6 +65,7 @@ type User struct {
 }
 
 func (r *Room) Run() {
+	slog.Info("Room started", "id", r.ID)
 	for {
 		select {
 		case client := <-r.register:
@@ -75,35 +81,32 @@ func (r *Room) Run() {
 				r.broadcastState()
 			}
 			if len(r.clients) == 0 {
+				slog.Info("Room closing", "id", r.ID)
 				r.hub.RemoveRoom(r.ID)
 				return
 			}
 		case message := <-r.broadcast:
-			var msg map[string]interface{}
-			if err := json.Unmarshal(message.payload, &msg); err != nil {
-				fmt.Printf("error: %v\n", err)
+			var action ActionMessage
+			if err := json.Unmarshal(message.payload, &action); err != nil {
+				slog.Warn("failed to unmarshal action", "error", err, "payload", string(message.payload))
 				continue
 			}
 
-			action, ok := msg["type"].(string)
-			if !ok {
-				continue
-			}
-
-			r.handleAction(action, msg, message.client)
+			r.handleAction(action, message.client)
 		}
 	}
 }
 
-func (r *Room) handleAction(action string, msg map[string]interface{}, client *Client) {
+func (r *Room) handleAction(action ActionMessage, client *Client) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	switch action {
+	slog.Debug("Handling action", "room", r.ID, "type", action.Type, "user", client.name)
+
+	switch action.Type {
 	case "VOTE":
-		vote, _ := msg["vote"].(string)
-		if allowedVotes[vote] {
-			r.participants[client.name] = vote
+		if allowedVotes[action.Vote] {
+			r.participants[client.name] = action.Vote
 		}
 	case "REVEAL":
 		r.isRevealed = true

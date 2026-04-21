@@ -30,11 +30,31 @@ First off, thank you for considering contributing to Backlog Royale! It's people
 
 Please refer to the [Getting Started](README.md#getting-started) section in the main README for instructions on how to set up your local development environment.
 
-## Coding Standards
+## Development Standards & "Laws"
 
-- **Go**: Follow standard Go idioms and use `go fmt`.
-- **React**: Use TypeScript for all new files. Prefer functional components and hooks.
-- **CSS**: Use Tailwind CSS for styling. Avoid writing custom CSS unless absolutely necessary.
+To ensure the project remains stable and maintainable, all contributors (including AI agents) must adhere to the following:
+
+### 1. Verification is Mandatory
+Before submitting any pull request or finalizing changes:
+- **Backend**: Run `go test -v ./...` and ensure all tests pass.
+- **Frontend**: Run `npm run test` and `npm run lint`.
+- **New Features**: Must include accompanying unit tests (Go `*_test.go` or Vitest `*.test.ts`).
+
+### 2. Backend (Go) Patterns
+- **Logging**: Use `log/slog` for structured logging. Never use `fmt.Printf` or standard `log` for application logs.
+- **WebSocket Messages**: Use strictly typed structs for JSON communication. Avoid `map[string]interface{}`.
+- **Configuration**: Use environment variables via `os.Getenv` in `main.go`.
+
+### 3. Frontend (React) Patterns
+- **Testing**: Use **Vitest** and **React Testing Library**.
+- **State Management**: Prefer hooks and context over global state libraries unless complexity demands otherwise.
+- **API/WS URLs**: Never hardcode URLs. Use `import.meta.env` as documented in `CONFIGURATION.md`.
+
+### 4. Continuous Integration
+The project uses GitHub Actions (see `.github/workflows/ci.yml`). Ensure your changes do not break the CI pipeline.
+
+### 5. Documentation
+If you add or change a configuration variable, you **must** update `CONFIGURATION.md` and the relevant service README.
 
 ## License
 

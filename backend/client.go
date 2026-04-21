@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -18,9 +18,6 @@ const (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true // Allow all origins for this project
-	},
 }
 
 type Client struct {
@@ -42,7 +39,7 @@ func (c *Client) readPump() {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				slog.Error("read error", "error", err)
 			}
 			break
 		}
@@ -83,7 +80,7 @@ func (c *Client) writePump() {
 	}
 }
 
-func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin string) {
 	roomID := r.URL.Query().Get("room")
 	name := r.URL.Query().Get("name")
 	if roomID == "" || name == "" {
@@ -91,9 +88,16 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	upgrader.CheckOrigin = func(r *http.Request) bool {
+		if allowedOrigin == "*" {
+			return true
+		}
+		return r.Header.Get("Origin") == allowedOrigin
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		slog.Error("upgrade error", "error", err)
 		return
 	}
 

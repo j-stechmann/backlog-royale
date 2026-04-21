@@ -1,20 +1,48 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 )
 
+type Config struct {
+	Port          string
+	AllowedOrigin string
+}
+
+func loadConfig() Config {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	origin := os.Getenv("ALLOWED_ORIGIN")
+	if origin == "" {
+		origin = "*" // Default for dev, should be restricted in prod
+	}
+
+	return Config{
+		Port:          port,
+		AllowedOrigin: origin,
+	}
+}
+
 func main() {
+	config := loadConfig()
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+
 	hub := NewHub()
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		serveWs(hub, w, r)
+		serveWs(hub, w, r, config.AllowedOrigin)
 	})
 
-	log.Println("Server starting on :8080")
-	err := http.ListenAndServe(":8080", nil)
+	slog.Info("Server starting", "port", config.Port)
+	err := http.ListenAndServe(":"+config.Port, nil)
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		slog.Error("ListenAndServe failed", "error", err)
+		os.Exit(1)
 	}
 }

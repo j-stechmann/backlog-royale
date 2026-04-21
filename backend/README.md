@@ -27,7 +27,17 @@ For a more detailed overview, see the [Architecture documentation](../ARCHITECTU
    ```
 The server will be available at `http://localhost:8080`.
 
-## 🔌 WebSocket API
+### Running Tests
+```bash
+go test -v ./...
+```
+
+## ⚙️ Configuration
+
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `PORT` | `8080` | Server port |
+| `ALLOWED_ORIGIN` | `*` | CORS restricted origin |
 
 The WebSocket endpoint is `/ws`.
 

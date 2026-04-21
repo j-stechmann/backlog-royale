@@ -23,8 +23,9 @@ export const useBacklogRoyale = (roomID: string, userName: string) => {
     if (ws.current) return;
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
-    const socket = new WebSocket(`${protocol}//${host}/ws?room=${roomID}&name=${userName}`);
+    const defaultHost = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
+    const host = import.meta.env.VITE_WS_URL || `${protocol}//${defaultHost}`;
+    const socket = new WebSocket(`${host}/ws?room=${roomID}&name=${userName}`);
 
     socket.onopen = () => {
       setConnected(true);

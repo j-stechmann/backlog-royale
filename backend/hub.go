@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log/slog"
 	"sync"
 )
 
@@ -24,6 +25,7 @@ func (h *Hub) GetOrCreateRoom(id string) *Room {
 		return room
 	}
 
+	slog.Info("Creating new room", "id", id)
 	room := NewRoom(id, h)
 	h.rooms[id] = room
 	go room.Run()
@@ -33,5 +35,6 @@ func (h *Hub) GetOrCreateRoom(id string) *Room {
 func (h *Hub) RemoveRoom(id string) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
+	slog.Info("Removing room", "id", id)
 	delete(h.rooms, id)
 }
