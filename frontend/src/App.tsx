@@ -137,104 +137,97 @@ function App() {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar: Stats and Participants */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-              <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Users size={18} className="text-gray-400" />
-                  <h2 className="font-bold text-gray-700 uppercase text-xs tracking-wider">Participants</h2>
-                </div>
-                <span className="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                  {state?.users.length || 0}
-                </span>
-              </div>
-              <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
-                {state?.users.map((user) => (
-                  <div key={user.name} className="p-4 flex justify-between items-center group">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-                        user.name === name ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
-                      }`}>
-                        {user.name.charAt(0).toUpperCase()}
-                      </div>
-                      <span className={`font-medium truncate max-w-[120px] ${user.name === name ? 'text-blue-600' : 'text-gray-900'}`}>
-                        {user.name} {user.name === name && <span className="text-[10px] text-gray-400">(You)</span>}
-                      </span>
-                    </div>
-                    <div>
-                      {user.hasVoted ? (
-                        <div className={`flex items-center justify-center w-10 h-10 rounded-xl font-bold transition-all ${
-                          state.reveal 
-                            ? 'bg-blue-100 text-blue-700 scale-110 shadow-sm' 
-                            : 'bg-green-500 text-white animate-bounce-subtle'
-                        }`}>
-                          {state.reveal ? user.vote : '✓'}
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
-                          <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <div className="space-y-6">
+          {/* Selection Area */}
+          <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden">
+            
+            <div className="text-center mb-10">
+              <h2 className="text-2xl font-black text-gray-800 mb-2">Cast your vote</h2>
+              <p className="text-gray-400 text-sm">Select a card to point this story</p>
             </div>
-
+            
+            <div className="flex flex-wrap justify-center max-w-3xl mx-auto gap-2">
+              {CARD_VALUES.map((val) => (
+                <Card
+                  key={val}
+                  value={val}
+                  selected={selectedVote === val}
+                  onClick={() => handleVote(val)}
+                  disabled={state?.reveal}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Main Area: Cards and Actions */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Control Panel */}
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="text-sm">
-                  <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">Progress</p>
-                  <p className="text-lg font-bold text-gray-700">
-                    {state?.users.filter(u => u.hasVoted).length} / {state?.users.length} Voted
-                  </p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <button
-                  onClick={handleReveal}
-                  disabled={state?.reveal || !state?.users.some(u => u.hasVoted)}
-                  className="flex items-center gap-2 bg-white text-gray-700 border-2 border-gray-200 px-6 py-2.5 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all font-bold disabled:opacity-50 disabled:hover:border-gray-200 disabled:hover:text-gray-700"
-                >
-                  <Eye size={18} /> Reveal Results
-                </button>
-                <button
-                  onClick={handleReset}
-                  className="flex items-center gap-2 bg-gray-900 text-white px-6 py-2.5 rounded-xl hover:bg-black transition-all font-bold shadow-lg shadow-gray-200"
-                >
-                  <RotateCcw size={18} /> Next Round
-                </button>
+          {/* Control Panel */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="text-sm">
+                <p className="text-gray-400 font-bold uppercase text-[10px] tracking-widest">Progress</p>
+                <p className="text-lg font-bold text-gray-700">
+                  {state?.users.filter(u => u.hasVoted).length} / {state?.users.length} Voted
+                </p>
               </div>
             </div>
+            <div className="flex gap-3">
+              <button
+                onClick={handleReveal}
+                disabled={state?.reveal || !state?.users.some(u => u.hasVoted)}
+                className="flex items-center gap-2 bg-white text-gray-700 border-2 border-gray-200 px-6 py-2.5 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all font-bold disabled:opacity-50 disabled:hover:border-gray-200 disabled:hover:text-gray-700"
+              >
+                <Eye size={18} /> Reveal Results
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-2 bg-gray-900 text-white px-6 py-2.5 rounded-xl hover:bg-black transition-all font-bold shadow-lg shadow-gray-200"
+              >
+                <RotateCcw size={18} /> Next Round
+              </button>
+            </div>
+          </div>
 
-            {/* Selection Area */}
-            <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-blue-600 opacity-10" />
-              
-              <div className="text-center mb-10">
-                <h2 className="text-2xl font-black text-gray-800 mb-2">Cast your vote</h2>
-                <p className="text-gray-400 text-sm">Select a card to point this story</p>
+          {/* Participants */}
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users size={18} className="text-gray-400" />
+                <h2 className="font-bold text-gray-700 uppercase text-xs tracking-wider">Participants</h2>
               </div>
-              
-              <div className="flex flex-wrap justify-center max-w-3xl mx-auto gap-2">
-                {CARD_VALUES.map((val) => (
-                  <Card
-                    key={val}
-                    value={val}
-                    selected={selectedVote === val}
-                    onClick={() => handleVote(val)}
-                    disabled={state?.reveal}
-                  />
-                ))}
-              </div>
+              <span className="bg-gray-200 text-gray-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                {state?.users.length || 0}
+              </span>
+            </div>
+            <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
+              {state?.users.map((user) => (
+                <div key={user.name} className="p-4 flex justify-between items-center group">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
+                      user.name === name ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+                    }`}>
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span className={`font-medium truncate max-w-[120px] ${user.name === name ? 'text-blue-600' : 'text-gray-900'}`}>
+                      {user.name} {user.name === name && <span className="text-[10px] text-gray-400">(You)</span>}
+                    </span>
+                  </div>
+                  <div>
+                    {user.hasVoted ? (
+                      <div className={`flex items-center justify-center w-10 h-10 rounded-xl font-bold transition-all ${
+                        state.reveal 
+                          ? 'bg-blue-100 text-blue-700 scale-110 shadow-sm' 
+                          : 'bg-green-500 text-white animate-bounce-subtle'
+                      }`}>
+                        {state.reveal ? user.vote : '✓'}
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
