@@ -2,7 +2,12 @@
 
 A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast, beautiful, and simple.
 
-![Backlog Royale UI](https://github.com/user-attachments/assets/7c5c0c1b-4f9b-4e1a-8c1a-7c5c0c1b4f9b) *Replace with actual screenshot if available*
+## 📖 Documentation
+
+- [Architecture](ARCHITECTURE.md) - Deep dive into how it works.
+- [Contributing](CONTRIBUTING.md) - How to help improve the project.
+- [Backend README](backend/README.md) - Backend specific details.
+- [Frontend README](frontend/README.md) - Frontend specific details.
 
 ## Features
 

@@ -1,34 +1,61 @@
 # Backlog Royale - Backend
 
-This is the Go-based backend for Backlog Royale, handling real-time WebSocket communication.
+The Go-based backend for Backlog Royale. It manages WebSocket connections, rooms, and real-time state broadcasting.
 
-## Architecture
+## 🏗️ Architecture
 
-The backend is built as a WebSocket server that manages rooms and client connections. 
+The server uses a Hub-and-Spoke model:
+- **Hub**: Manages all active rooms.
+- **Room**: A goroutine-backed session for a specific group of users.
+- **Client**: A WebSocket connection wrapper.
 
-- `main.go`: Entry point and HTTP server setup.
-- `hub.go`: Manages active clients and broadcasts messages.
-- `room.go`: Handles logic for specific voting rooms.
-- `client.go`: Manages individual WebSocket connections.
+For a more detailed overview, see the [Architecture documentation](../ARCHITECTURE.md).
 
-## API
+## 🚀 Getting Started
 
-- **GET `/ws`**: Upgrades connection to WebSocket.
+### Prerequisites
+- Go 1.26 or higher
 
-### WebSocket Actions
+### Running Locally
+1. Install dependencies:
+   ```bash
+   go mod download
+   ```
+2. Run the server:
+   ```bash
+   go run .
+   ```
+The server will be available at `http://localhost:8080`.
 
-Clients can send the following JSON actions:
-- `VOTE`: `{ "action": "VOTE", "payload": { "vote": "5" } }`
-- `REVEAL`: `{ "action": "REVEAL" }`
-- `RESET`: `{ "action": "RESET" }`
+## 🔌 WebSocket API
 
-## Development
+The WebSocket endpoint is `/ws`.
 
-1. Ensure Go 1.26+ is installed.
-2. Run `go run .` in this directory.
-3. The server will start on port `8080`.
+### Connection Parameters
+- `room`: (Required) The unique ID of the room to join.
+- `name`: (Required) The name of the user joining.
 
-## Dependencies
+Example: `ws://localhost:8080/ws?room=my-room&name=Alice`
 
-- `github.com/gorilla/websocket`: High-performance WebSocket implementation.
-- `github.com/google/uuid`: Secure room and client ID generation.
+### Actions (Client -> Server)
+
+Messages should be sent as JSON.
+
+| Action | Payload | Description |
+| :--- | :--- | :--- |
+| `VOTE` | `{ "vote": "string" }` | Casts a vote. |
+| `REVEAL` | `none` | Reveals all votes in the room. |
+| `RESET` | `none` | Resets the room for a new round. |
+
+### Events (Server -> Client)
+
+| Event | Description |
+| :--- | :--- |
+| `STATE` | The current state of the room, sent after every change. |
+
+## 🛠️ Project Structure
+
+- `main.go`: Server initialization and route handling.
+- `hub.go`: Room management logic.
+- `room.go`: Core game logic and broadcasting.
+- `client.go`: WebSocket reader/writer loops.

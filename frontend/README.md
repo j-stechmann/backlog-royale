@@ -1,28 +1,45 @@
 # Backlog Royale - Frontend
 
-This is the React-based frontend for Backlog Royale, built with Vite and Tailwind CSS.
+A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, TypeScript, and Tailwind CSS 4.
 
-## Features
+## ✨ Features
 
-- **Dynamic Room Support:** Connect to different rooms via URL parameters.
-- **Real-time State Sync:** Reactive UI that updates as team members vote.
-- **Mobile-First Design:** Fully responsive interface using Tailwind CSS 4.
-- **Fibonacci Cards:** Intuitive selection for story points.
+- **Real-time Sync**: Uses WebSockets for zero-latency updates.
+- **Responsive UI**: Optimized for both mobile and desktop.
+- **Fibonacci Scoring**: Standard agile pointing system.
+- **Dynamic Routing**: Join any room via a simple URL.
 
-## Scripts
+## 🚀 Getting Started
 
-- `npm run dev`: Starts the development server.
-- `npm run build`: Builds the application for production.
-- `npm run lint`: Runs ESLint for code quality.
-- `npm run preview`: Previews the production build locally.
+### Prerequisites
+- Node.js 20 or higher
 
-## Environment Variables
+### Installation
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The application connects to the backend via WebSockets. By default, it attempts to connect to the same host on port 8080 (or as configured in `src/hooks/useBacklogRoyale.ts`).
+## 🛠️ Tech Stack
 
-## Dependencies
+- **React 19**: Modern component-based UI.
+- **Vite**: Ultra-fast build tool and dev server.
+- **Tailwind CSS 4**: Utility-first styling.
+- **TypeScript**: Type-safe development.
+- **Lucide React**: Icon library.
+- **Sonner**: Toast notifications.
 
-- **React 19:** Latest features and performance.
-- **Tailwind CSS 4:** Modern CSS-in-JS alternative for styling.
-- **Lucide React:** Beautiful, consistent iconography.
-- **Sonner:** Toast notifications for actions like "Link Copied".
+## 📁 Project Structure
+
+- `src/components`: UI components (Card, Logo, etc.)
+- `src/hooks`: Custom hooks, notably `useBacklogRoyale` for WebSocket logic.
+- `src/App.tsx`: Main application container and layout.
+- `src/main.tsx`: Entry point.
+
+## 🔧 Environment Variables
+
+By default, the application connects to the backend at `localhost:8080`. For production deployments, ensure the WebSocket connection logic in `src/hooks/useBacklogRoyale.ts` matches your environment.
