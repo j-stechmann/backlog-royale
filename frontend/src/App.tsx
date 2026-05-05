@@ -228,13 +228,13 @@ function App() {
             </div>
           )}
 
-          {/* Participants */}
+          {/* Players */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center justify-between sm:justify-start gap-4">
                 <div className="flex items-center gap-2">
                   <Users size={20} className="text-blue-600" />
-                  <h2 className="font-bold text-gray-900 text-sm">Participants</h2>
+                  <h2 className="font-bold text-gray-900 text-sm">Players</h2>
                 </div>
                 <div className="px-3 py-1 bg-blue-50 border border-blue-100 rounded-lg">
                   <span className="text-xs font-bold text-blue-700">
@@ -263,7 +263,7 @@ function App() {
                 )}
               </div>
             </div>
-            <div className="divide-y divide-gray-50 max-h-[60vh] overflow-y-auto">
+            <div className="divide-y divide-gray-50">
               {state?.users.map((user) => (
                 <div key={user.id} className="p-4 flex justify-between items-center group">
                   <div className="flex items-center gap-3 min-w-0">

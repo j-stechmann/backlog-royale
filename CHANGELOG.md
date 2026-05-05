@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.1] - 2026-05-05
+
+### Changed
+- Renamed "Participants" to "Players" in the UI.
+- Removed scroll height limit from the player list container.
+
 ## [0.8.0] - 2026-05-05
 
 ### Added
