@@ -16,15 +16,19 @@ First off, thank you for considering contributing to Backlog Royale! It's people
 
 ### Pull Requests
 
+This project follows the **Git Flow** branching model.
+
 1.  Fork the repository.
-2.  Create a new branch for your feature or bug fix: `git checkout -b feature/your-feature-name`.
+2.  Create a new branch for your feature or bug fix off the `develop` branch: `git checkout -b feature/your-feature-name develop`.
 3.  Make your changes.
 4.  Ensure your code follows the existing style and passes linting.
     - Frontend: `npm run lint`
     - Backend: `go fmt ./...`
 5.  Commit your changes: `git commit -m "Add some feature"`.
 6.  Push to your branch: `git push origin feature/your-feature-name`.
-7.  Open a Pull Request against the `main` branch.
+7.  Open a Pull Request against the `develop` branch.
+
+For critical production bug fixes, branch off `main` into a `hotfix/` branch and open a Pull Request against `main`.
 
 ## Development Environment Setup
 

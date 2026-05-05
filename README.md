@@ -5,7 +5,7 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 ## 📖 Documentation
 
 - [Architecture](ARCHITECTURE.md) - Deep dive into how it works.
-- [Contributing](CONTRIBUTING.md) - How to help improve the project.
+- [Contributing](CONTRIBUTING.md) - How to help improve the project (uses Git Flow).
 - [Backend README](backend/README.md) - Backend specific details.
 - [Frontend README](frontend/README.md) - Frontend specific details.
 

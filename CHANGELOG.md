@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-05-05
+
+### Added
+- Documentation specifying Git Flow usage and requirements for documentation updates.
+- `AGENTS.md` file with guidelines for AI agents.
+
+### Changed
+- Updated `CONTRIBUTING.md` and `README.md` to reflect Git Flow branching model.
+
 ### Fixed
 - Prevented dealer from un-afking other players.
 - Synchronized AFK button animation and styling with voted cards.
