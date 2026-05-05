@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useBacklogRoyale } from './hooks/useBacklogRoyale';
 import { Card } from './components/Card';
 import { Logo } from './components/Logo';
-import { Users, Eye, RotateCcw, Share2, HandHelping } from 'lucide-react';
+import { Users, Eye, RotateCcw, Share2, HandHelping, Coffee } from 'lucide-react';
 import { toast } from 'sonner';
 
 const CARD_VALUES = ['1', '2', '3', '5', '8', '13', '21', '?'];
@@ -39,6 +39,7 @@ function App() {
 
   const currentUser = state?.users.find(u => u.id === userID);
   const isDealer = currentUser?.role === 'dealer';
+  const isAFK = currentUser?.role === 'afk';
   const players = state?.users.filter(u => u.role === 'player') || [];
   const votedPlayersCount = players.filter(u => u.hasVoted).length;
 
@@ -51,6 +52,8 @@ function App() {
       setSelectedVote(null);
       if (currentUser.role === 'dealer') {
         toast.info('You are now the Dealer');
+      } else if (currentUser.role === 'afk') {
+        toast.info('You are now AFK');
       } else {
         toast.info('You are now a Player');
       }
@@ -167,6 +170,18 @@ function App() {
             
             <div className="flex items-center gap-2">
               <button
+                onClick={() => sendAction('TOGGLE_AFK')}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
+                  isAFK 
+                  ? 'bg-blue-100 text-blue-700 hover:bg-blue-200' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
+                title={isAFK ? "Return to Game" : "Go AFK"}
+              >
+                <Coffee size={16} />
+                <span className="hidden sm:inline">{isAFK ? "AFK" : "Go AFK"}</span>
+              </button>
+              <button
                 onClick={() => sendAction('TOGGLE_ROLE')}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
                   isDealer 
@@ -197,7 +212,23 @@ function App() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <div className="space-y-6">
           {/* Selection Area */}
-          {!isDealer ? (
+          {isAFK ? (
+            <div className="bg-blue-50 p-8 rounded-3xl border border-blue-100 flex flex-col items-center text-center">
+              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                <Coffee size={32} />
+              </div>
+              <h2 className="text-xl font-bold text-blue-900 mb-1">You are AFK</h2>
+              <p className="text-blue-700 text-sm max-w-xs mb-6">
+                You are currently sitting out. You won't be counted in the voting progress.
+              </p>
+              <button
+                onClick={() => sendAction('TOGGLE_AFK')}
+                className="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-blue-700 transition-all active:scale-95"
+              >
+                Return to Game
+              </button>
+            </div>
+          ) : !isDealer ? (
             <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden">
               <div className="text-center mb-10">
                 <h2 className="text-2xl font-black text-gray-800 mb-2">Cast your vote</h2>
@@ -279,12 +310,21 @@ function App() {
                           DEALER
                         </span>
                       )}
+                      {user.role === 'afk' && (
+                        <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">
+                          AFK
+                        </span>
+                      )}
                     </span>
                   </div>
                   <div>
                     {user.role === 'dealer' ? (
                       <div className="w-10 h-10 flex items-center justify-center text-amber-500">
                         <HandHelping size={20} />
+                      </div>
+                    ) : user.role === 'afk' ? (
+                      <div className="w-10 h-10 flex items-center justify-center text-blue-500">
+                        <Coffee size={20} />
                       </div>
                     ) : user.hasVoted ? (
                       state.reveal ? (

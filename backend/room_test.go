@@ -179,3 +179,47 @@ func TestDealerRole(t *testing.T) {
 		t.Errorf("expected dealerID to be cleared after dealer left")
 	}
 }
+
+func TestAFKRole(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+
+	client1 := &Client{ID: "1", name: "Alice", role: "player", send: make(chan []byte, 10)}
+	room.clients[client1.ID] = client1
+
+	// Alice votes
+	room.handleAction(ActionMessage{Type: "VOTE", Vote: "5"}, client1)
+	if room.participants[client1.ID] != "5" {
+		t.Errorf("expected Alice to have voted 5")
+	}
+
+	// Alice goes AFK
+	room.handleAction(ActionMessage{Type: "TOGGLE_AFK"}, client1)
+	if client1.role != "afk" {
+		t.Errorf("expected Alice to be afk")
+	}
+	if _, ok := room.participants[client1.ID]; ok {
+		if room.participants[client1.ID] != "" {
+			t.Errorf("expected Alice's vote to be cleared when going afk")
+		}
+	}
+
+	// Alice returns
+	room.handleAction(ActionMessage{Type: "TOGGLE_AFK"}, client1)
+	if client1.role != "player" {
+		t.Errorf("expected Alice to be player again")
+	}
+
+	// Dealer goes AFK
+	room.handleAction(ActionMessage{Type: "TOGGLE_ROLE"}, client1) // Become dealer
+	if room.dealerID != client1.ID {
+		t.Errorf("expected Alice to be dealer")
+	}
+	room.handleAction(ActionMessage{Type: "TOGGLE_AFK"}, client1)
+	if client1.role != "afk" {
+		t.Errorf("expected Alice to be afk")
+	}
+	if room.dealerID != "" {
+		t.Errorf("expected dealerID to be cleared when dealer goes AFK")
+	}
+}

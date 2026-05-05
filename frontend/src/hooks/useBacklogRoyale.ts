@@ -5,7 +5,7 @@ export interface User {
   name: string;
   hasVoted: boolean;
   vote?: string;
-  role: 'player' | 'dealer';
+  role: 'player' | 'dealer' | 'afk';
 }
 
 export interface RoomState {

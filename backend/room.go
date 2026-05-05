@@ -151,6 +151,16 @@ func (r *Room) handleAction(action ActionMessage, client *Client) {
 			r.dealerID = client.ID
 			delete(r.participants, client.ID) // Dealer doesn't vote
 		}
+	case "TOGGLE_AFK":
+		if client.role == "afk" {
+			client.role = "player"
+		} else {
+			if client.role == "dealer" {
+				r.dealerID = ""
+			}
+			client.role = "afk"
+			delete(r.participants, client.ID)
+		}
 	}
 	r.broadcastStateLocked()
 }
