@@ -2,6 +2,7 @@
 backlog-server
 poker-server
 backlog-royale
+server
 *.exe
 *.exe~
 *.dll
