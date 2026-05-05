@@ -5,6 +5,7 @@ export interface User {
   name: string;
   hasVoted: boolean;
   vote?: string;
+  role: 'player' | 'dealer';
 }
 
 export interface RoomState {
@@ -12,6 +13,7 @@ export interface RoomState {
   id: string;
   users: User[];
   reveal: boolean;
+  dealerId: string;
 }
 
 export const useBacklogRoyale = (roomID: string, userName: string, userID: string) => {

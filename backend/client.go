@@ -28,6 +28,7 @@ type Client struct {
 	conn *websocket.Conn
 	send chan []byte
 	name string
+	role string
 }
 
 func (c *Client) readPump() {
@@ -116,7 +117,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 	}
 
 	room := hub.GetOrCreateRoom(roomID)
-	client := &Client{ID: id, room: room, conn: conn, send: make(chan []byte, 256), name: name}
+	client := &Client{ID: id, room: room, conn: conn, send: make(chan []byte, 256), name: name, role: "player"}
 	client.room.register <- client
 
 	go client.writePump()

@@ -51,8 +51,9 @@ test('should handle STATE updates', async () => {
   const mockState = {
     type: 'STATE',
     id: 'test-room',
-    users: [{ id: '1', name: 'Alice', hasVoted: false }],
-    reveal: false
+    users: [{ id: '1', name: 'Alice', hasVoted: false, role: 'player' }],
+    reveal: false,
+    dealerId: ''
   };
 
   await act(async () => {
@@ -60,4 +61,41 @@ test('should handle STATE updates', async () => {
   });
 
   expect(result.current.state).toEqual(mockState);
+});
+
+test('should handle role changes in state', async () => {
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice', 'user-123'));
+
+  await vi.waitFor(() => {
+    expect(result.current.connected).toBe(true);
+  });
+
+  const stateAsPlayer = {
+    type: 'STATE',
+    id: 'test-room',
+    users: [{ id: 'user-123', name: 'Alice', hasVoted: false, role: 'player' }],
+    reveal: false,
+    dealerId: ''
+  };
+
+  await act(async () => {
+    lastWsInstance.onmessage({ data: JSON.stringify(stateAsPlayer) });
+  });
+
+  expect(result.current.state?.users[0].role).toBe('player');
+
+  const stateAsDealer = {
+    type: 'STATE',
+    id: 'test-room',
+    users: [{ id: 'user-123', name: 'Alice', hasVoted: false, role: 'dealer' }],
+    reveal: false,
+    dealerId: 'user-123'
+  };
+
+  await act(async () => {
+    lastWsInstance.onmessage({ data: JSON.stringify(stateAsDealer) });
+  });
+
+  expect(result.current.state?.users[0].role).toBe('dealer');
+  expect(result.current.state?.dealerId).toBe('user-123');
 });

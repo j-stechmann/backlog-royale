@@ -39,6 +39,7 @@ type Room struct {
 	mu           sync.Mutex
 	isRevealed   bool
 	participants map[string]string // ID -> Vote
+	dealerID     string
 }
 
 func NewRoom(id string, hub *Hub) *Room {
@@ -54,10 +55,11 @@ func NewRoom(id string, hub *Hub) *Room {
 }
 
 type RoomState struct {
-	Type   string `json:"type"`
-	ID     string `json:"id"`
-	Users  []User `json:"users"`
-	Reveal bool   `json:"reveal"`
+	Type     string `json:"type"`
+	ID       string `json:"id"`
+	Users    []User `json:"users"`
+	Reveal   bool   `json:"reveal"`
+	DealerID string `json:"dealerId"`
 }
 
 type User struct {
@@ -65,6 +67,7 @@ type User struct {
 	Name     string `json:"name"`
 	HasVoted bool   `json:"hasVoted"`
 	Vote     string `json:"vote,omitempty"`
+	Role     string `json:"role"`
 }
 
 func (r *Room) Run() {
@@ -87,6 +90,9 @@ func (r *Room) Run() {
 				close(client.send)
 				r.mu.Lock()
 				delete(r.participants, client.ID)
+				if r.dealerID == client.ID {
+					r.dealerID = ""
+				}
 				r.mu.Unlock()
 				r.broadcastState()
 			}
@@ -116,15 +122,34 @@ func (r *Room) handleAction(action ActionMessage, client *Client) {
 
 	switch action.Type {
 	case "VOTE":
-		if allowedVotes[action.Vote] {
+		if client.role == "player" && allowedVotes[action.Vote] {
 			r.participants[client.ID] = action.Vote
 		}
 	case "REVEAL":
-		r.isRevealed = true
+		if client.ID == r.dealerID {
+			r.isRevealed = true
+		}
 	case "RESET":
-		r.isRevealed = false
-		for k := range r.participants {
-			r.participants[k] = ""
+		if client.ID == r.dealerID {
+			r.isRevealed = false
+			for k := range r.participants {
+				r.participants[k] = ""
+			}
+		}
+	case "TOGGLE_ROLE":
+		if client.role == "dealer" {
+			client.role = "player"
+			r.dealerID = ""
+		} else {
+			// If there's already a dealer, they become a player
+			if r.dealerID != "" {
+				if oldDealer, ok := r.clients[r.dealerID]; ok {
+					oldDealer.role = "player"
+				}
+			}
+			client.role = "dealer"
+			r.dealerID = client.ID
+			delete(r.participants, client.ID) // Dealer doesn't vote
 		}
 	}
 	r.broadcastStateLocked()
@@ -145,6 +170,7 @@ func (r *Room) broadcastStateLocked() {
 			Name:     client.name,
 			HasVoted: vote != "",
 			Vote:     r.getVisibleVote(vote),
+			Role:     client.role,
 		})
 	}
 
@@ -153,10 +179,11 @@ func (r *Room) broadcastStateLocked() {
 	})
 
 	state := RoomState{
-		Type:   "STATE",
-		ID:     r.ID,
-		Users:  users,
-		Reveal: r.isRevealed,
+		Type:     "STATE",
+		ID:       r.ID,
+		Users:    users,
+		Reveal:   r.isRevealed,
+		DealerID: r.dealerID,
 	}
 
 	data, err := json.Marshal(state)
