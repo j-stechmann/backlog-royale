@@ -18,12 +18,17 @@ export interface RoomState {
   dealerId: string;
 }
 
-export const useBacklogRoyale = (roomID: string, userName: string, userID: string) => {
+export const useBacklogRoyale = (roomID: string, userName: string, onIDAssigned?: (id: string) => void) => {
   const [state, setState] = useState<RoomState | null>(null);
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
   const connectRef = useRef<() => void>(() => {});
   const reconnectTimeoutRef = useRef<number | null>(null);
+  const onIDAssignedRef = useRef(onIDAssigned);
+
+  useEffect(() => {
+    onIDAssignedRef.current = onIDAssigned;
+  }, [onIDAssigned]);
 
   const connect = useCallback(() => {
     if (ws.current) return;
@@ -35,7 +40,8 @@ export const useBacklogRoyale = (roomID: string, userName: string, userID: strin
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const defaultHost = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
     const host = import.meta.env.VITE_WS_URL || `${protocol}//${defaultHost}`;
-    const socket = new WebSocket(`${host}/ws?room=${roomID}&name=${userName}&id=${userID}`);
+    // No longer sending id to server as it's generated server-side for security
+    const socket = new WebSocket(`${host}/ws?room=${roomID}&name=${userName}`);
 
     socket.onopen = () => {
       setConnected(true);
@@ -45,6 +51,8 @@ export const useBacklogRoyale = (roomID: string, userName: string, userID: strin
       const data = JSON.parse(event.data);
       if (data.type === MESSAGE_TYPES.STATE) {
         setState(data);
+      } else if (data.type === MESSAGE_TYPES.WELCOME) {
+        onIDAssignedRef.current?.(data.id);
       }
     };
 
@@ -56,7 +64,7 @@ export const useBacklogRoyale = (roomID: string, userName: string, userID: strin
     };
 
     ws.current = socket;
-  }, [roomID, userName, userID]);
+  }, [roomID, userName]); // Removed onIDAssigned from dependencies
 
   useEffect(() => {
     connectRef.current = connect;

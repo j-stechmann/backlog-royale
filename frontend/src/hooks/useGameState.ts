@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useBacklogRoyale } from './useBacklogRoyale';
 
 export const useGameState = () => {
@@ -9,13 +9,8 @@ export const useGameState = () => {
   const [name, setName] = useState(() => {
     return localStorage.getItem('backlog_royale_name') || '';
   });
-  const [userID] = useState(() => {
-    let id = localStorage.getItem('backlog_royale_id');
-    if (!id) {
-      id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('backlog_royale_id', id);
-    }
-    return id;
+  const [userID, setUserID] = useState(() => {
+    return localStorage.getItem('backlog_royale_id') || '';
   });
   const [isJoined, setIsJoined] = useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,7 +20,17 @@ export const useGameState = () => {
   });
   const [selectedVote, setSelectedVote] = useState<string | null>(null);
 
-  const { state, connected, sendAction } = useBacklogRoyale(isJoined ? roomID : '', isJoined ? name : '', userID);
+  const handleIDAssigned = useCallback((id: string) => {
+    setUserID(id);
+    localStorage.setItem('backlog_royale_id', id);
+  }, []);
+
+  const { state, connected, sendAction } = useBacklogRoyale(
+    isJoined ? roomID : '', 
+    isJoined ? name : '', 
+    handleIDAssigned
+  );
+
 
   const prevVotedCount = useRef(0);
   const prevReveal = useRef(false);

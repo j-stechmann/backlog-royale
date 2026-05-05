@@ -2,12 +2,15 @@ package main
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
+	"golang.org/x/time/rate"
 )
 
 const (
@@ -15,6 +18,9 @@ const (
 	pongWait       = 60 * time.Second
 	pingPeriod     = (pongWait * 9) / 10
 	maxMessageSize = 512
+	// Rate limiting: 10 messages per second with a burst of 20
+	messageRate  = 10
+	messageBurst = 20
 )
 
 var upgrader = websocket.Upgrader{
@@ -23,12 +29,13 @@ var upgrader = websocket.Upgrader{
 }
 
 type Client struct {
-	ID   string
-	room *Room
-	conn *websocket.Conn
-	send chan []byte
-	name string
-	role string
+	ID          string
+	room        *Room
+	conn        *websocket.Conn
+	send        chan []byte
+	name        string
+	role        string
+	rateLimiter *rate.Limiter
 }
 
 func (c *Client) readPump() {
@@ -47,6 +54,12 @@ func (c *Client) readPump() {
 			}
 			break
 		}
+
+		if !c.rateLimiter.Allow() {
+			slog.Warn("Rate limit exceeded", "client", c.name, "id", c.ID)
+			continue
+		}
+
 		c.room.broadcast <- ClientMessage{client: c, payload: message}
 	}
 }
@@ -93,21 +106,25 @@ func generateID() string {
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin string) {
 	roomID := r.URL.Query().Get("room")
 	name := r.URL.Query().Get("name")
-	id := r.URL.Query().Get("id")
+
 	if roomID == "" || name == "" {
 		http.Error(w, "Missing room or name", http.StatusBadRequest)
 		return
 	}
 
-	if id == "" {
-		id = generateID()
-	}
+	// Always generate ID server-side to prevent impersonation
+	id := generateID()
 
 	upgrader.CheckOrigin = func(r *http.Request) bool {
 		if allowedOrigin == "*" {
 			return true
 		}
-		return r.Header.Get("Origin") == allowedOrigin
+		origin := r.Header.Get("Origin")
+		if origin == "" {
+			return false
+		}
+		// Strict origin check
+		return strings.EqualFold(origin, allowedOrigin)
 	}
 
 	conn, err := upgrader.Upgrade(w, r, nil)
@@ -117,8 +134,20 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 	}
 
 	room := hub.GetOrCreateRoom(roomID)
-	client := &Client{ID: id, room: room, conn: conn, send: make(chan []byte, 256), name: name, role: RolePlayer}
+	client := &Client{
+		ID:          id,
+		room:        room,
+		conn:        conn,
+		send:        make(chan []byte, 256),
+		name:        name,
+		role:        RolePlayer,
+		rateLimiter: rate.NewLimiter(rate.Limit(messageRate), messageBurst),
+	}
 	client.room.register <- client
+
+	// Send welcome message with the generated ID
+	welcome, _ := json.Marshal(WelcomeMessage{Type: MessageTypeWelcome, ID: id})
+	client.send <- welcome
 
 	go client.writePump()
 	go client.readPump()

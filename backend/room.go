@@ -55,6 +55,11 @@ func NewRoom(id string, hub *Hub) *Room {
 	}
 }
 
+type WelcomeMessage struct {
+	Type string `json:"type"`
+	ID   string `json:"id"`
+}
+
 type RoomState struct {
 	Type     string `json:"type"`
 	ID       string `json:"id"`
@@ -100,7 +105,7 @@ func (r *Room) Run() {
 		case message := <-r.broadcast:
 			var action ActionMessage
 			if err := json.Unmarshal(message.payload, &action); err != nil {
-				slog.Warn("failed to unmarshal action", "error", err, "payload", string(message.payload))
+				slog.Warn("failed to unmarshal action", "error", err)
 				continue
 			}
 

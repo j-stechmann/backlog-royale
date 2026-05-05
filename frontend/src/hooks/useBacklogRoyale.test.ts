@@ -31,7 +31,7 @@ beforeEach(() => {
 });
 
 test('should connect to websocket', async () => {
-  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice', 'user-123'));
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
 
   await vi.waitFor(() => {
     expect(result.current.connected).toBe(true);
@@ -39,11 +39,31 @@ test('should connect to websocket', async () => {
   
   expect(lastWsInstance.url).toContain('room=test-room');
   expect(lastWsInstance.url).toContain('name=Alice');
-  expect(lastWsInstance.url).toContain('id=user-123');
+  expect(lastWsInstance.url).not.toContain('id=');
+});
+
+test('should handle WELCOME message', async () => {
+  const onIDAssigned = vi.fn();
+  renderHook(() => useBacklogRoyale('test-room', 'Alice', onIDAssigned));
+
+  await vi.waitFor(() => {
+    expect(lastWsInstance).not.toBeNull();
+  });
+
+  const welcomeMessage = {
+    type: MESSAGE_TYPES.WELCOME,
+    id: 'server-assigned-id'
+  };
+
+  await act(async () => {
+    lastWsInstance.onmessage({ data: JSON.stringify(welcomeMessage) });
+  });
+
+  expect(onIDAssigned).toHaveBeenCalledWith('server-assigned-id');
 });
 
 test('should handle STATE updates', async () => {
-  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice', 'user-123'));
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
 
   await vi.waitFor(() => {
     expect(result.current.connected).toBe(true);
@@ -65,7 +85,7 @@ test('should handle STATE updates', async () => {
 });
 
 test('should handle role changes in state', async () => {
-  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice', 'user-123'));
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
 
   await vi.waitFor(() => {
     expect(result.current.connected).toBe(true);

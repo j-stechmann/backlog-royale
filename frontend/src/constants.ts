@@ -20,4 +20,5 @@ export type ActionType = (typeof ACTIONS)[keyof typeof ACTIONS];
 
 export const MESSAGE_TYPES = {
   STATE: 'STATE',
+  WELCOME: 'WELCOME',
 } as const;

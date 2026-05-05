@@ -15,5 +15,6 @@ const (
 )
 
 const (
-	MessageTypeState = "STATE"
+	MessageTypeState   = "STATE"
+	MessageTypeWelcome = "WELCOME"
 )
