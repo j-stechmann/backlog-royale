@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useBacklogRoyale } from './hooks/useBacklogRoyale';
 import { Card } from './components/Card';
 import { Logo } from './components/Logo';
+import { UserStatus } from './components/UserStatus';
 import { Users, Eye, RotateCcw, Share2, HandHelping, Coffee } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -317,50 +318,14 @@ function App() {
                       )}
                     </span>
                   </div>
-                  <div className="relative group/status">
-                    {isDealer && user.id !== userID && (
-                      <button
-                        onClick={() => sendAction('TOGGLE_AFK', { userId: user.id })}
-                        className="absolute inset-0 z-10 bg-white/90 backdrop-blur-[2px] flex items-center justify-center text-blue-600 rounded-xl opacity-0 group-hover/status:opacity-100 transition-opacity border-2 border-blue-100 shadow-sm"
-                        title={`Toggle AFK for ${user.name}`}
-                      >
-                        <Coffee size={20} />
-                      </button>
-                    )}
-                    <div className="flex items-center justify-center">
-                      {user.role === 'dealer' ? (
-                        <div className="w-10 h-10 flex items-center justify-center text-amber-500">
-                          <HandHelping size={20} />
-                        </div>
-                      ) : user.role === 'afk' ? (
-                        <div className="w-10 h-10 flex items-center justify-center text-blue-500">
-                          <Coffee size={20} />
-                        </div>
-                      ) : user.hasVoted ? (
-                        state.reveal ? (
-                          <div className={`
-                            w-10 h-14 rounded-lg border-2 flex items-center justify-center font-black text-lg relative shadow-sm transition-all scale-110
-                            ${user.vote === '?' ? 'bg-gray-50 border-gray-200 text-gray-400' : 
-                              user.vote && parseInt(user.vote) <= 3 ? 'bg-emerald-50 border-emerald-200 text-emerald-600' :
-                              user.vote && parseInt(user.vote) <= 8 ? 'bg-blue-50 border-blue-200 text-blue-600' :
-                              'bg-rose-50 border-rose-200 text-rose-600'}
-                          `}>
-                            <span className="absolute top-0.5 left-1 text-[8px] opacity-70">{user.vote}</span>
-                            <span className="absolute bottom-0.5 right-1 text-[8px] opacity-70 rotate-180">{user.vote}</span>
-                            {user.vote}
-                          </div>
-                        ) : (
-                          <div className="w-10 h-10 bg-green-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-green-100 animate-bounce-subtle">
-                            <span className="font-bold">✓</span>
-                          </div>
-                        )
-                      ) : (
-                        <div className="w-10 h-10 border-2 border-dashed border-gray-200 rounded-xl flex items-center justify-center">
-                          <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <UserStatus
+                    role={user.role}
+                    hasVoted={user.hasVoted}
+                    vote={user.vote}
+                    reveal={state.reveal}
+                    isDealerAction={isDealer && user.id !== userID}
+                    onToggleAFK={() => sendAction('TOGGLE_AFK', { userId: user.id })}
+                  />
                 </div>
               ))}
             </div>
