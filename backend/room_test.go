@@ -229,8 +229,14 @@ func TestAFKRole(t *testing.T) {
 	room.dealerID = client2.ID
 
 	room.handleAction(ActionMessage{Type: ActionToggleAFK, UserID: client1.ID}, client2)
+	if client1.role != RoleAFK {
+		t.Errorf("expected Dealer to NOT be able to toggle Alice back to player")
+	}
+
+	// Alice toggles herself back to player
+	room.handleAction(ActionMessage{Type: ActionToggleAFK}, client1)
 	if client1.role != RolePlayer {
-		t.Errorf("expected Dealer to be able to toggle Alice back to player")
+		t.Errorf("expected Alice to be able to toggle herself back to player")
 	}
 
 	// Dealer toggles Alice to AFK

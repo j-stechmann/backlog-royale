@@ -187,6 +187,10 @@ func (r *Room) handleToggleAFK(client *Client, targetID string) {
 	}
 
 	if target.role == RoleAFK {
+		// Only allow un-AFKing if the user is doing it for themselves
+		if client.ID != target.ID {
+			return
+		}
 		target.role = RolePlayer
 	} else {
 		if target.role == RoleDealer {

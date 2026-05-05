@@ -69,7 +69,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
 
   return (
     <div className={`relative group/status w-12 h-16 flex items-center justify-center ${role === ROLES.PLAYER && hasVoted && !reveal ? 'animate-bounce-subtle' : ''}`}>
-      {isDealerAction && (
+      {isDealerAction && role !== ROLES.AFK && (
         <button
           onClick={(e) => {
             e.stopPropagation();
