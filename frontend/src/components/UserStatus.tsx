@@ -54,7 +54,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
       }
 
       return (
-        <div className="w-10 h-14 bg-green-500 text-white rounded-lg flex items-center justify-center shadow-lg shadow-green-100 animate-bounce-subtle">
+        <div className="w-10 h-14 bg-green-500 text-white rounded-lg flex items-center justify-center shadow-lg shadow-green-100">
           <span className="font-bold text-xl">✓</span>
         </div>
       );
@@ -68,14 +68,14 @@ export const UserStatus: React.FC<UserStatusProps> = ({
   };
 
   return (
-    <div className="relative group/status w-12 h-16 flex items-center justify-center">
+    <div className={`relative group/status w-12 h-16 flex items-center justify-center ${role === ROLES.PLAYER && hasVoted && !reveal ? 'animate-bounce-subtle' : ''}`}>
       {isDealerAction && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             onToggleAFK();
           }}
-          className="absolute inset-x-1 inset-y-1 z-10 bg-white/95 backdrop-blur-[2px] flex items-center justify-center text-blue-600 rounded-xl opacity-0 group-hover/status:opacity-100 transition-opacity border-2 border-blue-100 shadow-md cursor-pointer"
+          className="absolute inset-x-1 inset-y-1 z-10 bg-white flex items-center justify-center text-blue-600 rounded-lg opacity-0 group-hover/status:opacity-100 transition-opacity border-2 border-blue-100 shadow-md cursor-pointer"
           title="Toggle AFK"
         >
           <Coffee size={20} />
