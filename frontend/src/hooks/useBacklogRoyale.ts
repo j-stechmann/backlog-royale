@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { MESSAGE_TYPES } from '../constants';
+import type { Role } from '../constants';
 
 export interface User {
   id: string;
   name: string;
   hasVoted: boolean;
   vote?: string;
-  role: 'player' | 'dealer' | 'afk';
+  role: Role;
 }
 
 export interface RoomState {
@@ -41,7 +43,7 @@ export const useBacklogRoyale = (roomID: string, userName: string, userID: strin
 
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (data.type === 'STATE') {
+      if (data.type === MESSAGE_TYPES.STATE) {
         setState(data);
       }
     };

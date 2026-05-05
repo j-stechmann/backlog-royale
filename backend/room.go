@@ -122,55 +122,74 @@ func (r *Room) handleAction(action ActionMessage, client *Client) {
 	slog.Debug("Handling action", "room", r.ID, "type", action.Type, "user", client.name, "id", client.ID)
 
 	switch action.Type {
-	case "VOTE":
-		if client.role == "player" && allowedVotes[action.Vote] {
-			r.participants[client.ID] = action.Vote
-		}
-	case "REVEAL":
-		if client.ID == r.dealerID {
-			r.isRevealed = true
-		}
-	case "RESET":
-		if client.ID == r.dealerID {
-			r.isRevealed = false
-			for k := range r.participants {
-				r.participants[k] = ""
-			}
-		}
-	case "TOGGLE_ROLE":
-		if client.role == "dealer" {
-			client.role = "player"
-			r.dealerID = ""
-		} else {
-			// If there's already a dealer, they become a player
-			if r.dealerID != "" {
-				if oldDealer, ok := r.clients[r.dealerID]; ok {
-					oldDealer.role = "player"
-				}
-			}
-			client.role = "dealer"
-			r.dealerID = client.ID
-			delete(r.participants, client.ID) // Dealer doesn't vote
-		}
-	case "TOGGLE_AFK":
-		target := client
-		if action.UserID != "" && client.ID == r.dealerID {
-			if t, ok := r.clients[action.UserID]; ok {
-				target = t
-			}
-		}
-
-		if target.role == "afk" {
-			target.role = "player"
-		} else {
-			if target.role == "dealer" {
-				r.dealerID = ""
-			}
-			target.role = "afk"
-			delete(r.participants, target.ID)
-		}
+	case ActionVote:
+		r.handleVote(client, action.Vote)
+	case ActionReveal:
+		r.handleReveal(client)
+	case ActionReset:
+		r.handleReset(client)
+	case ActionToggleRole:
+		r.handleToggleRole(client)
+	case ActionToggleAFK:
+		r.handleToggleAFK(client, action.UserID)
 	}
 	r.broadcastStateLocked()
+}
+
+func (r *Room) handleVote(client *Client, vote string) {
+	if client.role == RolePlayer && allowedVotes[vote] {
+		r.participants[client.ID] = vote
+	}
+}
+
+func (r *Room) handleReveal(client *Client) {
+	if client.ID == r.dealerID {
+		r.isRevealed = true
+	}
+}
+
+func (r *Room) handleReset(client *Client) {
+	if client.ID == r.dealerID {
+		r.isRevealed = false
+		for k := range r.participants {
+			r.participants[k] = ""
+		}
+	}
+}
+
+func (r *Room) handleToggleRole(client *Client) {
+	if client.role == RoleDealer {
+		client.role = RolePlayer
+		r.dealerID = ""
+	} else {
+		if r.dealerID != "" {
+			if oldDealer, ok := r.clients[r.dealerID]; ok {
+				oldDealer.role = RolePlayer
+			}
+		}
+		client.role = RoleDealer
+		r.dealerID = client.ID
+		delete(r.participants, client.ID)
+	}
+}
+
+func (r *Room) handleToggleAFK(client *Client, targetID string) {
+	target := client
+	if targetID != "" && client.ID == r.dealerID {
+		if t, ok := r.clients[targetID]; ok {
+			target = t
+		}
+	}
+
+	if target.role == RoleAFK {
+		target.role = RolePlayer
+	} else {
+		if target.role == RoleDealer {
+			r.dealerID = ""
+		}
+		target.role = RoleAFK
+		delete(r.participants, target.ID)
+	}
 }
 
 func (r *Room) broadcastState() {
@@ -197,7 +216,7 @@ func (r *Room) broadcastStateLocked() {
 	})
 
 	state := RoomState{
-		Type:     "STATE",
+		Type:     MessageTypeState,
 		ID:       r.ID,
 		Users:    users,
 		Reveal:   r.isRevealed,

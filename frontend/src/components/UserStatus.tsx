@@ -1,8 +1,11 @@
 import React from 'react';
 import { HandHelping, Coffee } from 'lucide-react';
+import { getTheme } from '../utils/theme';
+import { ROLES } from '../constants';
+import type { Role } from '../constants';
 
 interface UserStatusProps {
-  role: 'player' | 'dealer' | 'afk';
+  role: Role;
   hasVoted: boolean;
   vote?: string;
   reveal: boolean;
@@ -19,7 +22,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
   onToggleAFK,
 }) => {
   const renderStatus = () => {
-    if (role === 'dealer') {
+    if (role === ROLES.DEALER) {
       return (
         <div className="w-10 h-14 flex items-center justify-center text-amber-500">
           <HandHelping size={24} />
@@ -27,7 +30,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
       );
     }
 
-    if (role === 'afk') {
+    if (role === ROLES.AFK) {
       return (
         <div className="w-10 h-14 flex items-center justify-center text-blue-500">
           <Coffee size={24} />
@@ -37,13 +40,11 @@ export const UserStatus: React.FC<UserStatusProps> = ({
 
     if (hasVoted) {
       if (reveal && vote) {
+        const theme = getTheme(vote);
         return (
           <div className={`
             w-10 h-14 rounded-lg border-2 flex items-center justify-center font-black text-lg relative shadow-sm transition-all
-            ${vote === '?' ? 'bg-gray-50 border-gray-200 text-gray-400' : 
-              parseInt(vote) <= 3 ? 'bg-emerald-50 border-emerald-200 text-emerald-600' :
-              parseInt(vote) <= 8 ? 'bg-blue-50 border-blue-200 text-blue-600' :
-              'bg-rose-50 border-rose-200 text-rose-600'}
+            ${theme.bg} ${theme.border} ${theme.text}
           `}>
             <span className="absolute top-0.5 left-1 text-[8px] opacity-70">{vote}</span>
             <span className="absolute bottom-0.5 right-1 text-[8px] opacity-70 rotate-180">{vote}</span>

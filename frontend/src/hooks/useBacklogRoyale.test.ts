@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { expect, test, vi, beforeEach } from 'vitest';
 import { useBacklogRoyale } from './useBacklogRoyale';
+import { MESSAGE_TYPES, ROLES } from '../constants';
 
 // Mock WebSocket
 let lastWsInstance: MockWebSocket | null = null;
@@ -49,9 +50,9 @@ test('should handle STATE updates', async () => {
   });
 
   const mockState = {
-    type: 'STATE',
+    type: MESSAGE_TYPES.STATE,
     id: 'test-room',
-    users: [{ id: '1', name: 'Alice', hasVoted: false, role: 'player' }],
+    users: [{ id: '1', name: 'Alice', hasVoted: false, role: ROLES.PLAYER }],
     reveal: false,
     dealerId: ''
   };
@@ -71,9 +72,9 @@ test('should handle role changes in state', async () => {
   });
 
   const stateAsPlayer = {
-    type: 'STATE',
+    type: MESSAGE_TYPES.STATE,
     id: 'test-room',
-    users: [{ id: 'user-123', name: 'Alice', hasVoted: false, role: 'player' }],
+    users: [{ id: 'user-123', name: 'Alice', hasVoted: false, role: ROLES.PLAYER }],
     reveal: false,
     dealerId: ''
   };
@@ -82,12 +83,12 @@ test('should handle role changes in state', async () => {
     lastWsInstance.onmessage({ data: JSON.stringify(stateAsPlayer) });
   });
 
-  expect(result.current.state?.users[0].role).toBe('player');
+  expect(result.current.state?.users[0].role).toBe(ROLES.PLAYER);
 
   const stateAsDealer = {
-    type: 'STATE',
+    type: MESSAGE_TYPES.STATE,
     id: 'test-room',
-    users: [{ id: 'user-123', name: 'Alice', hasVoted: false, role: 'dealer' }],
+    users: [{ id: 'user-123', name: 'Alice', hasVoted: false, role: ROLES.DEALER }],
     reveal: false,
     dealerId: 'user-123'
   };
@@ -96,6 +97,6 @@ test('should handle role changes in state', async () => {
     lastWsInstance.onmessage({ data: JSON.stringify(stateAsDealer) });
   });
 
-  expect(result.current.state?.users[0].role).toBe('dealer');
+  expect(result.current.state?.users[0].role).toBe(ROLES.DEALER);
   expect(result.current.state?.dealerId).toBe('user-123');
 });

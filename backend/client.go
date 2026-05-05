@@ -117,7 +117,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 	}
 
 	room := hub.GetOrCreateRoom(roomID)
-	client := &Client{ID: id, room: room, conn: conn, send: make(chan []byte, 256), name: name, role: "player"}
+	client := &Client{ID: id, room: room, conn: conn, send: make(chan []byte, 256), name: name, role: RolePlayer}
 	client.room.register <- client
 
 	go client.writePump()
