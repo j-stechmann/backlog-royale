@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- Prevented dealer from un-afking other players.
+- Synchronized AFK button animation and styling with voted cards.
+
+## [1.1.0] - 2026-05-05
+
+### Added
+- Server-side ID generation for improved security.
+- Rate limiting for WebSocket connections.
+
+## [1.0.0] - 2026-05-05
+
+### Added
+- Vote summary component for the dealer to see a breakdown of votes.
+
+## [0.9.1] - 2026-05-05
+
+### Technical
+- Modularized frontend code by extracting hooks and components.
+- Cleaned up backend state management for better stability.
+
+## [0.9.0] - 2026-05-05
+
+### Added
+- AFK mode allowing players to temporarily opt-out of voting.
+- Dealer ability to toggle AFK status for any player via the UI.
+
+### Changed
+- Extracted `UserStatus` component for better player list management.
+- Improved layout stability in the participant list.
+
 ## [0.8.1] - 2026-05-05
 
 ### Changed
