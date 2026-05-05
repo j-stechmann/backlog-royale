@@ -222,4 +222,31 @@ func TestAFKRole(t *testing.T) {
 	if room.dealerID != "" {
 		t.Errorf("expected dealerID to be cleared when dealer goes AFK")
 	}
+
+	// Dealer toggles Alice back to player
+	client2 := &Client{ID: "2", name: "Bob", role: "dealer", send: make(chan []byte, 10)}
+	room.clients[client2.ID] = client2
+	room.dealerID = client2.ID
+
+	room.handleAction(ActionMessage{Type: "TOGGLE_AFK", UserID: client1.ID}, client2)
+	if client1.role != "player" {
+		t.Errorf("expected Dealer to be able to toggle Alice back to player")
+	}
+
+	// Dealer toggles Alice to AFK
+	room.handleAction(ActionMessage{Type: "TOGGLE_AFK", UserID: client1.ID}, client2)
+	if client1.role != "afk" {
+		t.Errorf("expected Dealer to be able to toggle Alice to AFK")
+	}
+
+	// Non-dealer tries to toggle Alice (should fail to toggle her, but might toggle self if logic was wrong)
+	client3 := &Client{ID: "3", name: "Charlie", role: "player", send: make(chan []byte, 10)}
+	room.clients[client3.ID] = client3
+	room.handleAction(ActionMessage{Type: "TOGGLE_AFK", UserID: client1.ID}, client3)
+	if client1.role != "afk" {
+		t.Errorf("expected non-dealer to NOT be able to toggle Alice's AFK status")
+	}
+	if client3.role != "afk" {
+		t.Errorf("expected Charlie to toggle himself to AFK when trying to toggle others without permission")
+	}
 }

@@ -20,8 +20,9 @@ var allowedVotes = map[string]bool{
 }
 
 type ActionMessage struct {
-	Type string `json:"type"`
-	Vote string `json:"vote,omitempty"`
+	Type   string `json:"type"`
+	Vote   string `json:"vote,omitempty"`
+	UserID string `json:"userId,omitempty"`
 }
 
 type ClientMessage struct {
@@ -152,14 +153,21 @@ func (r *Room) handleAction(action ActionMessage, client *Client) {
 			delete(r.participants, client.ID) // Dealer doesn't vote
 		}
 	case "TOGGLE_AFK":
-		if client.role == "afk" {
-			client.role = "player"
+		target := client
+		if action.UserID != "" && client.ID == r.dealerID {
+			if t, ok := r.clients[action.UserID]; ok {
+				target = t
+			}
+		}
+
+		if target.role == "afk" {
+			target.role = "player"
 		} else {
-			if client.role == "dealer" {
+			if target.role == "dealer" {
 				r.dealerID = ""
 			}
-			client.role = "afk"
-			delete(r.participants, client.ID)
+			target.role = "afk"
+			delete(r.participants, target.ID)
 		}
 	}
 	r.broadcastStateLocked()
