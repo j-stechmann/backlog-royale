@@ -85,6 +85,7 @@ function App() {
             onVote={handleVote}
             reveal={state?.reveal || false}
             onReturnToGame={() => toggleAFK()}
+            users={state?.users || []}
           />
 
           <PlayerList

@@ -2,6 +2,8 @@ import React from 'react';
 import { Card } from './Card';
 import { Coffee, HandHelping } from 'lucide-react';
 import { CARD_VALUES } from '../constants';
+import { VoteSummary } from './VoteSummary';
+import type { User } from '../hooks/useBacklogRoyale';
 
 interface VotingPanelProps {
   isAFK: boolean;
@@ -10,6 +12,7 @@ interface VotingPanelProps {
   onVote: (val: string) => void;
   reveal: boolean;
   onReturnToGame: () => void;
+  users: User[];
 }
 
 export const VotingPanel: React.FC<VotingPanelProps> = ({
@@ -19,6 +22,7 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
   onVote,
   reveal,
   onReturnToGame,
+  users,
 }) => {
   if (isAFK) {
     return (
@@ -41,6 +45,10 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
   }
 
   if (isDealer) {
+    if (reveal) {
+      return <VoteSummary users={users} />;
+    }
+
     return (
       <div className="bg-amber-50 p-8 rounded-3xl border border-amber-100 flex flex-col items-center text-center">
         <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-4">
