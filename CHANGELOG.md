@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Dependabot update frequency increased from weekly to daily.
+
 ## [1.4.0] - 2026-06-02
 
 ### Changed
