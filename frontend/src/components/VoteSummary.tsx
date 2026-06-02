@@ -31,9 +31,15 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
         {sortedVotes.map(([value, count]) => {
           const theme = getTheme(value);
           return (
-            <div key={value} className="flex flex-col items-center gap-4 group">
+            <div key={value} className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
+              <div className="flex items-baseline gap-1 sm:gap-2">
+                <span className="text-3xl sm:text-5xl font-black text-gray-900 tabular-nums leading-none">
+                  {count}
+                </span>
+                <span className="text-xl sm:text-2xl font-bold text-gray-400 leading-none">×</span>
+              </div>
               <div className={`
-                w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden transition-transform duration-300 group-hover:-translate-y-2
+                w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden
                 ${theme.bg} ${theme.border} ${theme.text} shadow-xl ${theme.shadow}
               `}>
                 {/* Decorative background pattern */}
@@ -55,10 +61,6 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
                 <div className={`${theme.text} drop-shadow-sm`}>
                   {value}
                 </div>
-              </div>
-              <div className="flex flex-col items-center bg-gray-50 px-4 py-2 rounded-2xl border border-gray-100 min-w-[80px]">
-                <span className="text-2xl font-black text-gray-900 leading-tight">{count}</span>
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{count === 1 ? 'Vote' : 'Votes'}</span>
               </div>
             </div>
           );
