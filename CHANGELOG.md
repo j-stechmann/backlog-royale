@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.4.2] - 2026-06-02
+
+### Fixed
+- Fixed Dependabot configuration by removing redundant root Docker entry.
+- Synchronized frontend `package-lock.json` version with `package.json`.
+
+## [1.4.1] - 2026-06-02
+
 ### Changed
 - Dependabot update frequency increased from weekly to daily.
 
