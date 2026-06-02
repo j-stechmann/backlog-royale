@@ -1,0 +1,43 @@
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { VoteSummary } from './VoteSummary';
+import { ROLES } from '../constants';
+import type { User } from '../hooks/useBacklogRoyale';
+
+describe('VoteSummary', () => {
+  const mockUsers: User[] = [
+    { id: '1', name: 'Alice', role: ROLES.PLAYER, hasVoted: true, vote: '5' },
+    { id: '2', name: 'Bob', role: ROLES.PLAYER, hasVoted: true, vote: '8' },
+    { id: '3', name: 'Charlie', role: ROLES.PLAYER, hasVoted: true, vote: '5' },
+    { id: '4', name: 'Dealer', role: ROLES.DEALER, hasVoted: false, vote: '13' }, // Should be ignored
+    { id: '5', name: 'AFK User', role: ROLES.AFK, hasVoted: false }, // Should be ignored
+  ];
+
+  it('renders correctly and aggregates votes', () => {
+    render(<VoteSummary users={mockUsers} />);
+    
+    // Check for title
+    expect(screen.getByText('Voting Summary')).toBeDefined();
+    
+    // Check for counts (2 for '5', 1 for '8')
+    const fives = screen.getAllByText('2');
+    const eights = screen.getAllByText('1');
+    
+    expect(fives.length).toBeGreaterThan(0);
+    expect(eights.length).toBeGreaterThan(0);
+    
+    // Check that dealer vote is ignored
+    expect(screen.queryByText('13')).toBeNull();
+  });
+
+  it('returns null when there are no player votes', () => {
+    const { container } = render(<VoteSummary users={[]} />);
+    expect(container.firstChild).toBeNull();
+  });
+
+  it('renders the multiplication sign next to counts', () => {
+    render(<VoteSummary users={mockUsers} />);
+    const symbols = screen.getAllByText('×');
+    expect(symbols.length).toBe(2); // One for '5', one for '8'
+  });
+});

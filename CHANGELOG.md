@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-06-02
+
+### Changed
+- Improved dealer's vote summary with a more readable horizontal layout (e.g., "3 × [Card]") to reduce eye movement.
+
+## [1.3.0] - 2026-05-31
+
+### Technical
+- Updated frontend dependencies: react (19.2.6), react-dom (19.2.6), @types/react (19.2.15), tailwindcss (4.3.0), vite (8.0.12), @tailwindcss/postcss (4.3.0), typescript-eslint (8.60.0).
+- Updated backend dependencies: golang Docker image (1.26.3-alpine).
+- Updated frontend Docker image: node (26-alpine).
+
+### Documentation
+- Implemented Git Flow guidelines and AI agent instructions.
+
 ## [1.2.0] - 2026-05-05
 
 ### Added
