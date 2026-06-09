@@ -44,11 +44,11 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
     );
   }
 
-  if (isDealer) {
-    if (reveal) {
-      return <VoteSummary users={users} />;
-    }
+  if (reveal) {
+    return <VoteSummary users={users} />;
+  }
 
+  if (isDealer) {
     return (
       <div className="bg-amber-50 p-8 rounded-3xl border border-amber-100 flex flex-col items-center text-center">
         <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center mb-4">
@@ -68,7 +68,7 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
         <h2 className="text-2xl font-black text-gray-800 mb-2">Cast your vote</h2>
         <p className="text-gray-400 text-sm">Select a card to point this story</p>
       </div>
-      
+
       <div className="flex flex-wrap justify-center max-w-3xl mx-auto gap-2">
         {CARD_VALUES.map((val) => (
           <Card
