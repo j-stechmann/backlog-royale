@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- The vote summary (distribution of points) is now shown to all players after the dealer reveals the round, not just to the dealer.
+
 ## [1.4.2] - 2026-06-02
 
 ### Fixed
