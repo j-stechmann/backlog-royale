@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.1] - 2026-07-13
+
+### Security
+- Resolved Dependabot security alerts in frontend by updating vulnerable transitive dev dependencies within their declared ranges: undici (7.25.0 → 7.28.0, fixes SOCKS5 ProxyAgent TLS bypass, HTTP header injection via Set-Cookie, cross-origin request routing, response queue poisoning, SameSite downgrade, and shared cache whitespace bypass), @babel/core (7.29.0 → 7.29.7, fixes arbitrary file read via sourceMappingURL comment), brace-expansion (5.0.5 → 5.0.7, fixes large numeric range DoS protection bypass), and vite (8.0.12 → 8.1.4, fixes NTLMv2 hash disclosure via UNC path and `server.fs.deny` bypass on Windows). No direct dependencies or `package.json` changes required.
+
 ## [1.5.0] - 2026-06-09
 
 ### Changed
