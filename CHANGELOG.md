@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.2] - 2026-07-16
+
+### Technical
+- Updated GitHub Actions: actions/setup-node (6 → 7), actions/setup-go (6 → 7).
+- Updated frontend dev dependencies: @types/node (25.9.5 → 26.1.1), vite (8.1.4 → 8.1.5), @tailwindcss/postcss (4.3.2 → 4.3.3), autoprefixer (10.5.2 → 10.5.4).
+
 ## [1.5.1] - 2026-07-13
 
 ### Security
