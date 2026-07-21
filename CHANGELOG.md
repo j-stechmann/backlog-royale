@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.5.3] - 2026-07-21
+
+### Technical
+- Updated frontend dependencies: lucide-react (1.24.0 → 1.25.0), typescript-eslint (8.64.0 → 8.65.0), @testing-library/jest-dom (6.9.1 → 7.0.0), postcss (8.5.19 → 8.5.21).
+
 ## [1.5.2] - 2026-07-16
 
 ### Technical
