@@ -6,6 +6,9 @@ All notable changes to this project will be documented in this file.
 
 ### Technical
 - Extended CI workflow (`.github/workflows/ci.yml`) to trigger on pushes to and pull requests against `develop`, in addition to `main`. This aligns CI with the Git Flow model where `develop` is the integration branch for features and dependency bumps.
+- Updated GitHub Actions: docker/login-action (4 → 4.5.2).
+- Updated frontend dependencies: react (19.2.7 → 19.2.8), react-dom (19.2.7 → 19.2.8), lucide-react (1.25.0 → 1.28.0).
+- Updated frontend dev dependencies: @vitejs/plugin-react (6.0.3 → 6.0.5), postcss (8.5.21 → 8.5.25).
 
 ## [1.6.0] - 2026-08-02
 
