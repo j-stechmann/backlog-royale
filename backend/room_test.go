@@ -180,6 +180,91 @@ func TestDealerRole(t *testing.T) {
 	}
 }
 
+func TestNoDealerPlayerManageRound(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+
+	client1 := &Client{ID: "1", name: "Alice", role: RolePlayer, send: make(chan []byte, 10)}
+	client2 := &Client{ID: "2", name: "Bob", role: RolePlayer, send: make(chan []byte, 10)}
+	client3 := &Client{ID: "3", name: "Charlie", role: RoleAFK, send: make(chan []byte, 10)}
+	room.clients[client1.ID] = client1
+	room.clients[client2.ID] = client2
+	room.clients[client3.ID] = client3
+
+	if room.dealerID != "" {
+		t.Fatalf("expected no dealer initially, got %s", room.dealerID)
+	}
+
+	// Players vote
+	room.handleAction(ActionMessage{Type: ActionVote, Vote: "5"}, client1)
+	room.handleAction(ActionMessage{Type: ActionVote, Vote: "8"}, client2)
+	if room.participants[client1.ID] != "5" || room.participants[client2.ID] != "8" {
+		t.Error("expected both players to have voted")
+	}
+
+	// Player reveals when no dealer is present
+	room.handleAction(ActionMessage{Type: ActionReveal}, client1)
+	if !room.isRevealed {
+		t.Error("expected player to be able to reveal results when no dealer is present")
+	}
+
+	// AFK user should not be able to reveal/reset
+	room.handleAction(ActionMessage{Type: ActionReset}, client3)
+	if !room.isRevealed {
+		t.Error("AFK user should not be able to reset the round when no dealer is present")
+	}
+
+	// Player resets when no dealer is present
+	room.handleAction(ActionMessage{Type: ActionReset}, client2)
+	if room.isRevealed {
+		t.Error("expected player to be able to reset results when no dealer is present")
+	}
+	if room.participants[client1.ID] != "" || room.participants[client2.ID] != "" {
+		t.Error("expected votes to be cleared after reset")
+	}
+
+	// Now make Alice the dealer; Bob should no longer be able to reveal/reset
+	room.handleAction(ActionMessage{Type: ActionToggleRole}, client1)
+	if room.dealerID != client1.ID {
+		t.Fatal("expected Alice to be dealer")
+	}
+
+	room.handleAction(ActionMessage{Type: ActionReveal}, client2)
+	if room.isRevealed {
+		t.Error("Bob should not be able to reveal when a dealer is present")
+	}
+
+	// AFK user toggles herself back to player, then tries to reveal (should fail with dealer present)
+	room.handleAction(ActionMessage{Type: ActionToggleAFK}, client3)
+	room.handleAction(ActionMessage{Type: ActionReveal}, client3)
+	if room.isRevealed {
+		t.Error("non-dealer player should not be able to reveal when a dealer is present")
+	}
+
+	// Dealer reveals, then non-dealer tries to reset (should fail)
+	room.handleAction(ActionMessage{Type: ActionReveal}, client1)
+	if !room.isRevealed {
+		t.Fatal("expected dealer to be able to reveal")
+	}
+	room.handleAction(ActionMessage{Type: ActionReset}, client2)
+	if !room.isRevealed {
+		t.Error("non-dealer player should not be able to reset when a dealer is present")
+	}
+
+	// Dealer leaves - non-dealer players regain ability to manage rounds
+	delete(room.clients, client1.ID)
+	room.mu.Lock()
+	if room.dealerID == client1.ID {
+		room.dealerID = ""
+	}
+	room.mu.Unlock()
+
+	room.handleAction(ActionMessage{Type: ActionReset}, client2)
+	if room.isRevealed {
+		t.Error("expected player to reset round after dealer left")
+	}
+}
+
 func TestAFKRole(t *testing.T) {
 	hub := NewHub()
 	room := NewRoom("test-room", hub)

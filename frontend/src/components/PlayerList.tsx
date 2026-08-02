@@ -9,6 +9,7 @@ interface PlayerListProps {
   currentUserID: string;
   reveal: boolean;
   isDealer: boolean;
+  canManageRound: boolean;
   onReveal: () => void;
   onReset: () => void;
   onToggleAFK: (userId: string) => void;
@@ -19,6 +20,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   currentUserID,
   reveal,
   isDealer,
+  canManageRound,
   onReveal,
   onReset,
   onToggleAFK,
@@ -42,7 +44,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
         </div>
 
         <div className="flex items-center gap-2">
-          {isDealer && (
+          {canManageRound && (
             <>
               <button
                 onClick={onReveal}

@@ -58,15 +58,15 @@ Communication happens over WebSockets using JSON messages.
 
 ### Client to Server Actions
 
-- **VOTE**: Cast or change a vote.
+- **VOTE**: Cast or change a vote. Only valid for players.
   ```json
   { "type": "VOTE", "name": "Alice", "vote": "5" }
   ```
-- **REVEAL**: Show all votes to everyone.
+- **REVEAL**: Show all votes to everyone. Authorized for the dealer, or for any non-AFK player when no dealer is present in the room.
   ```json
   { "type": "REVEAL", "name": "Alice" }
   ```
-- **RESET**: Clear all votes and hide them for a new round.
+- **RESET**: Clear all votes and hide them for a new round. Authorized for the dealer, or for any non-AFK player when no dealer is present in the room.
   ```json
   { "type": "RESET", "name": "Alice" }
   ```
