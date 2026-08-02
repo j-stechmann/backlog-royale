@@ -148,13 +148,13 @@ func (r *Room) handleVote(client *Client, vote string) {
 }
 
 func (r *Room) handleReveal(client *Client) {
-	if client.ID == r.dealerID {
+	if client.ID == r.dealerID || (r.dealerID == "" && client.role == RolePlayer) {
 		r.isRevealed = true
 	}
 }
 
 func (r *Room) handleReset(client *Client) {
-	if client.ID == r.dealerID {
+	if client.ID == r.dealerID || (r.dealerID == "" && client.role == RolePlayer) {
 		r.isRevealed = false
 		for k := range r.participants {
 			r.participants[k] = ""
