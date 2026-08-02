@@ -24,6 +24,8 @@ function App() {
   const currentUser = state?.users.find(u => u.id === userID);
   const isDealer = currentUser?.role === ROLES.DEALER;
   const isAFK = currentUser?.role === ROLES.AFK;
+  const hasDealer = !!state?.users.some(u => u.role === ROLES.DEALER);
+  const canManageRound = !isAFK && (isDealer || !hasDealer);
 
   const prevRole = useRef<string | undefined>(undefined);
 
@@ -93,6 +95,7 @@ function App() {
             currentUserID={userID}
             reveal={state?.reveal || false}
             isDealer={isDealer}
+            canManageRound={canManageRound}
             onReveal={handleReveal}
             onReset={handleReset}
             onToggleAFK={(id) => toggleAFK(id)}

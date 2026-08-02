@@ -16,6 +16,7 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 - 🃏 **Story Pointing:** Fibonacci-based voting (1, 2, 3, 5, 8, 13, 21) plus the "?" card.
 - 👁️ **Vote Reveal:** Hide votes until the team is ready to reveal them.
 - 🔄 **Quick Reset:** Start new rounds with a single click.
+- 🤝 **Dealer-free Rounds:** When no dealer is present, any non-AFK player can reveal results and start the next round.
 - 🔗 **Shareable Links:** Easily invite team members by sharing the URL.
 - 📱 **Responsive Design:** Works great on desktop and mobile.
 

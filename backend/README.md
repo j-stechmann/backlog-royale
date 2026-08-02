@@ -54,8 +54,8 @@ Messages should be sent as JSON.
 | Action | Payload | Description |
 | :--- | :--- | :--- |
 | `VOTE` | `{ "vote": "string" }` | Casts a vote. |
-| `REVEAL` | `none` | Reveals all votes in the room. |
-| `RESET` | `none` | Resets the room for a new round. |
+| `REVEAL` | `none` | Reveals all votes in the room. Authorized for the dealer, or for any non-AFK player when no dealer is present. |
+| `RESET` | `none` | Resets the room for a new round. Authorized for the dealer, or for any non-AFK player when no dealer is present. |
 
 ### Events (Server -> Client)
 
