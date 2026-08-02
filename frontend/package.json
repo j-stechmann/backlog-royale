@@ -1,7 +1,7 @@
 {
   "name": "backlog-royale-frontend",
   "private": true,
-  "version": "1.6.0",
+  "version": "1.6.1",
   "license": "GPL-2.0-only",
   "type": "module",
   "scripts": {
@@ -12,9 +12,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lucide-react": "^1.25.0",
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6",
+    "lucide-react": "^1.28.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "sonner": "^2.0.7"
   },
   "devDependencies": {
@@ -27,14 +27,14 @@
     "@types/node": "^26.1.1",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.0.5",
     "autoprefixer": "^10.5.4",
     "eslint": "^10.4.1",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "jsdom": "^29.1.1",
-    "postcss": "^8.5.21",
+    "postcss": "^8.5.25",
     "tailwindcss": "^4.3.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.65.0",
