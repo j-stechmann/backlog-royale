@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Technical
+- Extended CI workflow (`.github/workflows/ci.yml`) to trigger on pushes to and pull requests against `develop`, in addition to `main`. This aligns CI with the Git Flow model where `develop` is the integration branch for features and dependency bumps.
+
+## [1.6.0] - 2026-08-02
+
+### Added
+- When no dealer is present in a room, any non-AFK player can reveal the round results and start the next round. AFK users are still excluded from managing rounds, and when a dealer is present the management controls remain dealer-exclusive.
+
 ## [1.5.3] - 2026-07-21
 
 ### Technical
