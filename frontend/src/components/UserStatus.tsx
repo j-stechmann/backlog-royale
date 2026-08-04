@@ -3,6 +3,7 @@ import { HandHelping, Coffee } from 'lucide-react';
 import { getTheme } from '../utils/theme';
 import { ROLES } from '../constants';
 import type { Role } from '../constants';
+import { CardFace } from './CardFace';
 
 interface UserStatusProps {
   role: Role;
@@ -46,9 +47,13 @@ export const UserStatus: React.FC<UserStatusProps> = ({
             w-10 h-14 rounded-lg border-2 flex items-center justify-center font-black text-lg relative shadow-sm transition-all
             ${theme.bg} ${theme.border} ${theme.text}
           `}>
-            <span className="absolute top-0.5 left-1 text-[8px] opacity-70">{vote}</span>
-            <span className="absolute bottom-0.5 right-1 text-[8px] opacity-70 rotate-180">{vote}</span>
-            {vote}
+            <span className="absolute top-0.5 left-1 opacity-70 leading-none">
+              <CardFace value={vote} textClassName="text-[8px] font-bold" iconClassName="w-2 h-2" />
+            </span>
+            <span className="absolute bottom-0.5 right-1 opacity-70 rotate-180 leading-none">
+              <CardFace value={vote} textClassName="text-[8px] font-bold" iconClassName="w-2 h-2" />
+            </span>
+            <CardFace value={vote} textClassName="font-black text-lg" iconClassName="w-5 h-5" />
           </div>
         );
       }
