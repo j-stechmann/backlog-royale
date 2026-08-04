@@ -12,7 +12,7 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 20 or higher
+- Node.js 26 or higher
 
 ### Installation
 1. Install dependencies:

@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-08-04
+
+### Security
+- Resolved 5 open and 2 auto-dismissed Dependabot security alerts in `frontend/package-lock.json` by upgrading transitive dependencies through their direct dependents:
+  - **undici** now resolves to 8.10.0 (via `jsdom` 29.1.1 → 30.0.1), fixing the open alerts for undici < 7.29.0 (CVE-2026-6733, CVE-2026-6734, CVE-2026-9678, CVE-2026-9679, CVE-2026-12151).
+  - **brace-expansion** now resolves to 5.0.9 (via `eslint` 10.7.0 → 10.8.0 → `minimatch` 10.2.6), fixing the auto-dismissed alerts for brace-expansion < 5.0.9 (CVE-2026-14257, CVE-2026-69152).
+- No direct `package.json` security overrides required; vulnerabilities were cleared by accepting Dependabot's direct-dependency bumps.
+
+### Technical
+- Updated GitHub Actions: docker/login-action (4.5.2 → 4.6.0).
+- Updated frontend dependencies: @types/react-dom (19.2.3 → 19.2.4), @emnapi/runtime (1.11.2 → 1.11.3).
+- Updated frontend dev dependencies: eslint (10.7.0 → 10.8.0), globals (17.7.0 → 17.8.0), jsdom (29.1.1 → 30.0.1).
+- Bumped CI Node version to 26 and updated README prerequisites to "Node.js 26+", aligning local development and CI with the existing `node:26-alpine` frontend Docker image and the Node engine requirement of jsdom 30.
+
 ## [1.7.0] - 2026-08-04
 
 ### Added
