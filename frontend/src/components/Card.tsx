@@ -1,5 +1,6 @@
 import React from 'react';
 import { getTheme } from '../utils/theme';
+import { CardFace } from './CardFace';
 
 interface CardProps {
   value: string;
@@ -16,6 +17,7 @@ export const Card: React.FC<CardProps> = ({ value, selected, onClick, disabled }
       <button
         onClick={onClick}
         disabled={disabled}
+        aria-label={value === 'A' ? 'Abstain' : value}
         className={`
           w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 transition-all duration-300 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden
           ${selected 
@@ -32,17 +34,17 @@ export const Card: React.FC<CardProps> = ({ value, selected, onClick, disabled }
 
         {/* Top-left corner */}
         <div className={`absolute top-2 left-2 flex flex-col items-center leading-none ${theme.text}`}>
-          <span className="text-xs sm:text-sm font-bold">{value}</span>
+          <CardFace value={value} textClassName="text-xs sm:text-sm font-bold" iconClassName="w-3 h-3 sm:w-3.5 sm:h-3.5" />
         </div>
 
         {/* Bottom-right corner */}
         <div className={`absolute bottom-2 right-2 flex flex-col items-center leading-none rotate-180 ${theme.text}`}>
-          <span className="text-xs sm:text-sm font-bold">{value}</span>
+          <CardFace value={value} textClassName="text-xs sm:text-sm font-bold" iconClassName="w-3 h-3 sm:w-3.5 sm:h-3.5" />
         </div>
 
         {/* Center value */}
         <div className={`${theme.text} drop-shadow-sm`}>
-          {value}
+          <CardFace value={value} textClassName="text-2xl sm:text-4xl font-black" iconClassName="w-6 h-6 sm:w-9 sm:h-9" />
         </div>
       </button>
       

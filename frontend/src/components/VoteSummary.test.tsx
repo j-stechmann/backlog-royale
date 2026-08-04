@@ -40,4 +40,26 @@ describe('VoteSummary', () => {
     const symbols = screen.getAllByText('×');
     expect(symbols.length).toBe(2); // One for '5', one for '8'
   });
+
+  it('renders an Abstain card for players who voted A', () => {
+    const abstainUsers: User[] = [
+      { id: '1', name: 'Alice', role: ROLES.PLAYER, hasVoted: true, vote: '5' },
+      { id: '2', name: 'Bob', role: ROLES.PLAYER, hasVoted: true, vote: 'A' },
+      { id: '3', name: 'Charlie', role: ROLES.PLAYER, hasVoted: true, vote: 'A' },
+    ];
+    render(<VoteSummary users={abstainUsers} />);
+
+    // The abstain card renders a Ban icon (lucide) rather than the letter "A".
+    // The letter "A" must NOT be rendered as text for the abstain votes.
+    expect(screen.queryByText('A')).toBeNull();
+
+    // Two players abstained, so the count "2" should appear for the abstain card,
+    // alongside the count "1" for the single "5" vote.
+    const counts = screen.getAllByText('2');
+    expect(counts.length).toBeGreaterThan(0);
+
+    // A Ban svg icon should be rendered for the abstain card.
+    const banIcons = document.querySelectorAll('svg.lucide-ban');
+    expect(banIcons.length).toBeGreaterThan(0);
+  });
 });

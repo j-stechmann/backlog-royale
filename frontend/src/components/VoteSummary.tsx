@@ -2,6 +2,7 @@ import React from 'react';
 import type { User } from '../hooks/useBacklogRoyale';
 import { getTheme } from '../utils/theme';
 import { ROLES } from '../constants';
+import { CardFace } from './CardFace';
 
 interface VoteSummaryProps {
   users: User[];
@@ -49,17 +50,17 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
 
                 {/* Top-left corner */}
                 <div className={`absolute top-2 left-2 flex flex-col items-center leading-none ${theme.text}`}>
-                  <span className="text-xs sm:text-sm font-bold">{value}</span>
+                  <CardFace value={value} textClassName="text-xs sm:text-sm font-bold" iconClassName="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </div>
 
                 {/* Bottom-right corner */}
                 <div className={`absolute bottom-2 right-2 flex flex-col items-center leading-none rotate-180 ${theme.text}`}>
-                  <span className="text-xs sm:text-sm font-bold">{value}</span>
+                  <CardFace value={value} textClassName="text-xs sm:text-sm font-bold" iconClassName="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </div>
 
                 {/* Center value */}
                 <div className={`${theme.text} drop-shadow-sm`}>
-                  {value}
+                  <CardFace value={value} textClassName="text-2xl sm:text-4xl font-black" iconClassName="w-6 h-6 sm:w-9 sm:h-9" />
                 </div>
               </div>
             </div>

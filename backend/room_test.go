@@ -80,6 +80,12 @@ func TestAllowedVotes(t *testing.T) {
 	if room.participants[client.ID] != "13" {
 		t.Errorf("expected invalid vote 100 to be ignored, kept 13")
 	}
+
+	// Abstain vote
+	room.handleAction(ActionMessage{Type: ActionVote, Vote: "A"}, client)
+	if room.participants[client.ID] != "A" {
+		t.Errorf("expected abstain vote A to be accepted, got %s", room.participants[client.ID])
+	}
 }
 
 func TestReconnectDeduplication(t *testing.T) {

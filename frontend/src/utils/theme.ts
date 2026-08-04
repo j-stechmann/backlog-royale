@@ -8,7 +8,7 @@ export interface Theme {
 }
 
 export const getTheme = (val: string | undefined): Theme => {
-  if (!val || val === '?') {
+  if (!val || val === '?' || val === 'A') {
     return {
       text: 'text-gray-400',
       bg: 'bg-gray-50',

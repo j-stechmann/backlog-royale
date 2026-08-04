@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { VotingPanel } from './VotingPanel';
 import { ROLES } from '../constants';
 import type { User } from '../hooks/useBacklogRoyale';
@@ -87,5 +87,23 @@ describe('VotingPanel', () => {
     );
     expect(screen.getByText('You are AFK')).toBeDefined();
     expect(screen.queryByText('Voting Summary')).toBeNull();
+  });
+
+  it('renders an Abstain card that fires onVote("A") when clicked', () => {
+    const onVote = vi.fn();
+    render(
+      <VotingPanel
+        {...baseProps}
+        onVote={onVote}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    const abstainCard = screen.getByRole('button', { name: 'Abstain' });
+    expect(abstainCard).toBeDefined();
+    fireEvent.click(abstainCard);
+    expect(onVote).toHaveBeenCalledWith('A');
   });
 });

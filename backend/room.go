@@ -17,6 +17,7 @@ var allowedVotes = map[string]bool{
 	"13": true,
 	"21": true,
 	"?":  true,
+	"A":  true,
 }
 
 type ActionMessage struct {
