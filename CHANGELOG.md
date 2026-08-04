@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.0] - 2026-08-04
+
 ### Added
 - "A" (Abstain) card allowing players to formally opt out of a vote. The abstain vote is rendered with a Ban icon, counts toward the voting-progress total, and appears in the vote summary distribution alongside the other cards.
 
