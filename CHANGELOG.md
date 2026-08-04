@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.1] - 2026-08-04
+
 ### Security
 - Resolved 5 open and 2 auto-dismissed Dependabot security alerts in `frontend/package-lock.json` by upgrading transitive dependencies through their direct dependents:
   - **undici** now resolves to 8.10.0 (via `jsdom` 29.1.1 → 30.0.1), fixing the open alerts for undici < 7.29.0 (CVE-2026-6733, CVE-2026-6734, CVE-2026-9678, CVE-2026-9679, CVE-2026-12151).
