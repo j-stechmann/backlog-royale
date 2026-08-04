@@ -1,4 +1,6 @@
-export const CARD_VALUES = ['1', '2', '3', '5', '8', '13', '21', '?', 'A'];
+export const ABSTAIN_VALUE = 'A';
+
+export const CARD_VALUES = ['1', '2', '3', '5', '8', '13', '21', '?', ABSTAIN_VALUE];
 
 export const ROLES = {
   PLAYER: 'player',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { getTheme } from '../utils/theme';
 import { CardFace } from './CardFace';
+import { ABSTAIN_VALUE } from '../constants';
 
 interface CardProps {
   value: string;
@@ -17,7 +18,7 @@ export const Card: React.FC<CardProps> = ({ value, selected, onClick, disabled }
       <button
         onClick={onClick}
         disabled={disabled}
-        aria-label={value === 'A' ? 'Abstain' : value}
+        aria-label={value === ABSTAIN_VALUE ? 'Abstain' : value}
         className={`
           w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 transition-all duration-300 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden
           ${selected 

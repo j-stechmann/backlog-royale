@@ -1,3 +1,5 @@
+import { ABSTAIN_VALUE } from '../constants';
+
 export interface Theme {
   text: string;
   bg: string;
@@ -8,7 +10,7 @@ export interface Theme {
 }
 
 export const getTheme = (val: string | undefined): Theme => {
-  if (!val || val === '?' || val === 'A') {
+  if (!val || val === '?' || val === ABSTAIN_VALUE) {
     return {
       text: 'text-gray-400',
       bg: 'bg-gray-50',

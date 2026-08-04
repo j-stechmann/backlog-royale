@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 )
@@ -85,6 +86,43 @@ func TestAllowedVotes(t *testing.T) {
 	room.handleAction(ActionMessage{Type: ActionVote, Vote: "A"}, client)
 	if room.participants[client.ID] != "A" {
 		t.Errorf("expected abstain vote A to be accepted, got %s", room.participants[client.ID])
+	}
+}
+
+func TestAbstainVoteCountsAsVoted(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+	client := &Client{ID: "1", name: "Alice", role: RolePlayer, send: make(chan []byte, 10)}
+	room.clients[client.ID] = client
+
+	// Cast an abstain vote.
+	room.handleAction(ActionMessage{Type: ActionVote, Vote: "A"}, client)
+
+	// Broadcast state and inspect the serialized user to confirm the abstain
+	// vote counts toward the voting-progress total (HasVoted == true).
+	room.mu.Lock()
+	room.broadcastStateLocked()
+	room.mu.Unlock()
+
+	select {
+	case data := <-client.send:
+		var state RoomState
+		if err := json.Unmarshal(data, &state); err != nil {
+			t.Fatalf("failed to unmarshal broadcast state: %v", err)
+		}
+		if len(state.Users) != 1 {
+			t.Fatalf("expected 1 user in state, got %d", len(state.Users))
+		}
+		u := state.Users[0]
+		if !u.HasVoted {
+			t.Error("expected abstain vote to count toward HasVoted, got false")
+		}
+		// Before reveal, the vote value must not be visible.
+		if u.Vote != "" {
+			t.Errorf("expected vote to be hidden before reveal, got %q", u.Vote)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("timed out waiting for broadcast state")
 	}
 }
 

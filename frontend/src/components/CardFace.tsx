@@ -1,19 +1,16 @@
 import React from 'react';
 import { Ban } from 'lucide-react';
-
-export const ABSTAIN_VALUE = 'A';
+import { ABSTAIN_VALUE } from '../constants';
 
 interface CardFaceProps {
   value: string;
   textClassName: string;
   iconClassName: string;
-  sharedClassName?: string;
 }
 
-export const CardFace: React.FC<CardFaceProps> = ({ value, textClassName, iconClassName, sharedClassName }) => {
-  const shared = sharedClassName ?? '';
+export const CardFace: React.FC<CardFaceProps> = ({ value, textClassName, iconClassName }) => {
   if (value === ABSTAIN_VALUE) {
-    return <Ban className={`${shared} ${iconClassName}`} strokeWidth={2.5} aria-hidden="true" />;
+    return <Ban className={iconClassName} strokeWidth={2.5} aria-hidden="true" />;
   }
-  return <span className={`${shared} ${textClassName}`}>{value}</span>;
+  return <span className={textClassName}>{value}</span>;
 };

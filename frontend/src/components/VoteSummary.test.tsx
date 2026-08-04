@@ -53,13 +53,13 @@ describe('VoteSummary', () => {
     // The letter "A" must NOT be rendered as text for the abstain votes.
     expect(screen.queryByText('A')).toBeNull();
 
-    // Two players abstained, so the count "2" should appear for the abstain card,
-    // alongside the count "1" for the single "5" vote.
-    const counts = screen.getAllByText('2');
-    expect(counts.length).toBeGreaterThan(0);
+    // Two players abstained -> one aggregated abstain card with count "2".
+    // The single "5" vote -> one card with count "1".
+    expect(screen.getAllByText('2').length).toBe(1);
+    expect(screen.getAllByText('1').length).toBe(1);
 
-    // A Ban svg icon should be rendered for the abstain card.
+    // The aggregated abstain card renders three Ban icons (two corners + center).
     const banIcons = document.querySelectorAll('svg.lucide-ban');
-    expect(banIcons.length).toBeGreaterThan(0);
+    expect(banIcons.length).toBe(3);
   });
 });

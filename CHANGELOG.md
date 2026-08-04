@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 ### Added
 - "A" (Abstain) card allowing players to formally opt out of a vote. The abstain vote is rendered with a Ban icon, counts toward the voting-progress total, and appears in the vote summary distribution alongside the other cards.
 
+### Technical
+- Centralized the abstain card sentinel as `ABSTAIN_VALUE` in `frontend/src/constants.ts`, replacing inline `'A'` literals in `Card.tsx`, `CardFace.tsx`, and `theme.ts`.
+- Tightened the `VoteSummary` abstain test to assert exact Ban-icon and aggregate-count values, and added a `getTheme('A')` test pinning the gray theme.
+- Added a backend test (`TestAbstainVoteCountsAsVoted`) asserting that an abstain vote sets `HasVoted: true` in the broadcast state and stays hidden before reveal.
+- Removed the unused `sharedClassName` prop from `CardFace` and added a trailing newline.
+
 ## [1.6.1] - 2026-08-02
 
 ### Technical
