@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.2] - 2026-08-10
+
+### Technical
+- Updated frontend dependencies: lucide-react (1.28.0 → 1.30.0).
+- Updated frontend dev dependencies: vite (8.2.0 → 8.2.1), postcss (8.5.25 → 8.5.26).
+
 ## [1.7.1] - 2026-08-04
 
 ### Security
