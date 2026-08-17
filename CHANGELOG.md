@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.7.3] - 2026-08-17
+
+### Technical
+- Updated backend base image: golang (1.26.5-alpine → 1.26.6-alpine).
+- Updated frontend dependencies: lucide-react (1.30.0 → 1.31.0), sonner (2.0.7 → 2.0.8).
+- Updated frontend dev dependencies: @types/node (26.1.2 → 26.2.0), eslint (10.8.0 → 10.8.1), @testing-library/jest-dom (7.0.0 → 7.0.1).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.7.3 (catch-up after v1.7.2 omitted the bump).
+
 ## [1.7.2] - 2026-08-10
 
 ### Technical
