@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.1] - 2026-08-20
+
+### Technical
+- Updated frontend dev dependencies: eslint-plugin-react-refresh (0.5.3 → 0.5.4), globals (17.9.0 → 17.11.0), typescript-eslint (8.66.0 → 8.67.0).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.8.1.
+
 ## [1.8.0] - 2026-08-20
 
 ### Added
