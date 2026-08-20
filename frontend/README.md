@@ -8,6 +8,7 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 - **Responsive UI**: Optimized for both mobile and desktop.
 - **Fibonacci Scoring**: Standard agile pointing system.
 - **Dynamic Routing**: Join any room via a simple URL.
+- **Version Indicator**: Displays the current app version in the bottom-right corner.
 
 ## 🚀 Getting Started
 
