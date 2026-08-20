@@ -63,46 +63,51 @@ function App() {
     sendAction(ACTIONS.TOGGLE_ROLE);
   };
 
-  if (!isJoined) {
-    return <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} />;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 pb-12">
-      <Header
-        roomID={roomID}
-        connected={connected}
-        isAFK={isAFK}
-        isDealer={isDealer}
-        onToggleAFK={() => toggleAFK()}
-        onToggleRole={toggleRole}
-      />
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-        <div className="space-y-6">
-          <VotingPanel
+    <>
+      {!isJoined ? (
+        <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} />
+      ) : (
+        <div className="min-h-screen bg-gray-50 pb-12">
+          <Header
+            roomID={roomID}
+            connected={connected}
             isAFK={isAFK}
             isDealer={isDealer}
-            selectedVote={selectedVote}
-            onVote={handleVote}
-            reveal={state?.reveal || false}
-            onReturnToGame={() => toggleAFK()}
-            users={state?.users || []}
+            onToggleAFK={() => toggleAFK()}
+            onToggleRole={toggleRole}
           />
 
-          <PlayerList
-            users={state?.users || []}
-            currentUserID={userID}
-            reveal={state?.reveal || false}
-            isDealer={isDealer}
-            canManageRound={canManageRound}
-            onReveal={handleReveal}
-            onReset={handleReset}
-            onToggleAFK={(id) => toggleAFK(id)}
-          />
+          <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <div className="space-y-6">
+              <VotingPanel
+                isAFK={isAFK}
+                isDealer={isDealer}
+                selectedVote={selectedVote}
+                onVote={handleVote}
+                reveal={state?.reveal || false}
+                onReturnToGame={() => toggleAFK()}
+                users={state?.users || []}
+              />
+
+              <PlayerList
+                users={state?.users || []}
+                currentUserID={userID}
+                reveal={state?.reveal || false}
+                isDealer={isDealer}
+                canManageRound={canManageRound}
+                onReveal={handleReveal}
+                onReset={handleReset}
+                onToggleAFK={(id) => toggleAFK(id)}
+              />
+            </div>
+          </main>
         </div>
-      </main>
-    </div>
+      )}
+      <div className="fixed bottom-1 right-2 text-xs text-gray-400 select-none pointer-events-none">
+        v{__APP_VERSION__}
+      </div>
+    </>
   );
 }
 

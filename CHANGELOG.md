@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-08-20
+
+### Added
+- Display the app version (from `frontend/package.json`) as a small, unobtrusive label in the bottom-right corner of the frontend, shown on all views including the Join screen.
+
 ## [1.7.3] - 2026-08-17
 
 ### Technical
