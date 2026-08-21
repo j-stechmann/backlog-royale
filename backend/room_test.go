@@ -451,6 +451,14 @@ func TestEvictClient(t *testing.T) {
 	room.register <- client1
 	room.register <- client2
 
+	// Wait for both registrations to be processed before sending any
+	// actions. Without this, select may pick a broadcast case before the
+	// register cases; with no clients in the room, broadcastStateLocked
+	// sends nothing and the len(r.clients) == 0 check closes the room
+	// before the test's wait condition ever runs.
+	waitForBroadcast(t, client1.send, "initial broadcast after registering Alice")
+	waitForBroadcast(t, client2.send, "initial broadcast after registering Bob")
+
 	// Alice votes "5" (as a player), then becomes dealer (which clears
 	// her vote). Bob votes "8" so we can verify his vote survives Alice's
 	// eviction.
