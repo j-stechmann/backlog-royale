@@ -149,13 +149,16 @@ func TestReconnectDeduplication(t *testing.T) {
 	waitForBroadcast(t, client2.send, "reconnect broadcast")
 
 	// Verify client1's send channel was closed (old client evicted).
+	// After waitForBroadcast drained client1's initial state and the
+	// second register closed client1.send, the channel is closed-and-
+	// empty, so this receive should return immediately with ok == false.
 	select {
 	case _, ok := <-client1.send:
 		if ok {
 			t.Error("expected client1.send to be closed after dedup")
 		}
-	default:
-		// Channel might have buffered messages; drain and re-check.
+	case <-time.After(time.Second):
+		t.Fatal("timed out waiting for client1.send to close")
 	}
 
 	// Clean up: unregister client2 so the room closes.

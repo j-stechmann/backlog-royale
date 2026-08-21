@@ -66,6 +66,7 @@ func (c *Client) readPump() {
 		select {
 		case c.room.broadcast <- ClientMessage{client: c, payload: message}:
 		default:
+			slog.Warn("broadcast channel full, dropping message", "client", c.name, "id", c.ID)
 		}
 	}
 }
