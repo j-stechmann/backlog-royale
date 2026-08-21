@@ -42,6 +42,8 @@ The frontend is located in the `/frontend` directory. It is a modern React appli
 ### Key Components
 
 - **useBacklogRoyale Hook**: A custom hook that encapsulates WebSocket logic, including connection management, message parsing, and state updates.
+- **useTheme Hook**: Manages the light/dark/system theme choice, persists it to `localStorage` (`backlog_royale_theme`), subscribes to OS `prefers-color-scheme` changes while in system mode, and toggles a `.dark` class on `<html>`. An inline script in `index.html` applies the class before paint to avoid a flash. The segmented light/dark/system toggle is a shared `ThemeToggle` component (`role="group"` + `aria-pressed` buttons) used in both the header and the join screen.
+- **Semantic color tokens**: Tailwind v4 `@theme inline` in `src/index.css` maps 22 raw `:root`/`.dark` variables to utility classes (`bg-surface`, `text-content`, `border-line`, `accent`, `warn`, …). Dark mode is a single `.dark` variable block; components consume semantic utilities instead of hardcoded palette colors. `src/utils/theme.ts` separately encodes vote-band colors (emerald/blue/rose by point value) with `dark:` variants.
 - **Tailwind CSS 4**: Used for styling the application, providing a responsive and modern UI.
 - **Lucide React**: Provides the icon set used throughout the application.
 
@@ -51,6 +53,7 @@ The frontend is located in the `/frontend` directory. It is a modern React appli
 2.  The `useBacklogRoyale` hook establishes a WebSocket connection to `/ws?room=ID&name=NAME`.
 3.  The server sends the current `STATE` of the room immediately upon connection.
 4.  Whenever a client performs an action (VOTE, REVEAL, RESET), the server updates the room state and broadcasts the new state to all clients in that room.
+5.  When switching rooms, the client sends its previous server-assigned ID as `prevId` in the WebSocket URL. The server uses a global client-ID-to-room index to find and evict the previous connection from whichever room it is still in, ensuring clean room transitions even if the old WebSocket has not fully closed yet. The eviction is performed by the owning Room's `Run` goroutine via its `evict` channel, preserving single-goroutine ownership of the `clients` map. `prevId` is sent exclusively on room switches (tracked in `useGameState` via a `prevIdToEvict` state field cleared once the new connection's WELCOME arrives); reconnects within the same room and additional tabs in the same room send no `prevId`, so coexisting tabs keep their vote/dealer state.
 
 ## Communication Protocol
 

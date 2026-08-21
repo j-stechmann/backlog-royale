@@ -40,7 +40,11 @@ type Client struct {
 
 func (c *Client) readPump() {
 	defer func() {
-		c.room.unregister <- c
+		select {
+		case c.room.unregister <- c:
+		default:
+			slog.Warn("unregister channel full, dropping disconnect", "client", c.name, "id", c.ID)
+		}
 		c.conn.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
@@ -60,7 +64,11 @@ func (c *Client) readPump() {
 			continue
 		}
 
-		c.room.broadcast <- ClientMessage{client: c, payload: message}
+		select {
+		case c.room.broadcast <- ClientMessage{client: c, payload: message}:
+		default:
+			slog.Warn("broadcast channel full, dropping message", "client", c.name, "id", c.ID)
+		}
 	}
 }
 
@@ -106,6 +114,7 @@ func generateID() string {
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin string) {
 	roomID := r.URL.Query().Get("room")
 	name := r.URL.Query().Get("name")
+	prevID := r.URL.Query().Get("prevId")
 
 	if roomID == "" || name == "" {
 		http.Error(w, "Missing room or name", http.StatusBadRequest)
@@ -143,11 +152,29 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 		role:        RolePlayer,
 		rateLimiter: rate.NewLimiter(rate.Limit(messageRate), messageBurst),
 	}
-	client.room.register <- client
+
+	select {
+	case client.room.register <- client:
+	default:
+		slog.Warn("room register channel full, closing connection", "room", roomID)
+		conn.Close()
+		return
+	}
 
 	// Send welcome message with the generated ID
 	welcome, _ := json.Marshal(WelcomeMessage{Type: MessageTypeWelcome, ID: id})
 	client.send <- welcome
+
+	// Evict the client's previous connection (if any). Both register and
+	// evict are buffered channels and Room.Run's select picks among ready
+	// cases pseudo-randomly, so ordering between the two is not strictly
+	// guaranteed. In practice this is safe because same-room reconnects
+	// occur after the old room has already died via unregister, making
+	// EvictClient a no-op; cross-room transitions work regardless of order
+	// since the old and new rooms are distinct.
+	if prevID != "" {
+		hub.EvictClient(prevID)
+	}
 
 	go client.writePump()
 	go client.readPump()

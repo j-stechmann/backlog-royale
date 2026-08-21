@@ -1,7 +1,7 @@
 import React from 'react';
 import type { User } from '../hooks/useBacklogRoyale';
 import { getTheme } from '../utils/theme';
-import { ROLES } from '../constants';
+import { CARD_VALUES, ROLES } from '../constants';
 import { CardFace } from './CardFace';
 
 interface VoteSummaryProps {
@@ -17,27 +17,30 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
       return acc;
     }, {} as Record<string, number>);
 
-  const sortedVotes = Object.entries(votes).sort((a, b) => b[1] - a[1]);
+  const sortedVotes = Object.entries(votes).sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1];
+    return CARD_VALUES.indexOf(a[0]) - CARD_VALUES.indexOf(b[0]);
+  });
 
   if (sortedVotes.length === 0) return null;
 
   return (
-    <div className="bg-white p-8 sm:p-12 rounded-3xl shadow-sm border border-gray-200 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="bg-surface p-8 sm:p-12 rounded-3xl shadow-sm border border-line relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="text-center mb-10">
-        <h2 className="text-2xl font-black text-gray-800 mb-2">Voting Summary</h2>
-        <p className="text-gray-400 text-sm font-medium">Distribution of points for this round</p>
+        <h2 className="text-2xl font-black text-content-soft mb-2">Voting Summary</h2>
+        <p className="text-muted text-sm font-medium">Distribution of points for this round</p>
       </div>
 
       <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
         {sortedVotes.map(([value, count]) => {
           const theme = getTheme(value);
           return (
-            <div key={value} className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
+            <div key={value} data-testid="vote-card" className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
               <div className="flex items-center gap-1 sm:gap-2">
-                <span className="text-3xl sm:text-5xl font-black text-gray-900 tabular-nums leading-none">
+                <span className="text-3xl sm:text-5xl font-black text-content tabular-nums leading-none">
                   {count}
                 </span>
-                <span className="text-3xl sm:text-5xl font-black text-gray-400 leading-none">×</span>
+                <span className="text-3xl sm:text-5xl font-black text-muted leading-none">×</span>
               </div>
               <div className={`
                 w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden

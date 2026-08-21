@@ -5,6 +5,23 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Backlog Royale</title>
+    <script>
+      (function () {
+        try {
+          var m = localStorage.getItem('backlog_royale_theme');
+          if (m !== 'light' && m !== 'dark') m = 'system';
+          var d =
+            m === 'dark' ||
+            (m === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', d);
+        } catch (e) {
+          try {
+            if (matchMedia('(prefers-color-scheme: dark)').matches)
+              document.documentElement.classList.add('dark');
+          } catch (e2) {}
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -23,7 +23,7 @@ export const Card: React.FC<CardProps> = ({ value, selected, onClick, disabled }
           w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 transition-all duration-300 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden
           ${selected 
             ? `${theme.bg} ${theme.border} ${theme.text} transform -translate-y-4 shadow-2xl ${theme.shadow} ring-4 ${theme.ring}` 
-            : `bg-white border-gray-200 text-gray-800 ${theme.hoverBorder} hover:shadow-xl hover:-translate-y-1`
+            : `bg-surface border-line text-content-soft ${theme.hoverBorder} hover:shadow-xl hover:-translate-y-1`
           }
           ${disabled ? 'opacity-50 cursor-not-allowed grayscale-[0.5]' : 'cursor-pointer'}
         `}
@@ -50,9 +50,9 @@ export const Card: React.FC<CardProps> = ({ value, selected, onClick, disabled }
       </button>
       
       {disabled && (
-        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-gray-900 text-white text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-xl border border-white/10">
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-3 py-2 bg-surface-inverse text-content-inverse text-xs font-bold rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-xl border border-glass">
           Voting is locked
-          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900" />
+          <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-surface-inverse" />
         </div>
       )}
     </div>

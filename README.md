@@ -19,6 +19,7 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 - 🤝 **Dealer-free Rounds:** When no dealer is present, any non-AFK player can reveal results and start the next round.
 - 🔗 **Shareable Links:** Easily invite team members by sharing the URL.
 - 📱 **Responsive Design:** Works great on desktop and mobile.
+- 🌙 **Dark Theme:** Light/dark/system theme with OS-preference detection and a manual override (persisted). Toggle in the header or on the join screen.
 
 ## Tech Stack
 
