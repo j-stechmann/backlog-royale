@@ -29,15 +29,15 @@ export const PlayerList: React.FC<PlayerListProps> = ({
   const votedPlayersCount = players.filter((u) => u.hasVoted).length;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-      <div className="p-4 border-b border-gray-200 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="bg-surface rounded-2xl shadow-sm border border-line overflow-hidden">
+      <div className="p-4 border-b border-line bg-surface-2/50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center justify-between sm:justify-start gap-4">
           <div className="flex items-center gap-2">
-            <Users size={20} className="text-blue-600" />
-            <h2 className="font-bold text-gray-900 text-sm">Players</h2>
+            <Users size={20} className="text-accent-text" />
+            <h2 className="font-bold text-content text-sm">Players</h2>
           </div>
-          <div className="px-3 py-1 bg-blue-50 border border-blue-100 rounded-lg">
-            <span className="text-xs font-bold text-blue-700">
+          <div className="px-3 py-1 bg-accent-soft border border-accent-soft rounded-lg">
+            <span className="text-xs font-bold text-accent-strong">
               {votedPlayersCount} / {players.length} Voted
             </span>
           </div>
@@ -49,13 +49,13 @@ export const PlayerList: React.FC<PlayerListProps> = ({
               <button
                 onClick={onReveal}
                 disabled={reveal || players.length === 0 || !players.every((u) => u.hasVoted)}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-white text-gray-700 border border-gray-200 px-4 py-2.5 rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all text-sm font-bold disabled:opacity-50 active:scale-95 shadow-sm"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-surface text-mid-text border border-line px-4 py-2.5 rounded-xl hover:border-accent hover:text-accent-text transition-all text-sm font-bold disabled:opacity-50 active:scale-95 shadow-sm"
               >
                 <Eye size={18} /> Reveal Results
               </button>
               <button
                 onClick={onReset}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 transition-all text-sm font-bold active:scale-95 shadow-lg shadow-blue-100"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-accent text-white px-4 py-2.5 rounded-xl hover:bg-accent-strong transition-all text-sm font-bold active:scale-95 shadow-lg shadow-accent/20 dark:shadow-black/30"
               >
                 <RotateCcw size={18} /> Next Round
               </button>
@@ -63,26 +63,26 @@ export const PlayerList: React.FC<PlayerListProps> = ({
           )}
         </div>
       </div>
-      <div className="divide-y divide-gray-50">
+      <div className="divide-y divide-line">
         {users.map((user) => (
           <div key={user.id} className="p-4 flex justify-between items-center group">
             <div className="flex items-center gap-3 min-w-0">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${
-                  user.id === currentUserID ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
+                  user.id === currentUserID ? 'bg-accent text-white' : 'bg-surface-3 text-mid-text'
                 }`}
               >
                 {user.name.charAt(0).toUpperCase()}
               </div>
-              <span className={`font-medium truncate ${user.id === currentUserID ? 'text-blue-600' : 'text-gray-900'}`}>
-                {user.name} {user.id === currentUserID && <span className="text-[10px] text-gray-400">(You)</span>}
+              <span className={`font-medium truncate ${user.id === currentUserID ? 'text-accent-text' : 'text-content'}`}>
+                {user.name} {user.id === currentUserID && <span className="text-[10px] text-subtle">(You)</span>}
                 {user.role === ROLES.DEALER && (
-                  <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-700">
+                  <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-warn-soft text-warn-strong">
                     DEALER
                   </span>
                 )}
                 {user.role === ROLES.AFK && (
-                  <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700">
+                  <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-accent-soft text-accent-strong">
                     AFK
                   </span>
                 )}

@@ -42,6 +42,8 @@ The frontend is located in the `/frontend` directory. It is a modern React appli
 ### Key Components
 
 - **useBacklogRoyale Hook**: A custom hook that encapsulates WebSocket logic, including connection management, message parsing, and state updates.
+- **useTheme Hook**: Manages the light/dark/system theme choice, persists it to `localStorage` (`backlog_royale_theme`), subscribes to OS `prefers-color-scheme` changes while in system mode, and toggles a `.dark` class on `<html>`. An inline script in `index.html` applies the class before paint to avoid a flash.
+- **Semantic color tokens**: Tailwind v4 `@theme inline` in `src/index.css` maps raw `:root`/`.dark` variables to utility classes (`bg-surface`, `text-content`, `border-line`, `accent`, `warn`, …). Dark mode is a single `.dark` variable block; components consume semantic utilities instead of hardcoded palette colors. `src/utils/theme.ts` separately encodes vote-band colors (emerald/blue/rose by point value) with `dark:` variants.
 - **Tailwind CSS 4**: Used for styling the application, providing a responsive and modern UI.
 - **Lucide React**: Provides the icon set used throughout the application.
 

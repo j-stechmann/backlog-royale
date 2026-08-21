@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Dark theme** with three modes — light, dark, and system (follows the OS `prefers-color-scheme`). The choice is persisted in `localStorage` under `backlog_royale_theme` and applied via a `.dark` class on `<html>`. An inline pre-paint script in `index.html` prevents a flash of the wrong theme on reload. A 3-state segmented toggle (Sun/Moon/Monitor) is available in the header and on the join screen.
+
+### Changed
+- Refactored the frontend styling from hardcoded Tailwind color utilities to a set of 23 semantic CSS color tokens (`base`, `surface`, `line`, `content`, `accent`, `warn`, `ok`, etc.) defined via Tailwind v4 `@theme inline` with `:root`/`.dark` overrides. Components consume semantic utilities (`bg-surface`, `text-content`, `border-line`, …) instead of raw palette colors, so dark mode is a single `.dark` variable block.
+- Split `accent` into `accent` (button backgrounds, blue-600 in both themes) and `accent-text` (on-surface blue text/icons, blue-600/blue-400) to keep WCAG AA contrast in both modes. Added `accent-strong` (blue-700/blue-300) for hover backgrounds and status-panel headings.
+- Vote-band colors in `src/utils/theme.ts` (emerald/blue/rose/gray) now include `dark:` variants per field; band backgrounds use `-900` (not `-950`) so the hue encoding stays visible on the dark surface.
+- Inverted the "voted" checkmark to a dark glyph on the green pill for WCAG AA compliance (was white-on-green-500 at 2.28:1).
+- `body` background now uses `var(--bg)` (raw token) instead of a hardcoded `#f9fafb`, and `App.tsx` uses `bg-base`.
+- The sonner `<Toaster>` moved from `main.tsx` into `App.tsx` so it receives the current `theme` prop (light/dark/system); `position="top-center"` and `richColors` are preserved.
+
+### Technical
+- Added `src/hooks/useTheme.ts` (two-effect hook: matchMedia subscription + `.dark` class application) with `useTheme.test.ts` covering default/system mode, localStorage override, invalid-value normalization, OS-change reactivity (system mode only), class application, and persistence.
+- Rewrote `src/utils/theme.test.ts` to use a `classesOf()` set-membership helper and assert all six fields per band (text/bg/border/ring/shadow/hoverBorder).
+- `Logo.tsx` now uses inline `style={{ fill: 'var(--surface)' }}` (raw tokens, since `@theme inline` does not emit `--color-*` to `:root`) for theme-aware card chrome; crown and jewels remain fixed brand colors.
+- Added `surface-3` (lifted/inactive), `surface-inverse` (tooltip), `surface-highlight` (toggle active segment), `mid-text`, `content-soft`, `accent-text`, `accent-strong`, `warn-strong`, `glass` tokens. Renamed the glassmorphism border token to `glass` (utility `border-glass`).
+
+### Notes
+- `public/favicon.svg` is intentionally left light/brand-colored (favicons don't theme at runtime).
+- The amber-700 crown stroke in the logo may appear low-contrast in dark mode; tracked as a known cosmetic item.
+
 ## [1.8.1] - 2026-08-20
 
 ### Technical

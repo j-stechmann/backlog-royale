@@ -25,7 +25,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
   const renderStatus = () => {
     if (role === ROLES.DEALER) {
       return (
-        <div className="w-10 h-14 flex items-center justify-center text-amber-500">
+        <div className="w-10 h-14 flex items-center justify-center text-warn">
           <HandHelping size={24} />
         </div>
       );
@@ -33,7 +33,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
 
     if (role === ROLES.AFK) {
       return (
-        <div className="w-10 h-14 flex items-center justify-center text-blue-500">
+        <div className="w-10 h-14 flex items-center justify-center text-accent-text">
           <Coffee size={24} />
         </div>
       );
@@ -59,15 +59,15 @@ export const UserStatus: React.FC<UserStatusProps> = ({
       }
 
       return (
-        <div className="w-10 h-14 bg-green-500 text-white rounded-lg flex items-center justify-center shadow-lg shadow-green-100">
+        <div className="w-10 h-14 bg-ok text-content rounded-lg flex items-center justify-center shadow-lg shadow-ok/20 dark:shadow-black/30">
           <span className="font-bold text-xl">✓</span>
         </div>
       );
     }
 
     return (
-      <div className="w-10 h-14 border-2 border-dashed border-gray-200 rounded-lg flex items-center justify-center">
-        <div className="w-1.5 h-1.5 rounded-full bg-gray-200" />
+      <div className="w-10 h-14 border-2 border-dashed border-line rounded-lg flex items-center justify-center">
+        <div className="w-1.5 h-1.5 rounded-full bg-surface-3" />
       </div>
     );
   };
@@ -80,7 +80,7 @@ export const UserStatus: React.FC<UserStatusProps> = ({
             e.stopPropagation();
             onToggleAFK();
           }}
-          className="absolute inset-x-1 inset-y-1 z-10 bg-white flex items-center justify-center text-blue-600 rounded-lg opacity-0 group-hover/status:opacity-100 transition-opacity border-2 border-blue-100 shadow-md cursor-pointer"
+          className="absolute inset-x-1 inset-y-1 z-10 bg-surface flex items-center justify-center text-accent-text rounded-lg opacity-0 group-hover/status:opacity-100 transition-opacity border-2 border-accent-soft shadow-md cursor-pointer"
           title="Toggle AFK"
         >
           <Coffee size={20} />
