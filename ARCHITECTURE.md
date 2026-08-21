@@ -53,6 +53,7 @@ The frontend is located in the `/frontend` directory. It is a modern React appli
 2.  The `useBacklogRoyale` hook establishes a WebSocket connection to `/ws?room=ID&name=NAME`.
 3.  The server sends the current `STATE` of the room immediately upon connection.
 4.  Whenever a client performs an action (VOTE, REVEAL, RESET), the server updates the room state and broadcasts the new state to all clients in that room.
+5.  When switching rooms, the client sends its previous server-assigned ID as `prevId` in the WebSocket URL. The server uses a global client-ID-to-room index to find and evict the previous connection from whichever room it is still in, ensuring clean room transitions even if the old WebSocket has not fully closed yet. The eviction is performed by the owning Room's `Run` goroutine via its `evict` channel, preserving single-goroutine ownership of the `clients` map.
 
 ## Communication Protocol
 

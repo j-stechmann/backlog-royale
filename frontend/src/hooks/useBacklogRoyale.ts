@@ -18,17 +18,28 @@ export interface RoomState {
   dealerId: string;
 }
 
-export const useBacklogRoyale = (roomID: string, userName: string, onIDAssigned?: (id: string) => void) => {
+export const useBacklogRoyale = (
+  roomID: string,
+  userName: string,
+  onIDAssigned?: (id: string) => void,
+  prevId?: string
+) => {
   const [state, setState] = useState<RoomState | null>(null);
   const [connected, setConnected] = useState(false);
   const ws = useRef<WebSocket | null>(null);
   const connectRef = useRef<() => void>(() => {});
   const reconnectTimeoutRef = useRef<number | null>(null);
   const onIDAssignedRef = useRef(onIDAssigned);
+  const genRef = useRef(0);
+  const prevIdRef = useRef(prevId || '');
 
   useEffect(() => {
     onIDAssignedRef.current = onIDAssigned;
   }, [onIDAssigned]);
+
+  useEffect(() => {
+    prevIdRef.current = prevId || '';
+  }, [prevId]);
 
   const connect = useCallback(() => {
     if (ws.current) return;
@@ -37,11 +48,13 @@ export const useBacklogRoyale = (roomID: string, userName: string, onIDAssigned?
       reconnectTimeoutRef.current = null;
     }
 
+    const myGen = ++genRef.current;
+
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const defaultHost = window.location.hostname === 'localhost' ? 'localhost:8080' : window.location.host;
     const host = import.meta.env.VITE_WS_URL || `${protocol}//${defaultHost}`;
-    // No longer sending id to server as it's generated server-side for security
-    const socket = new WebSocket(`${host}/ws?room=${roomID}&name=${userName}`);
+    const prevIdParam = prevIdRef.current ? `&prevId=${encodeURIComponent(prevIdRef.current)}` : '';
+    const socket = new WebSocket(`${host}/ws?room=${encodeURIComponent(roomID)}&name=${encodeURIComponent(userName)}${prevIdParam}`);
 
     socket.onopen = () => {
       setConnected(true);
@@ -57,14 +70,14 @@ export const useBacklogRoyale = (roomID: string, userName: string, onIDAssigned?
     };
 
     socket.onclose = () => {
+      if (myGen !== genRef.current) return;
       setConnected(false);
       ws.current = null;
-      // Reconnect after a delay
       reconnectTimeoutRef.current = window.setTimeout(() => connectRef.current(), 3000);
     };
 
     ws.current = socket;
-  }, [roomID, userName]); // Removed onIDAssigned from dependencies
+  }, [roomID, userName]);
 
   useEffect(() => {
     connectRef.current = connect;
@@ -75,9 +88,12 @@ export const useBacklogRoyale = (roomID: string, userName: string, onIDAssigned?
       connect();
     }
     return () => {
+      genRef.current++;
       ws.current?.close();
+      ws.current = null;
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
+        reconnectTimeoutRef.current = null;
       }
     };
   }, [roomID, userName, connect]);

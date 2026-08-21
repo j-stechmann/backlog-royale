@@ -37,6 +37,7 @@ type Room struct {
 	broadcast    chan ClientMessage
 	register     chan *Client
 	unregister   chan *Client
+	evict        chan string
 	hub          *Hub
 	mu           sync.Mutex
 	isRevealed   bool
@@ -48,9 +49,10 @@ func NewRoom(id string, hub *Hub) *Room {
 	return &Room{
 		ID:           id,
 		clients:      make(map[string]*Client),
-		broadcast:    make(chan ClientMessage),
-		register:     make(chan *Client),
-		unregister:   make(chan *Client),
+		broadcast:    make(chan ClientMessage, 64),
+		register:     make(chan *Client, 16),
+		unregister:   make(chan *Client, 64),
+		evict:        make(chan string, 64),
 		hub:          hub,
 		participants: make(map[string]string),
 	}
@@ -90,6 +92,7 @@ func (r *Room) Run() {
 				}
 			}
 			r.clients[client.ID] = client
+			r.hub.Associate(client.ID, r)
 			r.broadcastState()
 		case client := <-r.unregister:
 			if current, ok := r.clients[client.ID]; ok && current == client {
@@ -101,6 +104,23 @@ func (r *Room) Run() {
 					r.dealerID = ""
 				}
 				r.mu.Unlock()
+				r.hub.Disassociate(client.ID)
+				r.broadcastState()
+			}
+		case clientID := <-r.evict:
+			if client, ok := r.clients[clientID]; ok {
+				delete(r.clients, clientID)
+				close(client.send)
+				if client.conn != nil {
+					client.conn.Close()
+				}
+				r.mu.Lock()
+				delete(r.participants, clientID)
+				if r.dealerID == clientID {
+					r.dealerID = ""
+				}
+				r.mu.Unlock()
+				r.hub.Disassociate(clientID)
 				r.broadcastState()
 			}
 		case message := <-r.broadcast:
@@ -245,6 +265,7 @@ func (r *Room) broadcastStateLocked() {
 		default:
 			close(client.send)
 			delete(r.clients, id)
+			r.hub.Disassociate(id)
 		}
 	}
 }

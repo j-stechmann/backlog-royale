@@ -44,8 +44,9 @@ The WebSocket endpoint is `/ws`.
 ### Connection Parameters
 - `room`: (Required) The unique ID of the room to join.
 - `name`: (Required) The name of the user joining.
+- `prevId`: (Optional) The server-assigned ID from a previous connection. The server will evict that client from any room it's still in, ensuring clean room transitions.
 
-Example: `ws://localhost:8080/ws?room=my-room&name=Alice`
+Example: `ws://localhost:8080/ws?room=my-room&name=Alice&prevId=abc123`
 
 ### Actions (Client -> Server)
 

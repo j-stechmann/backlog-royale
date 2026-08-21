@@ -28,7 +28,8 @@ export const useGameState = () => {
   const { state, connected, sendAction } = useBacklogRoyale(
     isJoined ? roomID : '', 
     isJoined ? name : '', 
-    handleIDAssigned
+    handleIDAssigned,
+    isJoined ? userID : ''
   );
 
 

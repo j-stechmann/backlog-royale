@@ -135,16 +135,31 @@ func TestReconnectDeduplication(t *testing.T) {
 	client1 := &Client{ID: "user-1", name: "Alice", role: RolePlayer, send: make(chan []byte, 1)}
 	room.register <- client1
 
+	// Wait for the first registration to be processed by receiving the
+	// broadcast state on client1's send channel.
+	waitForBroadcast(t, client1.send, "first registration broadcast")
+
 	// Simulate reconnect with same ID
 	client2 := &Client{ID: "user-1", name: "Alice-New", role: RolePlayer, send: make(chan []byte, 1)}
 	room.register <- client2
 
-	// Give it a moment to process the channel
-	time.Sleep(10 * time.Millisecond)
+	// Wait for the second registration: the register handler closes
+	// client1.send and broadcasts to client2. Receiving on client2.send
+	// confirms the replacement was processed.
+	waitForBroadcast(t, client2.send, "reconnect broadcast")
 
-	if room.clients["user-1"] != client2 {
-		t.Errorf("expected client2 to replace client1")
+	// Verify client1's send channel was closed (old client evicted).
+	select {
+	case _, ok := <-client1.send:
+		if ok {
+			t.Error("expected client1.send to be closed after dedup")
+		}
+	default:
+		// Channel might have buffered messages; drain and re-check.
 	}
+
+	// Clean up: unregister client2 so the room closes.
+	room.unregister <- client2
 }
 
 func TestDealerRole(t *testing.T) {
@@ -384,4 +399,164 @@ func TestAFKRole(t *testing.T) {
 	if client3.role != RoleAFK {
 		t.Errorf("expected Charlie to toggle himself to AFK when trying to toggle others without permission")
 	}
+}
+
+// waitForCondition polls a predicate with a bounded timeout, avoiding
+// fixed sleeps that are flaky on loaded CI machines. The predicate is
+// called with r.mu held so reads of r.dealerID / r.participants
+// are race-free under the -race detector. Note: r.clients is owned by
+// the Run goroutine and is NOT protected by r.mu, so the predicate must
+// not read r.clients.
+func waitForCondition(t *testing.T, room *Room, predicate func() bool, what string) {
+	t.Helper()
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		room.mu.Lock()
+		ok := predicate()
+		room.mu.Unlock()
+		if ok {
+			return
+		}
+		time.Sleep(2 * time.Millisecond)
+	}
+	t.Fatalf("timed out waiting for: %s", what)
+}
+
+// waitForBroadcast blocks until a message arrives on the given channel
+// or the timeout elapses. This is used to confirm that broadcastState
+// has run (and thus that a prior register/evict/unregister was processed
+// by the Room.Run goroutine) without reading r.clients from the test.
+func waitForBroadcast(t *testing.T, send <-chan []byte, what string) []byte {
+	t.Helper()
+	select {
+	case data := <-send:
+		return data
+	case <-time.After(2 * time.Second):
+		t.Fatalf("timed out waiting for broadcast: %s", what)
+		return nil
+	}
+}
+
+func TestEvictClient(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+	go room.Run()
+
+	// Register two clients so the room stays alive after evicting one.
+	client1 := &Client{ID: "user-1", name: "Alice", role: RolePlayer, send: make(chan []byte, 10)}
+	client2 := &Client{ID: "user-2", name: "Bob", role: RolePlayer, send: make(chan []byte, 10)}
+	room.register <- client1
+	room.register <- client2
+
+	// Alice votes "5" (as a player), then becomes dealer (which clears
+	// her vote). Bob votes "8" so we can verify his vote survives Alice's
+	// eviction.
+	room.broadcast <- ClientMessage{client: client1, payload: mustMarshal(t, ActionMessage{Type: ActionVote, Vote: "5"})}
+	room.broadcast <- ClientMessage{client: client1, payload: mustMarshal(t, ActionMessage{Type: ActionToggleRole})}
+	room.broadcast <- ClientMessage{client: client2, payload: mustMarshal(t, ActionMessage{Type: ActionVote, Vote: "8"})}
+
+	// Wait for Alice to be dealer and Bob to have voted.
+	waitForCondition(t, room, func() bool {
+		return room.dealerID == "user-1" && room.participants["user-2"] == "8"
+	}, "Alice is dealer and Bob voted")
+
+	// Evict Alice via the evict channel.
+	room.evict <- "user-1"
+
+	// Wait for eviction: dealerID cleared, Alice's vote cleared, Bob's
+	// vote intact. All under r.mu so safe to read from the test goroutine.
+	waitForCondition(t, room, func() bool {
+		_, aliceVote := room.participants["user-1"]
+		bobVote := room.participants["user-2"]
+		return room.dealerID == "" && !aliceVote && bobVote == "8"
+	}, "dealerID and Alice's vote cleared, Bob's vote intact")
+
+	if _, hasVote := room.participants["user-1"]; hasVote {
+		t.Error("expected Alice's vote to be cleared after eviction")
+	}
+	if room.participants["user-2"] != "8" {
+		t.Error("expected Bob's vote to survive Alice's eviction")
+	}
+
+	// Clean up: evict Bob so Run() exits and the goroutine doesn't leak.
+	room.evict <- "user-2"
+	// Wait for the room to be removed from the hub (same pattern as
+	// TestEvictLastClientClosesRoom).
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		hub.mu.RLock()
+		_, exists := hub.rooms["test-room"]
+		hub.mu.RUnlock()
+		if !exists {
+			break
+		}
+		time.Sleep(2 * time.Millisecond)
+	}
+}
+
+func TestEvictNonExistentClient(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+	go room.Run()
+
+	client1 := &Client{ID: "user-1", name: "Alice", role: RolePlayer, send: make(chan []byte, 10)}
+	room.register <- client1
+
+	// Wait for registration by receiving the initial broadcast on client1.send.
+	waitForBroadcast(t, client1.send, "initial broadcast after registration")
+
+	// Evict a non-existent ID — should be a no-op (no panic, no state change).
+	room.evict <- "nonexistent"
+
+	// Give the evict a moment to be processed, then verify Alice is still
+	// present by sending a broadcast action and receiving the state update.
+	room.broadcast <- ClientMessage{client: client1, payload: mustMarshal(t, ActionMessage{Type: ActionVote, Vote: "5"})}
+
+	// If Alice is still registered, we'll receive a state broadcast.
+	waitForBroadcast(t, client1.send, "state broadcast after evicting non-existent ID")
+
+	// Verify the vote was recorded (proves Alice is still in the room).
+	waitForCondition(t, room, func() bool {
+		return room.participants["user-1"] == "5"
+	}, "Alice's vote recorded")
+
+	// Clean up.
+	room.evict <- "user-1"
+}
+
+func TestEvictLastClientClosesRoom(t *testing.T) {
+	hub := NewHub()
+	room := NewRoom("test-room", hub)
+	go room.Run()
+
+	client1 := &Client{ID: "user-1", name: "Alice", role: RolePlayer, send: make(chan []byte, 10)}
+	room.register <- client1
+
+	// Wait for registration.
+	waitForBroadcast(t, client1.send, "initial broadcast")
+
+	// Evict the only client — the room should empty and Run() should exit.
+	room.evict <- "user-1"
+
+	// Wait for the room to be removed from the hub.
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		hub.mu.RLock()
+		_, exists := hub.rooms["test-room"]
+		hub.mu.RUnlock()
+		if !exists {
+			return
+		}
+		time.Sleep(2 * time.Millisecond)
+	}
+	t.Fatal("expected room to be removed from hub after last client evicted")
+}
+
+func mustMarshal(t *testing.T, v interface{}) []byte {
+	t.Helper()
+	data, err := json.Marshal(v)
+	if err != nil {
+		t.Fatalf("failed to marshal: %v", err)
+	}
+	return data
 }

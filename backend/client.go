@@ -40,7 +40,10 @@ type Client struct {
 
 func (c *Client) readPump() {
 	defer func() {
-		c.room.unregister <- c
+		select {
+		case c.room.unregister <- c:
+		default:
+		}
 		c.conn.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
@@ -60,7 +63,10 @@ func (c *Client) readPump() {
 			continue
 		}
 
-		c.room.broadcast <- ClientMessage{client: c, payload: message}
+		select {
+		case c.room.broadcast <- ClientMessage{client: c, payload: message}:
+		default:
+		}
 	}
 }
 
@@ -106,6 +112,7 @@ func generateID() string {
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin string) {
 	roomID := r.URL.Query().Get("room")
 	name := r.URL.Query().Get("name")
+	prevID := r.URL.Query().Get("prevId")
 
 	if roomID == "" || name == "" {
 		http.Error(w, "Missing room or name", http.StatusBadRequest)
@@ -143,11 +150,27 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 		role:        RolePlayer,
 		rateLimiter: rate.NewLimiter(rate.Limit(messageRate), messageBurst),
 	}
-	client.room.register <- client
+
+	select {
+	case client.room.register <- client:
+	default:
+		slog.Warn("room register channel full, closing connection", "room", roomID)
+		conn.Close()
+		return
+	}
 
 	// Send welcome message with the generated ID
 	welcome, _ := json.Marshal(WelcomeMessage{Type: MessageTypeWelcome, ID: id})
 	client.send <- welcome
+
+	// Evict the client's previous connection (if any) after the new
+	// connection is registered. This ensures clean room transitions:
+	// the old connection is removed from whichever room it was in
+	// without emptying the target room's Run goroutine before the
+	// new client is established.
+	if prevID != "" {
+		hub.EvictClient(prevID)
+	}
 
 	go client.writePump()
 	go client.readPump()
