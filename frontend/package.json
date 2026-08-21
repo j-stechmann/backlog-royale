@@ -1,7 +1,7 @@
 {
   "name": "backlog-royale-frontend",
   "private": true,
-  "version": "1.9.0",
+  "version": "1.9.1",
   "license": "GPL-2.0-only",
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "lucide-react": "^1.31.0",
+    "lucide-react": "^1.32.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "sonner": "^2.0.8"

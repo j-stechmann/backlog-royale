@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.9.1] - 2026-08-21
+
+### Fixed
+- Eliminated a flake in the backend `TestEvictClient` test. The test queued 2 register and 3 broadcast messages into buffered channels before `Room.Run()` processed any; since `select` picks ready cases pseudo-randomly, a broadcast could be handled before the registers, causing `broadcastStateLocked` to send nothing and the `len(r.clients) == 0` check to close the room immediately (timing out the wait condition at `room_test.go:462`). The test now waits for each client's initial broadcast after registering — the same pattern already used in `TestEvictNonExistentClient` — before sending any action messages. Verified with 50 repeated runs under `-race`.
+
+### Technical
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.9.1.
+
 ## [1.9.0] - 2026-08-21
 
 ### Added
