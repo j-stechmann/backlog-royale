@@ -41,6 +41,30 @@ describe('VoteSummary', () => {
     expect(symbols.length).toBe(2); // One for '5', one for '8'
   });
 
+  it('orders tied votes by CARD_VALUES order, not insertion order', () => {
+    // Two votes for 'A' (abstain) and two for '?'. Both are ties (count 2).
+    // Integer-like keys ('5','8') are auto-ordered by JS, but '?' and 'A' are
+    // not, so they follow insertion order unless we sort by CARD_VALUES index.
+    // '?' comes before 'A' in CARD_VALUES, so '?' should appear first.
+    const tiedUsers: User[] = [
+      { id: '1', name: 'Alice', role: ROLES.PLAYER, hasVoted: true, vote: 'A' },
+      { id: '2', name: 'Bob', role: ROLES.PLAYER, hasVoted: true, vote: 'A' },
+      { id: '3', name: 'Charlie', role: ROLES.PLAYER, hasVoted: true, vote: '?' },
+      { id: '4', name: 'Dave', role: ROLES.PLAYER, hasVoted: true, vote: '?' },
+    ];
+    const { container } = render(<VoteSummary users={tiedUsers} />);
+
+    const cards = container.querySelectorAll('.flex.items-center.gap-3');
+    expect(cards.length).toBe(2);
+
+    // First card should be '?' (appears earlier in CARD_VALUES), second 'A'.
+    const firstCardContent = cards[0]?.textContent ?? '';
+    const secondCardContent = cards[1]?.textContent ?? '';
+
+    expect(firstCardContent).toContain('?');
+    expect(secondCardContent).not.toContain('?');
+  });
+
   it('renders an Abstain card for players who voted A', () => {
     const abstainUsers: User[] = [
       { id: '1', name: 'Alice', role: ROLES.PLAYER, hasVoted: true, vote: '5' },

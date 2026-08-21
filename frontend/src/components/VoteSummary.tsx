@@ -1,7 +1,7 @@
 import React from 'react';
 import type { User } from '../hooks/useBacklogRoyale';
 import { getTheme } from '../utils/theme';
-import { ROLES } from '../constants';
+import { CARD_VALUES, ROLES } from '../constants';
 import { CardFace } from './CardFace';
 
 interface VoteSummaryProps {
@@ -17,7 +17,10 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
       return acc;
     }, {} as Record<string, number>);
 
-  const sortedVotes = Object.entries(votes).sort((a, b) => b[1] - a[1]);
+  const sortedVotes = Object.entries(votes).sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1];
+    return CARD_VALUES.indexOf(a[0]) - CARD_VALUES.indexOf(b[0]);
+  });
 
   if (sortedVotes.length === 0) return null;
 
