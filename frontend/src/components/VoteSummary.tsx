@@ -35,7 +35,7 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
         {sortedVotes.map(([value, count]) => {
           const theme = getTheme(value);
           return (
-            <div key={value} className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
+            <div key={value} data-testid="vote-card" className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
               <div className="flex items-center gap-1 sm:gap-2">
                 <span className="text-3xl sm:text-5xl font-black text-content tabular-nums leading-none">
                   {count}

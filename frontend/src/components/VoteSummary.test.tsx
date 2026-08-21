@@ -52,17 +52,14 @@ describe('VoteSummary', () => {
       { id: '3', name: 'Charlie', role: ROLES.PLAYER, hasVoted: true, vote: '?' },
       { id: '4', name: 'Dave', role: ROLES.PLAYER, hasVoted: true, vote: '?' },
     ];
-    const { container } = render(<VoteSummary users={tiedUsers} />);
+    render(<VoteSummary users={tiedUsers} />);
 
-    const cards = container.querySelectorAll('.flex.items-center.gap-3');
+    const cards = screen.getAllByTestId('vote-card');
     expect(cards.length).toBe(2);
 
     // First card should be '?' (appears earlier in CARD_VALUES), second 'A'.
-    const firstCardContent = cards[0]?.textContent ?? '';
-    const secondCardContent = cards[1]?.textContent ?? '';
-
-    expect(firstCardContent).toContain('?');
-    expect(secondCardContent).not.toContain('?');
+    expect(cards[0].textContent).toContain('?');
+    expect(cards[1].textContent).not.toContain('?');
   });
 
   it('renders an Abstain card for players who voted A', () => {
