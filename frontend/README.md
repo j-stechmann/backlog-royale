@@ -43,7 +43,7 @@ npm run test
 
 ## 📁 Project Structure
 
-- `src/components`: UI components (Card, Logo, etc.)
+- `src/components`: UI components (Card, Logo, ThemeToggle, etc.)
 - `src/hooks`: Custom hooks, notably `useBacklogRoyale` for WebSocket logic and `useTheme` for theme switching.
 - `src/utils/theme.ts`: Vote-band color mapping (emerald/blue/rose by point value) with light/dark variants.
 - `src/index.css`: Tailwind v4 setup, semantic color tokens (`:root`/`.dark` + `@theme inline`), and the `bounce-subtle` animation.

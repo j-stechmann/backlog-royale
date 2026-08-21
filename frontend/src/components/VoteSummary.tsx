@@ -25,7 +25,7 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
     <div className="bg-surface p-8 sm:p-12 rounded-3xl shadow-sm border border-line relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="text-center mb-10">
         <h2 className="text-2xl font-black text-content-soft mb-2">Voting Summary</h2>
-        <p className="text-subtle text-sm font-medium">Distribution of points for this round</p>
+        <p className="text-muted text-sm font-medium">Distribution of points for this round</p>
       </div>
 
       <div className="flex flex-wrap justify-center gap-8 sm:gap-12">
@@ -37,7 +37,7 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
                 <span className="text-3xl sm:text-5xl font-black text-content tabular-nums leading-none">
                   {count}
                 </span>
-                <span className="text-3xl sm:text-5xl font-black text-subtle leading-none">×</span>
+                <span className="text-3xl sm:text-5xl font-black text-muted leading-none">×</span>
               </div>
               <div className={`
                 w-16 h-24 sm:w-24 sm:h-36 rounded-xl border-2 flex items-center justify-center text-2xl sm:text-4xl font-black relative overflow-hidden

@@ -59,8 +59,8 @@ export const UserStatus: React.FC<UserStatusProps> = ({
       }
 
       return (
-        <div className="w-10 h-14 bg-ok text-content rounded-lg flex items-center justify-center shadow-lg shadow-ok/20 dark:shadow-black/30">
-          <span className="font-bold text-xl">✓</span>
+        <div className="w-10 h-14 bg-ok rounded-lg flex items-center justify-center shadow-lg shadow-ok/20 dark:shadow-black/30">
+          <span className="font-bold text-xl text-emerald-950">✓</span>
         </div>
       );
     }

@@ -26,7 +26,7 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
 }) => {
   if (isAFK) {
     return (
-      <div className="bg-accent-soft p-8 rounded-3xl border border-accent-soft flex flex-col items-center text-center">
+      <div className="bg-accent-soft p-8 rounded-3xl border border-accent/30 flex flex-col items-center text-center">
         <div className="w-16 h-16 bg-accent-soft text-accent-text rounded-2xl flex items-center justify-center mb-4">
           <Coffee size={32} />
         </div>
@@ -50,7 +50,7 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
 
   if (isDealer) {
     return (
-      <div className="bg-warn-soft p-8 rounded-3xl border border-warn-soft flex flex-col items-center text-center">
+      <div className="bg-warn-soft p-8 rounded-3xl border border-warn/30 flex flex-col items-center text-center">
         <div className="w-16 h-16 bg-warn-soft text-warn rounded-2xl flex items-center justify-center mb-4">
           <HandHelping size={32} />
         </div>
@@ -66,7 +66,7 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
     <div className="bg-surface p-8 sm:p-12 rounded-3xl shadow-sm border border-line relative overflow-hidden">
       <div className="text-center mb-10">
         <h2 className="text-2xl font-black text-content-soft mb-2">Cast your vote</h2>
-        <p className="text-subtle text-sm">Select a card to point this story</p>
+        <p className="text-muted text-sm">Select a card to point this story</p>
       </div>
 
       <div className="flex flex-wrap justify-center max-w-3xl mx-auto gap-2">

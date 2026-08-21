@@ -36,7 +36,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
             <Users size={20} className="text-accent-text" />
             <h2 className="font-bold text-content text-sm">Players</h2>
           </div>
-          <div className="px-3 py-1 bg-accent-soft border border-accent-soft rounded-lg">
+          <div className="px-3 py-1 bg-accent-soft border border-accent/30 rounded-lg">
             <span className="text-xs font-bold text-accent-strong">
               {votedPlayersCount} / {players.length} Voted
             </span>
@@ -75,7 +75,7 @@ export const PlayerList: React.FC<PlayerListProps> = ({
                 {user.name.charAt(0).toUpperCase()}
               </div>
               <span className={`font-medium truncate ${user.id === currentUserID ? 'text-accent-text' : 'text-content'}`}>
-                {user.name} {user.id === currentUserID && <span className="text-[10px] text-subtle">(You)</span>}
+                {user.name} {user.id === currentUserID && <span className="text-[10px] text-muted">(You)</span>}
                 {user.role === ROLES.DEALER && (
                   <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-warn-soft text-warn-strong">
                     DEALER

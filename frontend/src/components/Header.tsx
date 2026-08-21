@@ -1,7 +1,8 @@
 import React from 'react';
 import { Logo } from './Logo';
-import { Share2, Coffee, HandHelping, Sun, Moon, Monitor } from 'lucide-react';
+import { Share2, Coffee, HandHelping } from 'lucide-react';
 import { toast } from 'sonner';
+import { ThemeToggle } from './ThemeToggle';
 import type { ThemeMode } from '../hooks/useTheme';
 
 interface HeaderProps {
@@ -14,12 +15,6 @@ interface HeaderProps {
   theme: ThemeMode;
   onSetTheme: (mode: ThemeMode) => void;
 }
-
-const THEME_OPTIONS: { mode: ThemeMode; Icon: React.FC<{ size?: number }>; label: string }[] = [
-  { mode: 'light', Icon: Sun, label: 'Light theme' },
-  { mode: 'dark', Icon: Moon, label: 'Dark theme' },
-  { mode: 'system', Icon: Monitor, label: 'System theme' },
-];
 
 export const Header: React.FC<HeaderProps> = ({
   roomID,
@@ -53,7 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleAFK}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
-                isAFK ? 'bg-accent-soft text-accent-strong hover:bg-accent-soft' : 'bg-surface-3 text-mid-text hover:bg-surface-3'
+                isAFK ? 'bg-accent-soft text-accent-strong hover:bg-accent-strong hover:text-white' : 'bg-surface-3 text-mid-text hover:bg-surface-3/80'
               }`}
               title={isAFK ? 'Return to Game' : 'Go AFK'}
             >
@@ -63,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleRole}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${
-                isDealer ? 'bg-warn-soft text-warn-strong hover:bg-warn-soft' : 'bg-surface-3 text-mid-text hover:bg-surface-3'
+                isDealer ? 'bg-warn-soft text-warn-strong hover:bg-warn-strong hover:text-white' : 'bg-surface-3 text-mid-text hover:bg-surface-3/80'
               }`}
               title={isDealer ? 'Switch to Player' : 'Become Dealer'}
             >
@@ -76,25 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
               />
               <span className="text-xs font-semibold text-muted">{connected ? 'Live' : 'Reconnecting...'}</span>
             </div>
-            <div
-              role="radiogroup"
-              aria-label="Color theme"
-              className="inline-flex rounded-full bg-surface-3 p-0.5"
-            >
-              {THEME_OPTIONS.map(({ mode, Icon, label }) => (
-                <button
-                  key={mode}
-                  role="radio"
-                  aria-checked={theme === mode}
-                  aria-label={label}
-                  title={label}
-                  onClick={() => onSetTheme(mode)}
-                  className={`p-1.5 rounded-full transition-colors ${theme === mode ? 'bg-surface-highlight shadow-sm' : ''}`}
-                >
-                  <Icon size={16} />
-                </button>
-              ))}
-            </div>
+            <ThemeToggle theme={theme} onSetTheme={onSetTheme} />
             <button
               onClick={copyLink}
               className="p-2 text-mid-text hover:bg-surface-3 rounded-lg transition-colors"

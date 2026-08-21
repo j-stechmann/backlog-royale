@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Logo } from './Logo';
-import { Sun, Moon, Monitor } from 'lucide-react';
+import { ThemeToggle } from './ThemeToggle';
 import type { ThemeMode } from '../hooks/useTheme';
 
 interface JoinViewProps {
@@ -10,12 +10,6 @@ interface JoinViewProps {
   theme: ThemeMode;
   onSetTheme: (mode: ThemeMode) => void;
 }
-
-const THEME_OPTIONS: { mode: ThemeMode; Icon: React.FC<{ size?: number }>; label: string }[] = [
-  { mode: 'light', Icon: Sun, label: 'Light theme' },
-  { mode: 'dark', Icon: Moon, label: 'Dark theme' },
-  { mode: 'system', Icon: Monitor, label: 'System theme' },
-];
 
 export const JoinView: React.FC<JoinViewProps> = ({ initialRoomID, initialName, onJoin, theme, onSetTheme }) => {
   const [roomID, setRoomID] = useState(initialRoomID);
@@ -31,26 +25,12 @@ export const JoinView: React.FC<JoinViewProps> = ({ initialRoomID, initialName, 
   return (
     <div className="min-h-screen bg-gradient-to-br from-base to-accent-soft flex items-center justify-center p-4">
       <div className="bg-surface p-8 rounded-3xl shadow-2xl w-full max-w-md border border-glass backdrop-blur-sm relative">
-        <div
-          role="radiogroup"
-          aria-label="Color theme"
-          className="absolute top-4 right-4 inline-flex rounded-full bg-surface-3 p-0.5"
-        >
-          {THEME_OPTIONS.map(({ mode, Icon, label }) => (
-            <button
-              key={mode}
-              type="button"
-              role="radio"
-              aria-checked={theme === mode}
-              aria-label={label}
-              title={label}
-              onClick={() => onSetTheme(mode)}
-              className={`p-1.5 rounded-full transition-colors ${theme === mode ? 'bg-surface-highlight shadow-sm' : ''}`}
-            >
-              <Icon size={14} />
-            </button>
-          ))}
-        </div>
+        <ThemeToggle
+          theme={theme}
+          onSetTheme={onSetTheme}
+          iconSize={14}
+          className="absolute top-4 right-4"
+        />
         <div className="flex justify-center mb-6">
           <Logo size={64} />
         </div>
@@ -65,7 +45,7 @@ export const JoinView: React.FC<JoinViewProps> = ({ initialRoomID, initialName, 
               value={roomID}
               onChange={(e) => setRoomID(e.target.value)}
               placeholder="e.g. engineering-sprint-21"
-              className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-subtle"
+              className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-muted"
               required
             />
           </div>
@@ -76,7 +56,7 @@ export const JoinView: React.FC<JoinViewProps> = ({ initialRoomID, initialName, 
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="How should your team see you?"
-              className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-subtle"
+              className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-muted"
               required
             />
           </div>

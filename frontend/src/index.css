@@ -14,7 +14,6 @@
   --content-soft: #1f2937;
   --mid-text: #4b5563;
   --muted: #6b7280;
-  --subtle: #6b7280;
   --content-inverse: #ffffff;
   --accent: #2563eb;
   --accent-text: #2563eb;
@@ -41,7 +40,6 @@
   --content-soft: #e5e7eb;
   --mid-text: #cbd5e1;
   --muted: #94a3b8;
-  --subtle: #94a3b8;
   --content-inverse: #0b1120;
   --accent: #2563eb;
   --accent-text: #60a5fa;
@@ -68,7 +66,6 @@
   --color-content-soft: var(--content-soft);
   --color-mid-text: var(--mid-text);
   --color-muted: var(--muted);
-  --color-subtle: var(--subtle);
   --color-content-inverse: var(--content-inverse);
   --color-accent: var(--accent);
   --color-accent-text: var(--accent-text);

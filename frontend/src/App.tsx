@@ -109,7 +109,7 @@ function App() {
           </main>
         </div>
       )}
-      <div className="fixed bottom-1 right-2 text-xs text-subtle select-none pointer-events-none">
+      <div className="fixed bottom-1 right-2 text-xs text-muted select-none pointer-events-none">
         v{__APP_VERSION__}
       </div>
       <Toaster position="top-center" richColors theme={theme} />
