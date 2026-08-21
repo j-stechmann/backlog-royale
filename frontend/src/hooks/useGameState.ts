@@ -20,16 +20,23 @@ export const useGameState = () => {
   });
   const [selectedVote, setSelectedVote] = useState<string | null>(null);
 
+  // Holds the previous server-assigned ID to evict, set only when
+  // switching rooms. Sending the shared localStorage ID on every
+  // connection would cause a second browser tab to evict the first
+  // tab's live connection. Cleared once the new connection is welcomed.
+  const [prevIdToEvict, setPrevIdToEvict] = useState('');
+
   const handleIDAssigned = useCallback((id: string) => {
     setUserID(id);
     localStorage.setItem('backlog_royale_id', id);
+    setPrevIdToEvict('');
   }, []);
 
   const { state, connected, sendAction } = useBacklogRoyale(
     isJoined ? roomID : '', 
     isJoined ? name : '', 
     handleIDAssigned,
-    isJoined ? userID : ''
+    isJoined ? prevIdToEvict : ''
   );
 
 
@@ -52,6 +59,7 @@ export const useGameState = () => {
   }, [state]);
 
   const joinRoom = (newRoomID: string, newName: string) => {
+    setPrevIdToEvict(userID);
     setRoomID(newRoomID);
     setName(newName);
     localStorage.setItem('backlog_royale_name', newName);

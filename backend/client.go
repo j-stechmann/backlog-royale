@@ -43,6 +43,7 @@ func (c *Client) readPump() {
 		select {
 		case c.room.unregister <- c:
 		default:
+			slog.Warn("unregister channel full, dropping disconnect", "client", c.name, "id", c.ID)
 		}
 		c.conn.Close()
 	}()
@@ -164,11 +165,13 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 	welcome, _ := json.Marshal(WelcomeMessage{Type: MessageTypeWelcome, ID: id})
 	client.send <- welcome
 
-	// Evict the client's previous connection (if any) after the new
-	// connection is registered. This ensures clean room transitions:
-	// the old connection is removed from whichever room it was in
-	// without emptying the target room's Run goroutine before the
-	// new client is established.
+	// Evict the client's previous connection (if any). Both register and
+	// evict are buffered channels and Room.Run's select picks among ready
+	// cases pseudo-randomly, so ordering between the two is not strictly
+	// guaranteed. In practice this is safe because same-room reconnects
+	// occur after the old room has already died via unregister, making
+	// EvictClient a no-op; cross-room transitions work regardless of order
+	// since the old and new rooms are distinct.
 	if prevID != "" {
 		hub.EvictClient(prevID)
 	}

@@ -6,9 +6,11 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Fixed players not being properly removed from a room when switching to a different room. The frontend now uses a connection-generation counter so that stale WebSocket `onclose` handlers from a previous room are ignored entirely (no spurious reconnects, no flicker, no orphaned sockets). The backend supports an optional `prevId` query parameter on the `/ws` endpoint; when provided, the server looks up the client's previous connection via a global client-ID-to-room index and evicts it from whichever room it is still in, providing server-side validation independent of client-side cleanup.
+- Fixed a regression where opening a second browser tab for the same room evicted the first tab's live connection. `useGameState` now only forwards `prevId` when an actual room switch occurs (tracked via a `prevIdToEvict` state field cleared on welcome); reconnects within the same room and additional tabs in the same room no longer send the shared localStorage ID, so coexisting tabs keep their vote/dealer state.
 
 ### Technical
 - `readPump`'s non-blocking send to `room.broadcast` now logs a warning when the channel is full (previously dropped client actions such as VOTE silently), matching the logging already present in `EvictClient` and `serveWs`.
+- `readPump`'s non-blocking send to `room.unregister` now logs a warning when the channel is full, matching the parity logging already present in `broadcast` and `EvictClient`. Previously a dropped unregister would silently leak a ghost client in `r.clients`, preventing `Room.Run` from exiting on a mass disconnect that exceeds the 64-slot buffer.
 - `TestReconnectDeduplication` no longer uses a misleading empty `default` branch with a "drain and re-check" comment; the closed-channel check now blocks with a timeout and a clear comment explaining the closed-and-empty invariant.
 - Added a global `clientID → *Room` index in the backend Hub (`Hub.index` / `Hub.idxMu`) with `Associate`/`Disassociate`/`EvictClient` methods. The index is maintained on client register, unregister, evict, and the `broadcastStateLocked` slow-client default path.
 - Added a per-room `evict` channel (buffered, 64) consumed by `Room.Run()` to remove a client by ID, mirroring the existing `unregister` handler's lock-release-before-`broadcastState` ordering.
