@@ -1,7 +1,7 @@
 import React from 'react';
 import type { User } from '../hooks/useBacklogRoyale';
 import { getTheme } from '../utils/theme';
-import { ROLES } from '../constants';
+import { CARD_VALUES, ROLES } from '../constants';
 import { CardFace } from './CardFace';
 
 interface VoteSummaryProps {
@@ -17,7 +17,10 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
       return acc;
     }, {} as Record<string, number>);
 
-  const sortedVotes = Object.entries(votes).sort((a, b) => b[1] - a[1]);
+  const sortedVotes = Object.entries(votes).sort((a, b) => {
+    if (b[1] !== a[1]) return b[1] - a[1];
+    return CARD_VALUES.indexOf(a[0]) - CARD_VALUES.indexOf(b[0]);
+  });
 
   if (sortedVotes.length === 0) return null;
 
@@ -32,7 +35,7 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
         {sortedVotes.map(([value, count]) => {
           const theme = getTheme(value);
           return (
-            <div key={value} className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
+            <div key={value} data-testid="vote-card" className="flex items-center gap-3 sm:gap-4 group transition-transform duration-300 hover:-translate-y-2">
               <div className="flex items-center gap-1 sm:gap-2">
                 <span className="text-3xl sm:text-5xl font-black text-content tabular-nums leading-none">
                   {count}

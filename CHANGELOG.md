@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Corrected the "AFK" and "Become Dealer" header buttons whose `hover:` classes were identical to their base classes (no visible hover effect). Active states now darken to `accent-strong`/`warn-strong` with white text; inactive states dim to `surface-3/80`.
 - Replaced zero-contrast `border-accent-soft`/`border-warn-soft` borders (drawn on matching `*-soft` backgrounds) with `border-accent/30`/`border-warn/30` in `PlayerList` and `VotingPanel` so the borders are actually visible.
+- Vote summary cards now tie-break by `CARD_VALUES` index, so cards with equal counts appear in the same order as on the voting screen instead of arbitrary insertion order.
 
 ### Technical
 - Consolidated the previously-identical `subtle` and `muted` tokens into a single `muted` token (22 semantic tokens, down from 23); all `text-subtle`/`placeholder:text-subtle` usages now use `muted`.
