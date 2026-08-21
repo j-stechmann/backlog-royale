@@ -1,4 +1,82 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --surface-3: #f3f4f6;
+  --surface-inverse: #111827;
+  --surface-highlight: #ffffff;
+  --line: #e5e7eb;
+  --glass: rgba(255, 255, 255, 0.5);
+  --content: #111827;
+  --content-soft: #1f2937;
+  --mid-text: #4b5563;
+  --muted: #6b7280;
+  --content-inverse: #ffffff;
+  --accent: #2563eb;
+  --accent-text: #2563eb;
+  --accent-strong: #1d4ed8;
+  --accent-soft: #eff6ff;
+  --warn: #d97706;
+  --warn-strong: #b45309;
+  --warn-soft: #fffbeb;
+  --ok: #22c55e;
+  --danger: #ef4444;
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0b1120;
+  --surface: #1e293b;
+  --surface-2: #111827;
+  --surface-3: #334155;
+  --surface-inverse: #f3f4f6;
+  --surface-highlight: #475569;
+  --line: #475569;
+  --glass: rgba(255, 255, 255, 0.15);
+  --content: #f9fafb;
+  --content-soft: #e5e7eb;
+  --mid-text: #cbd5e1;
+  --muted: #94a3b8;
+  --content-inverse: #0b1120;
+  --accent: #2563eb;
+  --accent-text: #60a5fa;
+  --accent-strong: #93c5fd;
+  --accent-soft: #1e3a8a;
+  --warn: #f59e0b;
+  --warn-strong: #fbbf24;
+  --warn-soft: #78350f;
+  --ok: #22c55e;
+  --danger: #ef4444;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-base: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-inverse: var(--surface-inverse);
+  --color-surface-highlight: var(--surface-highlight);
+  --color-line: var(--line);
+  --color-glass: var(--glass);
+  --color-content: var(--content);
+  --color-content-soft: var(--content-soft);
+  --color-mid-text: var(--mid-text);
+  --color-muted: var(--muted);
+  --color-content-inverse: var(--content-inverse);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-warn: var(--warn);
+  --color-warn-strong: var(--warn-strong);
+  --color-warn-soft: var(--warn-soft);
+  --color-ok: var(--ok);
+  --color-danger: var(--danger);
+}
 
 html, body, #root {
   height: 100%;
@@ -7,7 +85,7 @@ html, body, #root {
 }
 
 body {
-  background-color: #f9fafb; /* gray-50 */
+  background-color: var(--bg);
 }
 
 @keyframes bounce-subtle {

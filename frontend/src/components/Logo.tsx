@@ -16,11 +16,10 @@ export const Logo: React.FC<LogoProps> = ({ className, size = 32 }) => {
       className={className}
     >
       {/* Background Card (Shadow/Depth) */}
-      <rect x="12" y="12" width="26" height="32" rx="3" fill="#E5E7EB" />
-      <rect x="12" y="12" width="26" height="32" rx="3" stroke="#D1D5DB" strokeWidth="1" />
+      <rect x="12" y="12" width="26" height="32" rx="3" style={{ fill: 'var(--surface-2)', stroke: 'var(--line)' }} strokeWidth="1" />
 
       {/* Main Card */}
-      <rect x="10" y="8" width="26" height="32" rx="3" fill="white" stroke="#2563EB" strokeWidth="2" />
+      <rect x="10" y="8" width="26" height="32" rx="3" style={{ fill: 'var(--surface)', stroke: 'var(--accent)' }} strokeWidth="2" />
       
       {/* Crown - Centered on the card instead of a number */}
       <path 

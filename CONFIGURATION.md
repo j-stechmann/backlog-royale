@@ -33,6 +33,12 @@ VITE_WS_URL=ws://localhost:8080
 ### Production
 Set the environment variables in your CI/CD or hosting provider (e.g., Vercel, Netlify).
 
+### Theme Preference
+
+The frontend supports light, dark, and system (follows OS `prefers-color-scheme`) themes. The user's choice is persisted in `localStorage` under the key `backlog_royale_theme` (`'light'` | `'dark'` | `'system'`), defaulting to `'system'`. Invalid stored values fall back to `'system'`.
+
+A small inline `<script>` in `frontend/index.html` applies the correct theme class before React mounts to prevent a flash of the wrong theme on reload. If you deploy with a strict Content-Security-Policy header, allow inline scripts (or add a nonce) so this pre-paint script can run.
+
 ## Security Best Practices
 1. **Never commit `.env` files.** They are included in `.gitignore`.
 2. **Restrict CORS.** In production, `ALLOWED_ORIGIN` must be set to the frontend's domain.

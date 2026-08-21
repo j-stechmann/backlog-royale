@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { Toaster, toast } from 'sonner';
 import { JoinView } from './components/JoinView';
 import { Header } from './components/Header';
 import { VotingPanel } from './components/VotingPanel';
 import { PlayerList } from './components/PlayerList';
-import { toast } from 'sonner';
 import { useGameState } from './hooks/useGameState';
+import { useTheme } from './hooks/useTheme';
 import { ACTIONS, ROLES } from './constants';
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
     sendAction,
     joinRoom
   } = useGameState();
+
+  const { theme, setTheme } = useTheme();
 
   const currentUser = state?.users.find(u => u.id === userID);
   const isDealer = currentUser?.role === ROLES.DEALER;
@@ -66,9 +69,9 @@ function App() {
   return (
     <>
       {!isJoined ? (
-        <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} />
+        <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} theme={theme} onSetTheme={setTheme} />
       ) : (
-        <div className="min-h-screen bg-gray-50 pb-12">
+        <div className="min-h-screen bg-base pb-12">
           <Header
             roomID={roomID}
             connected={connected}
@@ -76,6 +79,8 @@ function App() {
             isDealer={isDealer}
             onToggleAFK={() => toggleAFK()}
             onToggleRole={toggleRole}
+            theme={theme}
+            onSetTheme={setTheme}
           />
 
           <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
@@ -104,9 +109,10 @@ function App() {
           </main>
         </div>
       )}
-      <div className="fixed bottom-1 right-2 text-xs text-gray-400 select-none pointer-events-none">
+      <div className="fixed bottom-1 right-2 text-xs text-muted select-none pointer-events-none">
         v{__APP_VERSION__}
       </div>
+      <Toaster position="top-center" richColors theme={theme} />
     </>
   );
 }

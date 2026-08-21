@@ -9,6 +9,7 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 - **Fibonacci Scoring**: Standard agile pointing system.
 - **Dynamic Routing**: Join any room via a simple URL.
 - **Version Indicator**: Displays the current app version in the bottom-right corner.
+- **Dark Theme**: Light, dark, and system (follows OS) modes with a persisted manual override. Toggle via the segmented control in the header (joined view) or the top-right of the join card.
 
 ## 🚀 Getting Started
 
@@ -42,8 +43,10 @@ npm run test
 
 ## 📁 Project Structure
 
-- `src/components`: UI components (Card, Logo, etc.)
-- `src/hooks`: Custom hooks, notably `useBacklogRoyale` for WebSocket logic.
+- `src/components`: UI components (Card, Logo, ThemeToggle, etc.)
+- `src/hooks`: Custom hooks, notably `useBacklogRoyale` for WebSocket logic and `useTheme` for theme switching.
+- `src/utils/theme.ts`: Vote-band color mapping (emerald/blue/rose by point value) with light/dark variants.
+- `src/index.css`: Tailwind v4 setup, semantic color tokens (`:root`/`.dark` + `@theme inline`), and the `bounce-subtle` animation.
 - `src/test`: Testing setup and utilities.
 - `src/App.tsx`: Main application container and layout.
 - `src/main.tsx`: Entry point.
