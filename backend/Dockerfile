@@ -14,7 +14,7 @@ COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o backlog-server .
 
 # Final stage
-FROM alpine:3.23.5
+FROM alpine:3.24.1
 
 WORKDIR /app
 
