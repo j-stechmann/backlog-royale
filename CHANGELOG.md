@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Switched frontend Docker build and local setup instructions from `npm install` to `npm ci` so builds are locked to `package-lock.json`.
 
 ### Removed
-- Deleted a stray empty `package-lock.json` at the repository root.
+- Deleted an untracked empty `package-lock.json` from the local working tree (the file was never committed to the repository).
 
 ## [1.9.2] - 2026-08-30
 
