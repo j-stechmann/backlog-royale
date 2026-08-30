@@ -19,7 +19,7 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 ### Installation
 1. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 2. Start the development server:
    ```bash

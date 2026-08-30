@@ -50,7 +50,7 @@ The easiest way to get started is using Docker Compose:
 docker-compose up --build
 ```
 
-- **Frontend:** [http://localhost](http://localhost)
+- **Frontend:** [http://localhost:8081](http://localhost:8081)
 - **Backend:** [http://localhost:8080](http://localhost:8080)
 
 ### Local Development
@@ -72,7 +72,7 @@ docker-compose up --build
    ```
 2. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 3. Start the development server:
    ```bash
