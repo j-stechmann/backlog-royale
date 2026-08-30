@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.9.2] - 2026-08-30
+
+### Technical
+- Updated backend base image: golang (1.26.6-alpine → 1.27.0-alpine).
+- Updated frontend dependencies: lucide-react (1.32.0 → 1.33.0).
+- Updated frontend dev dependencies: @vitejs/plugin-react (6.0.5 → 6.1.0), vitest (4.1.10 → 4.1.11), eslint (10.8.1 → 10.9.0), vite (8.2.1 → 8.2.2).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.9.2.
+
 ## [1.9.1] - 2026-08-21
 
 ### Fixed
