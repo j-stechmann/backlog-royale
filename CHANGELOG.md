@@ -4,7 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Automated dependency merging**: Dependabot now opens weekly, grouped PRs (minor+patch per ecosystem) against `develop` and auto-merges them once CI is green; major bumps and all PRs targeting `main` always require manual review. Configured via `.github/dependabot.yml` and `.github/workflows/dependabot-auto-merge.yml`, plus branch protection: `develop` requires green CI checks, `main` additionally requires human approval — production can never be updated automatically.
+- Docker build smoke-test job in CI (`docker`: builds both images without pushing) so base-image updates are validated before they can merge into `develop`.
+
 ### Changed
+- Aligned the Go version triangle: `backend/go.mod` (1.26.1 → 1.27.0) and CI (`go-version: 1.27.x`) now match the backend Dockerfile builder (`golang:1.27.0-alpine3.23`); README prerequisites updated to Go 1.27. Dependabot is configured to ignore all version updates (major/minor/patch) of the go.mod `go` directive — including patch bumps triggered by a dependency's own `go` directive requirement, which would otherwise auto-merge and make builds silently download a newer toolchain via `GOTOOLCHAIN=auto` — so CI and the Dockerfile never fall out of sync again.
+- Replaced Dependabot's daily per-package PR flood with a weekly schedule grouped into one minor+patch PR per ecosystem (npm split production/development, Go, Docker frontend/backend, GitHub Actions), limited to 10 open PRs; security updates remain immediate and individual.
+- `golang.org/x/time` is now declared as a direct dependency in `backend/go.mod` (it is imported by `main.go`/`client.go`); `go mod tidy` dropped its incorrect `// indirect` marker.
 - Updated `frontend/package-lock.json` to fix `nanoid` < 3.3.18 (GHSA-2v37-7h3g-55p8, high severity, via postcss).
 - Pinned all Dockerfile base images to specific versions (golang 1.27.0-alpine3.23, node 26.7.0-alpine3.23, alpine 3.23.5, nginx-unprivileged 1.31.4-alpine3.24) for reproducible builds; floating tags like `alpine:latest` and `nginx:alpine` can no longer drift.
 - Containers now run as non-root: the backend uses a dedicated `appuser`, and the frontend uses `nginxinc/nginx-unprivileged`. The frontend container now listens on port 8080 instead of 80; `docker-compose.yml` maps it to host port 8081.

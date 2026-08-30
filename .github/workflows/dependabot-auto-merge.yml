@@ -1,0 +1,39 @@
+name: Dependabot auto-merge
+
+# pull_request_target (not pull_request): workflows triggered by Dependabot
+# get a read-only GITHUB_TOKEN under `pull_request`, so auto-merge would fail
+# with 403. This workflow never checks out or executes PR code, it only reads
+# PR metadata and calls the API, so the elevated trigger is safe here.
+on: pull_request_target
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    runs-on: ubuntu-latest
+    if: >
+      github.repository == 'j-stechmann/backlog-royale' &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.base.ref == 'develop'
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Enable auto-merge (merge commit)
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Label major updates for manual review
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        run: gh pr edit "$PR_URL" --add-label "major"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
