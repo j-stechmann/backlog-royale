@@ -32,7 +32,7 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 - **Notifications:** Sonner
 
 ### Backend
-- **Language:** Go 1.26
+- **Language:** Go 1.27
 - **Real-time:** Gorilla WebSocket
 - **ID Generation:** Google UUID
 
@@ -40,7 +40,7 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 
 ### Prerequisites
 - Docker & Docker Compose (Recommended)
-- OR Go 1.26+ and Node.js 26+ (for local development)
+- OR Go 1.27+ and Node.js 26+ (for local development)
 
 ### Running with Docker
 

@@ -14,7 +14,7 @@ For a more detailed overview, see the [Architecture documentation](../ARCHITECTU
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Go 1.26 or higher
+- Go 1.27 or higher
 
 ### Running Locally
 1. Install dependencies:

@@ -57,7 +57,15 @@ Before submitting any pull request or finalizing changes:
 ### 4. Continuous Integration
 The project uses GitHub Actions (see `.github/workflows/ci.yml`). Ensure your changes do not break the CI pipeline.
 
-### 5. Documentation
+### 5. Dependency Updates
+Dependency updates are automated with **Dependabot** (see `.github/dependabot.yml`):
+
+- **Schedule**: Weekly, grouped into one pull request per ecosystem (npm production, npm development, Go, Docker, GitHub Actions) containing minor and patch updates only. Security updates arrive immediately as individual PRs.
+- **Auto-merge**: Grouped minor/patch PRs against `develop` are automatically merged (merge commits) once CI passes (see `.github/workflows/dependabot-auto-merge.yml`). **Major updates are never auto-merged** — they are labeled `major` and wait for manual review.
+- **Branch protection**: All PRs require the CI checks (`backend`, `frontend`, `docker`) to pass before merging. Pull requests against `main` additionally require human approval — production is never updated automatically.
+- **Manual Go version bumps**: If you bump the Go version, update all three places together: `backend/go.mod`, `go-version` in `ci.yml`, and the builder image in `backend/Dockerfile`. Dependabot ignores minor/major updates of the go.mod `go` directive to prevent drift.
+
+### 6. Documentation
 If you add or change a configuration variable, you **must** update `CONFIGURATION.md` and the relevant service README.
 
 ## License
