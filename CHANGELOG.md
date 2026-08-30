@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Updated `frontend/package-lock.json` to fix `nanoid` < 3.3.18 (GHSA-2v37-7h3g-55p8, high severity, via postcss).
+- Pinned all Dockerfile base images to specific versions (golang 1.27.0-alpine3.23, node 26.7.0-alpine3.23, alpine 3.23.5, nginx-unprivileged 1.31.4-alpine3.24) for reproducible builds; floating tags like `alpine:latest` and `nginx:alpine` can no longer drift.
+- Containers now run as non-root: the backend uses a dedicated `appuser`, and the frontend uses `nginxinc/nginx-unprivileged`. The frontend container now listens on port 8080 instead of 80; `docker-compose.yml` maps it to host port 8081.
+- Switched frontend Docker build and local setup instructions from `npm install` to `npm ci` so builds are locked to `package-lock.json`.
+
+### Removed
+- Deleted a stray empty `package-lock.json` at the repository root.
+
 ## [1.9.2] - 2026-08-30
 
 ### Technical
