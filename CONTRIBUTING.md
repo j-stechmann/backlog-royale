@@ -63,7 +63,7 @@ Dependency updates are automated with **Dependabot** (see `.github/dependabot.ym
 - **Schedule**: Weekly, grouped into one pull request per ecosystem (npm production, npm development, Go, Docker, GitHub Actions) containing minor and patch updates only. Security updates arrive immediately as individual PRs.
 - **Auto-merge**: Grouped minor/patch PRs against `develop` are automatically merged (merge commits) once CI passes (see `.github/workflows/dependabot-auto-merge.yml`). **Major updates are never auto-merged** — they are labeled `major` and wait for manual review.
 - **Branch protection**: All PRs require the CI checks (`backend`, `frontend`, `docker`) to pass before merging. Pull requests against `main` additionally require human approval — production is never updated automatically.
-- **Manual Go version bumps**: If you bump the Go version, update all three places together: `backend/go.mod`, `go-version` in `ci.yml`, and the builder image in `backend/Dockerfile`. Dependabot ignores minor/major updates of the go.mod `go` directive to prevent drift.
+- **Manual Go version bumps**: If you bump the Go version, update all three places together: `backend/go.mod`, `go-version` in `ci.yml`, and the builder image in `backend/Dockerfile`. Dependabot ignores all version updates (major/minor/patch) of the go.mod `go` directive to prevent drift. The pinned builder image enforces the compiler version: Go's `GOTOOLCHAIN=auto` would otherwise silently download a newer toolchain whenever a dependency requires it.
 
 ### 6. Documentation
 If you add or change a configuration variable, you **must** update `CONFIGURATION.md` and the relevant service README.

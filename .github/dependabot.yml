@@ -33,10 +33,14 @@ updates:
     ignore:
       # Keep the `go` directive from moving ahead of the Go versions pinned in
       # ci.yml and backend/Dockerfile; bump it deliberately, in all three places.
+      # Patch updates are ignored too, otherwise a bumped dependency's go.mod
+      # requirement would auto-merge and trigger a GOTOOLCHAIN=auto download of
+      # a toolchain newer than the ones pinned in ci.yml and the Dockerfile.
       - dependency-name: "go"
         update-types:
           - "version-update:semver-major"
           - "version-update:semver-minor"
+          - "version-update:semver-patch"
 
   - package-ecosystem: "docker"
     directory: "/frontend"

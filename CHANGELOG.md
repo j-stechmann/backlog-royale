@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 - Docker build smoke-test job in CI (`docker`: builds both images without pushing) so base-image updates are validated before they can merge into `develop`.
 
 ### Changed
-- Aligned the Go version triangle: `backend/go.mod` (1.26.1 → 1.27.0) and CI (`go-version: 1.27.x`) now match the backend Dockerfile builder (`golang:1.27.0-alpine3.23`); README prerequisites updated to Go 1.27. Dependabot is configured to ignore minor/major updates of the go.mod `go` directive so CI and the Dockerfile never fall out of sync again.
+- Aligned the Go version triangle: `backend/go.mod` (1.26.1 → 1.27.0) and CI (`go-version: 1.27.x`) now match the backend Dockerfile builder (`golang:1.27.0-alpine3.23`); README prerequisites updated to Go 1.27. Dependabot is configured to ignore all version updates (major/minor/patch) of the go.mod `go` directive — including patch bumps triggered by a dependency's own `go` directive requirement, which would otherwise auto-merge and make builds silently download a newer toolchain via `GOTOOLCHAIN=auto` — so CI and the Dockerfile never fall out of sync again.
 - Replaced Dependabot's daily per-package PR flood with a weekly schedule grouped into one minor+patch PR per ecosystem (npm split production/development, Go, Docker frontend/backend, GitHub Actions), limited to 10 open PRs; security updates remain immediate and individual.
 - `golang.org/x/time` is now declared as a direct dependency in `backend/go.mod` (it is imported by `main.go`/`client.go`); `go mod tidy` dropped its incorrect `// indirect` marker.
 - Updated `frontend/package-lock.json` to fix `nanoid` < 3.3.18 (GHSA-2v37-7h3g-55p8, high severity, via postcss).
