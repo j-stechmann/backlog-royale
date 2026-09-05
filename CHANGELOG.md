@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Documentation
+- Rewrote `ARCHITECTURE.md` as a complete reference: concurrency model (single-goroutine room ownership, channel buffers, non-blocking sends, drop-the-client backpressure), room lifecycle, role/permission rules, identity & deduplication (including the `prevId` register/evict ordering caveat and multi-tab semantics), the full WebSocket protocol, deployment/CI details (pinned base images, Dependabot grouping & auto-merge, the Go version triangle), testing strategy, and a new "Design decisions and trade-offs" section (in-memory state, full-state broadcasts, server-authoritative identity, 64-bit IDs, distribution-only summary, unauthenticated rooms, single-instance scaling) plus a "Known limitations" section.
+
 ### Added
 - **Automated dependency merging**: Dependabot now opens weekly, grouped PRs (minor+patch per ecosystem) against `develop` and auto-merges them once CI is green; major bumps and all PRs targeting `main` always require manual review. Configured via `.github/dependabot.yml` and `.github/workflows/dependabot-auto-merge.yml`, plus branch protection: `develop` requires green CI checks, `main` additionally requires human approval — production can never be updated automatically.
 - Docker build smoke-test job in CI (`docker`: builds both images without pushing) so base-image updates are validated before they can merge into `develop`.
