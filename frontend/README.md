@@ -9,7 +9,10 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 - **Fibonacci Scoring**: Standard agile pointing system.
 - **Dynamic Routing**: Join any room via a simple URL.
 - **Version Indicator**: Displays the current app version in the bottom-right corner.
+- **Legal Pages**: Imprint and Privacy Policy via hash routes (`/#/imprint`, `/#/privacy`; no router dependency), linked from the footer next to the version.
 - **Dark Theme**: Light, dark, and system (follows OS) modes with a persisted manual override. Toggle via the segmented control in the header (joined view) or the top-right of the join card.
+
+Deep dives: [architecture](../docs/architecture/frontend.md) · [theming](../docs/adr/0009-semantic-tokens-and-dark-theme.md) · [legal pages](../docs/adr/0013-hash-based-legal-pages.md) · [docs map](../docs/README.md).
 
 ## 🚀 Getting Started
 
@@ -19,7 +22,7 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 ### Installation
 1. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 2. Start the development server:
    ```bash

@@ -4,10 +4,16 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 
 ## 📖 Documentation
 
-- [Architecture](ARCHITECTURE.md) - Deep dive into how it works.
-- [Contributing](CONTRIBUTING.md) - How to help improve the project (uses Git Flow).
-- [Backend README](backend/README.md) - Backend specific details.
-- [Frontend README](frontend/README.md) - Frontend specific details.
+All project documentation lives in the [`docs/`](docs/README.md) directory. Start with the [documentation map](docs/README.md#documentation-map).
+
+- [Features](docs/product/features.md) — the full feature catalog.
+- [Usage guide](docs/guides/usage.md) — how to run a session (for players & facilitators).
+- [Getting started](docs/guides/getting-started.md) — run the app locally.
+- [Self-hosting](docs/guides/self-hosting.md) — deploy it for real.
+- [Architecture](docs/architecture/overview.md) — how it works, deep dive.
+- [Design decisions (ADRs)](docs/adr/README.md) — every significant decision, with trade-offs.
+- [Protocol reference](docs/reference/protocol.md) — the WebSocket wire format.
+- [Contributing](CONTRIBUTING.md) — how to help improve the project (uses Git Flow).
 
 ## Features
 
@@ -20,6 +26,7 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 - 🔗 **Shareable Links:** Easily invite team members by sharing the URL.
 - 📱 **Responsive Design:** Works great on desktop and mobile.
 - 🌙 **Dark Theme:** Light/dark/system theme with OS-preference detection and a manual override (persisted). Toggle in the header or on the join screen.
+- ⚖️ **Legal Pages:** Imprint and Privacy Policy built into the app, reachable via hash routes (`/#/imprint`, `/#/privacy`) from the footer.
 
 ## Tech Stack
 
@@ -32,15 +39,15 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 - **Notifications:** Sonner
 
 ### Backend
-- **Language:** Go 1.26
+- **Language:** Go 1.27
 - **Real-time:** Gorilla WebSocket
-- **ID Generation:** Google UUID
+- **ID Generation:** crypto/rand (server-side, per connection)
 
 ## Getting Started
 
 ### Prerequisites
 - Docker & Docker Compose (Recommended)
-- OR Go 1.26+ and Node.js 26+ (for local development)
+- OR Go 1.27+ and Node.js 26+ (for local development)
 
 ### Running with Docker
 
@@ -50,7 +57,7 @@ The easiest way to get started is using Docker Compose:
 docker-compose up --build
 ```
 
-- **Frontend:** [http://localhost](http://localhost)
+- **Frontend:** [http://localhost:8081](http://localhost:8081)
 - **Backend:** [http://localhost:8080](http://localhost:8080)
 
 ### Local Development
@@ -72,7 +79,7 @@ docker-compose up --build
    ```
 2. Install dependencies:
    ```bash
-   npm install
+   npm ci
    ```
 3. Start the development server:
    ```bash

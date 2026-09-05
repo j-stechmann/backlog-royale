@@ -9,12 +9,12 @@ The server uses a Hub-and-Spoke model:
 - **Room**: A goroutine-backed session for a specific group of users.
 - **Client**: A WebSocket connection wrapper.
 
-For a more detailed overview, see the [Architecture documentation](../ARCHITECTURE.md).
+For a more detailed overview, see the [architecture documentation](../docs/architecture/backend.md) and the [documentation map](../docs/README.md).
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Go 1.26 or higher
+- Go 1.27 or higher
 
 ### Running Locally
 1. Install dependencies:
