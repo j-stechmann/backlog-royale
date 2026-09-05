@@ -131,7 +131,7 @@ The app version (from `frontend/package.json`, injected at build time) is displa
 
 ## Rate limiting and connection hygiene
 
-Two independent token buckets: per-IP HTTP rate limiting (429 on excess) and per-connection WebSocket message rate limiting (silently drops excess messages, logs a warning). Plus ping/pong keepalive, a 512-byte message cap, and server-enforced timeouts. Details in [Security](../architecture/security.md).
+Two independent token buckets: per-IP HTTP rate limiting (429 on excess) and per-connection WebSocket message rate limiting (drops excess messages with no client feedback — the server logs a warning). Plus ping/pong keepalive, a 512-byte message cap, and server-enforced timeouts. Details in [Security](../architecture/security.md).
 
 - Implemented by: `backend/main.go` (`securityMiddleware`, `getIPLimiter`), `backend/client.go` (`rateLimiter`, `readPump`, `writePump`).
 - Status: shipped (v1.1.0).
@@ -168,5 +168,5 @@ Dropped connections show a "Reconnecting..." pill and reconnect automatically af
 | 1.7.0 | "A" (Abstain) card |
 | 1.8.0 | Version indicator |
 | 1.9.0 | Dark theme + semantic tokens; clean room transitions (`prevId`); multi-tab coexistence |
-| 1.9.2 | Go 1.27 alignment |
-| Unreleased | Automated dependency merging (grouped PRs + auto-merge) |
+| 1.9.2 | Docker builder bumped to Go 1.27 |
+| Unreleased | Automated dependency merging (grouped PRs + auto-merge); Go 1.27 alignment (go.mod, CI, Docker) |

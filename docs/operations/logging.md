@@ -51,10 +51,10 @@ The backend logs structured JSON to stdout via `log/slog` (`slog.NewJSONHandler`
 Everything is JSON on stdout, so any log stack works as-is:
 
 ```bash
-docker logs -f backlog-backend | jq 'select(.level=="WARN")'
+docker compose logs -f backend | jq 'select(.level=="WARN")'
 ```
 
-Useful queries: `Room closing` frequency (churn), the four "full, dropping" warnings (overload or abuse), `Rate limit exceeded` (rowdy clients), `failed to unmarshal action` (protocol bugs).
+Useful queries: `Room closing` frequency (churn), the three "full, dropping" warnings plus `room register channel full` (which closes the connection instead of dropping — overload or abuse), `Rate limit exceeded` (rowdy clients), `failed to unmarshal action` (protocol bugs).
 
 ## Frontend observability
 

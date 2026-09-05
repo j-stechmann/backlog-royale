@@ -54,7 +54,7 @@ The `packages: write` permission is granted per-job; the rest of the workflow ru
 
 ## Version notes
 
-- Actions are themselves Dependabot-managed (the `github-actions` ecosystem) and pinned to major tags (`@v7`, `@v4`) — except `docker/login-action@v4.6.0` and `metadata-action@v6`, which are patch-pinned from earlier history. Mixed pinning styles are cosmetic; the weekly group PRs keep everything current.
+- Actions are themselves Dependabot-managed (the `github-actions` ecosystem) and pinned to major tags (`@v7`, `@v4`, `@v6`) — except `docker/login-action@v4.6.0`, which is patch-pinned from earlier history. Mixed pinning styles are cosmetic; the weekly group PRs keep everything current.
 - `docker-publish.yml` grants `permissions: packages: write` and defaults the rest to read-only, following least-privilege.
 
 ## Extending the pipelines

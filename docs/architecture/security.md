@@ -11,7 +11,7 @@ What the application protects, how, and — just as importantly — what it does
 | Message size | `SetReadLimit` | 512 bytes | `client.go` |
 | Keepalive | Ping/pong + deadlines | 60 s read deadline (pong-refreshed), ping every 54 s, 10 s write deadline | `client.go` |
 | Origin check | `upgrader.CheckOrigin` | Exact, case-insensitive match when `ALLOWED_ORIGIN` ≠ `*`; empty `Origin` rejected | `client.go` (`serveWs`) |
-| Security headers | Middleware | `nosniff`, `DENY`, XSS filter, `no-referrer`, CSP (`default-src 'self'; connect-src ws: wss:`) | `main.go` |
+| Security headers | Middleware | `nosniff`, `DENY`, XSS filter, `no-referrer`, CSP (`default-src 'self'; connect-src 'self' ws: wss:`) | `main.go` |
 | Server timeouts | `http.Server` | ReadHeader 5 s, Read 10 s, Write 10 s, Idle 120 s (handshake only) | `main.go` |
 | Identity | Server-generated IDs | 8 bytes `crypto/rand`, hex; client IDs never trusted | `client.go` (`generateID`) |
 

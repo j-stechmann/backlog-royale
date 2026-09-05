@@ -74,4 +74,4 @@ The Dependabot config fix in v1.4.2 followed exactly this path (`b1b5505`, "hotf
 
 ## Release history
 
-The authoritative record is the [CHANGELOG](../../CHANGELOG.md). Notable milestones: 0.1.0 (initial, 2026-04-21) → 0.8.0 (dealer) → 1.6.0 (dealer-free rounds) → 1.7.0 (abstain card) → 1.9.0 (dark theme + room transitions) → 1.9.2 (Go 1.27 alignment); the unreleased line adds automated dependency merging.
+The authoritative record is the [CHANGELOG](../../CHANGELOG.md). Notable milestones: 0.1.0 (initial, 2026-04-21) → 0.8.0 (dealer) → 1.6.0 (dealer-free rounds) → 1.7.0 (abstain card) → 1.9.0 (dark theme + room transitions) → 1.9.2 (Docker builder bumped to Go 1.27); the unreleased line adds automated dependency merging and the Go 1.27 alignment (go.mod, CI, Docker).

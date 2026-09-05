@@ -37,7 +37,7 @@ GET /ws?room=<id>&name=<name>[&prevId=<id>]
   "type": "STATE",
   "id": "engineering-sprint-21",
   "users": [
-    { "id": "a1b2c3d4e5f60718", "name": "Alice", "hasVoted": true,  "vote": "5", "role": "player" },
+    { "id": "a1b2c3d4e5f60718", "name": "Alice", "hasVoted": true,              "role": "player" },
     { "id": "f00dcafe01234567", "name": "Bob",   "hasVoted": false,              "role": "player" },
     { "id": "0011223344556677", "name": "Carol", "hasVoted": false,              "role": "dealer" },
     { "id": "0fedcba987654321", "name": "Dave",  "hasVoted": false,              "role": "afk" }
