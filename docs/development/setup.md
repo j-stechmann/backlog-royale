@@ -7,7 +7,7 @@ The precise toolchain, the commands, and the pitfalls that are easy to trip over
 | Tool | Version | Where pinned |
 | :--- | :--- | :--- |
 | Go | **1.27.x** | `backend/go.mod` (`go 1.27.0`), `ci.yml` (`go-version: '1.27.x'`), `backend/Dockerfile` builder (`golang:1.27.0-alpine3.23`) |
-| Node.js | **26** | `frontend/package.json` engines (via jsdom 30), `ci.yml`, `frontend/Dockerfile` builder (`node:26.8.1-alpine3.23`) |
+| Node.js | **26** | `ci.yml` (`node-version: 26`), `frontend/Dockerfile` builder (`node:26.8.1-alpine3.23`); jsdom 30 requires `>=26`-compatible Node (its range also permits 22/24, so the CI/Docker pins are the enforcement) |
 
 **Go version triangle:** the three Go pins must be bumped *together, by hand*. Dependabot ignores every version update of the `go` directive — a mismatch would silently download a different toolchain via `GOTOOLCHAIN=auto` and desynchronize CI from the Docker build. The full story is [ADR 0011](../adr/0011-go-version-triangle.md).
 

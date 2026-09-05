@@ -79,7 +79,7 @@ Wire examples:
 
 **Identity fields are decorative:** the server binds every action to the connection's own ID and the `name` from the query string. A client-declared `name` inside an action is ignored; `userId` is honored only for the dealer's AFK-targeting (permission-checked) ([ADR 0003](../adr/0003-server-authoritative-identity.md)).
 
-**Error handling:** there is no error message type. Invalid JSON is logged and dropped; unauthorized or invalid actions are dropped (server-side log only) and the next `STATE` re-asserts reality. The only hard failure is HTTP 400 on the initial handshake.
+**Error handling:** there is no error message type in the protocol. Invalid JSON is logged and dropped; unauthorized or invalid actions are dropped (server-side log only) and the next `STATE` re-asserts reality. Hard failures exist only at the handshake: **HTTP 400** (missing `room`/`name`), **403** (origin rejected when `ALLOWED_ORIGIN` is set), or **429** (per-IP HTTP rate limit exhausted).
 
 ## Sequence: a full round
 

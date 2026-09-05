@@ -40,7 +40,7 @@ All project documentation lives in the [`docs/`](docs/README.md) directory. Star
 ### Backend
 - **Language:** Go 1.27
 - **Real-time:** Gorilla WebSocket
-- **ID Generation:** Google UUID
+- **ID Generation:** crypto/rand (server-side, per connection)
 
 ## Getting Started
 

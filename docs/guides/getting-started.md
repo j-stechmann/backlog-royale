@@ -9,7 +9,7 @@ Three ways to run Backlog Royale, from fastest to most involved. For the whys be
 | Docker (recommended) | Docker & Docker Compose |
 | Local development | Go **1.27+** and Node.js **26+** |
 
-The versions matter: Go 1.27 is pinned across `backend/go.mod`, CI, and the backend Dockerfile (the [Go version triangle](../adr/0011-go-version-triangle.md)); Node 26 matches the frontend Docker image and the jsdom 30 engine requirement.
+The versions matter: Go 1.27 is pinned across `backend/go.mod`, CI, and the backend Dockerfile (the [Go version triangle](../adr/0011-go-version-triangle.md)); Node 26 is pinned by CI and the frontend Docker image (jsdom 30 permits it, the pins enforce it).
 
 ## Option 1: Docker Compose (recommended)
 
