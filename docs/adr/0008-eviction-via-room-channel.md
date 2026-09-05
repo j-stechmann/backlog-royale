@@ -27,6 +27,7 @@ The frontend triggers this by sending its previous server-assigned ID as `prevId
 
 - **Good:** server-side validation independent of client cleanup; works even when the old socket never closes on its own; the ordering caveat (register vs. evict channel readiness under `select`) is analyzed and safe — same-room reconnects hit a dead room (no-op eviction), cross-room switches touch two distinct rooms.
 - **Bad / accepted:** a full `evict` channel drops the eviction with a warning (the stale connection is then cleaned up only by its own read pump, up to a pong deadline later); the index adds one more map to keep consistent — it is updated on *every* membership transition, including the slow-client drop path.
+- **Known sharp edge:** `prevIdToEvict` is set on *any* user-initiated join, not just a cross-room switch. A second tab that opens the plain URL and submits the join form inherits the shared localStorage ID and forwards it as `prevId`, evicting the first tab's live connection (which then reconnects fresh, losing its vote/dealer seat). The v1.9.0 multi-tab fix only covered the auto-join path (a tab already joined on mount sends no `prevId`); form-joins from a second tab remain subject to this. Coexistence guarantees therefore hold for URL/auto-join and reconnects, not for form-joins.
 - Test infrastructure grew around this: `TestEvictClient`, `TestEvictNonExistentClient`, `TestEvictLastClientClosesRoom`, plus the broadcast-signal waiting helpers ([Testing strategy](../development/testing.md)).
 
 ## References

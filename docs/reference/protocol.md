@@ -18,7 +18,7 @@ GET /ws?room=<id>&name=<name>[&prevId=<id>]
 - `ALLOWED_ORIGIN` ≠ `*` enforces an exact, case-insensitive `Origin` match; an empty `Origin` header is rejected.
 - The upgrade response is followed immediately by a `WELCOME` message, then a full `STATE`.
 
-**Message framing:** JSON text frames; outbound buffer 256 messages per client; inbound frames capped at 512 bytes; per-connection rate limit 10 msg/s (burst 20) with excess dropped (server logs a warning, client gets no feedback); ping every 54 s, read deadline 60 s (pong-refreshed), write deadline 10 s.
+**Message framing:** JSON text frames; outbound buffer 256 messages per client; inbound frames capped at 512 bytes; per-connection rate limit 10 msg/s (burst 20) with excess dropped (server logs a warning, client gets no feedback); server pings every 54 s and enforces a 60 s pong-refreshed read deadline (clients only answer pongs), write deadline 10 s.
 
 ## Message catalog
 

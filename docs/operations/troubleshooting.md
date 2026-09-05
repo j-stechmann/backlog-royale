@@ -25,7 +25,7 @@ The `prevId` eviction should have removed them. Causes:
 
 ### Two tabs of the same room evict each other
 
-This was a fixed regression (v1.9.0): `prevId` must be sent **only** on room switches. If you see it again, the `prevIdToEvict` lifecycle in `useGameState.ts` broke — it should be set from the pre-switch ID and cleared on `WELCOME` ([ADR 0008](../adr/0008-eviction-via-room-channel.md)).
+The v1.9.0 fix makes tabs that reach a room via its URL (auto-join) or a reconnect coexist without sending `prevId`. One path is still subject to eviction: a second tab that opens the plain URL and **submits the join form** forwards the shared localStorage ID as `prevId`, evicting the first tab's connection (which then reconnects fresh). If you see mutual eviction *without* a form-join involved, the `prevIdToEvict` lifecycle in `useGameState.ts` broke — it should be set from the pre-switch ID and cleared on `WELCOME` ([ADR 0008](../adr/0008-eviction-via-room-channel.md), including the documented form-join sharp edge).
 
 ## Game behavior
 

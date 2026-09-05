@@ -70,7 +70,7 @@ docker build backend/ && docker build frontend/
 1. **The Go triangle** — bumping `go.mod` alone breaks CI's version match; bump all three places ([ADR 0011](../adr/0011-go-version-triangle.md)).
 2. **`npm install` instead of `npm ci`** — produces a lockfile drift that fails CI's `npm ci`; always `npm ci` locally too.
 3. **Reading `r.clients` from backend tests** — the map is owned by the room's goroutine; tests must use the broadcast/condition helpers ([Testing strategy](testing.md)).
-4. **Sending `prevId` on every connection** — would make second tabs evict first tabs; the `prevIdToEvict` lifecycle in `useGameState` exists precisely to prevent this ([ADR 0008](../adr/0008-eviction-via-room-channel.md)).
+4. **Sending `prevId` on every connection** — would make second tabs evict first tabs; the `prevIdToEvict` lifecycle in `useGameState` exists precisely to prevent this ([ADR 0008](../adr/0008-eviction-via-room-channel.md)). Caveat: it is set on any form-join too, so a second tab that submits the join form still evicts the first tab — only the URL/auto-join path is fully protected.
 5. **Hardcoded URLs in the frontend** — the laws forbid it; use `import.meta.env` / runtime derivation ([Configuration](../reference/configuration.md)).
 6. **`fmt.Printf`/`log` in Go code** — structured `log/slog` JSON only; the log catalog is in [Logging](../operations/logging.md).
 7. **Docker base-image tags** — always version-pinned, never `latest` or floating tags; Dependabot bumps them weekly and CI's `docker` job validates the build ([ADR 0010](../adr/0010-dependency-automation.md)).

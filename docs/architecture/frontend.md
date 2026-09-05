@@ -35,7 +35,7 @@ src/
 
 - Reads the room ID from the URL and name/ID from `localStorage` at startup; `isJoined` is true when the URL carries a room and a saved name exists (one-click rejoin).
 - `joinRoom(roomID, name)` persists the name, rewrites the URL via `history.pushState` (shareable links, no router), and sets `isJoined`.
-- Owns the `prevIdToEvict` lifecycle: set from the pre-switch ID when switching rooms, cleared when the new connection's `WELCOME` arrives. Sending the shared localStorage ID on *every* connection would make a second tab evict the first — the reason this is a state field and not unconditional ([ADR 0008](../adr/0008-eviction-via-room-channel.md)).
+- Owns the `prevIdToEvict` lifecycle: set from the current ID on any `joinRoom` call (a room switch or a first-time form-join), cleared when the new connection's `WELCOME` arrives. Sending the shared localStorage ID on *every* connection would make a second tab evict the first — the reason this is a state field and not unconditional ([ADR 0008](../adr/0008-eviction-via-room-channel.md)).
 - Implements the [derived-state reset heuristic](#derived-state-reset-heuristic).
 
 ### `useBacklogRoyale` — the WebSocket
@@ -87,7 +87,7 @@ join ──► connect ──► WELCOME (store ID) ──► STATE loop ──�
 
 - **On close:** if the socket's generation is still current, mark disconnected and schedule a reconnect in 3 s. Stale sockets (generation mismatch) do nothing.
 - **On room switch:** cleanup closes the socket and bumps the generation; the new connection carries `prevId` so the server evicts the ghost from the old room.
-- **Multi-tab:** additional tabs of the same room never send `prevId`, so they do not evict each other.
+- **Multi-tab:** additional tabs of the same room never send `prevId`, so they do not evict each other. Sharp edge: `joinRoom` sets `prevIdToEvict` unconditionally, so a second tab that *submits the join form* (open URL without `?room=`, type a name, join) sends the shared localStorage ID and evicts the first tab's live connection — it reconnects fresh a moment later. Only the URL/auto-join and reconnect paths are guaranteed coexistence.
 
 The server-side half of this lifecycle is in [Backend architecture](backend.md#identity-and-deduplication); the wire format is in the [protocol reference](../reference/protocol.md).
 

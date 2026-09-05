@@ -60,7 +60,7 @@ server {
 Critical details:
 
 - **Upgrade headers are mandatory** for `/ws`; without them the handshake fails.
-- **Idle proxies kill WebSockets.** The client sends pings every 54 s and expects pongs within 60 s, but proxies with shorter read timeouts (nginx defaults to 60 s) can kill the connection first — raise `proxy_read_timeout` as above. A killed connection is *survivable* (3-second reconnect) but avoidable.
+- **Idle proxies kill WebSockets.** The **server** sends pings every 54 s and enforces the pong deadline: a connection that does not answer within 60 s is closed (browsers answer server pings automatically; clients cannot originate WebSocket pings). Proxies with shorter read timeouts (nginx defaults to 60 s) can kill the connection first anyway — raise `proxy_read_timeout` as above; the server's periodic pings keep the proxy→backend leg alive. A killed connection is *survivable* (3-second reconnect) but avoidable.
 - **Real client IPs:** the backend rate-limits per `RemoteAddr`. Without PROXY protocol or real-IP handling, all clients share one bucket — see [Configuration](../reference/configuration.md#security-best-practices-for-deployment).
 
 ### Caddy example

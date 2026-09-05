@@ -138,7 +138,7 @@ Two independent token buckets: per-IP HTTP rate limiting (429 on excess) and per
 
 ## Clean room transitions
 
-Switching rooms is ghost-free: the client sends its previous server-assigned ID as `prevId`, and the server evicts the stale connection from the old room even if the old WebSocket has not closed yet. Additional tabs in the same room are unaffected.
+Switching rooms is ghost-free: the client sends its previous server-assigned ID as `prevId`, and the server evicts the stale connection from the old room even if the old WebSocket has not closed yet. Additional tabs in the same room are unaffected — with one known sharp edge: a second tab that joins by *submitting the join form* (rather than opening the room URL) sends the shared localStorage ID and evicts the first tab's connection, which then reconnects fresh. Coexistence is guaranteed for the URL/auto-join and reconnect paths.
 
 - Implemented by: `frontend/src/hooks/useGameState.ts` (`prevIdToEvict`), `backend/hub.go` (`EvictClient`), `backend/room.go` (evict channel).
 - Status: shipped (v1.9.0).

@@ -14,7 +14,7 @@ Yes. Names are display-only; votes and roles are tracked by server-assigned conn
 
 ### Can I be in two rooms at once?
 
-Not from the same browser tab — joining a new room evicts your old connection (that is the `prevId` mechanism). A second browser tab or window, however, joins independently and can sit in any room. Tabs in the *same* room coexist peacefully, each with their own vote.
+Not from the same browser tab — joining a new room evicts your old connection (that is the `prevId` mechanism). A second browser tab or window, however, joins independently and can sit in any room. Tabs that reach the same room via the room URL or a reconnect coexist peacefully, each with their own vote — but note the sharp edge: a second tab that *submits the join form* still carries your shared localStorage ID and will evict the first tab's connection, which then reconnects fresh. See [ADR 0008](../adr/0008-eviction-via-room-channel.md).
 
 ### What happens if I lose connection mid-vote?
 
