@@ -1,6 +1,6 @@
 # 0013. Hash-based legal pages (no router)
 
-**Status:** Proposed
+**Status:** Accepted
 **Date:** 2026-09-05
 
 ## Context

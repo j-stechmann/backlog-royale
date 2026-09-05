@@ -127,7 +127,7 @@ services:
 
 ## Legal compliance
 
-Operating the site publicly (e.g., in Germany) typically requires an imprint and a privacy policy describing *your* data processing. The app ships legal pages at `/#/imprint` and `/#/privacy` ([ADR 0013](../adr/0013-hash-based-legal-pages.md)), but their **content is the operator's responsibility**: the bundled text reflects the production deployment, not yours. Replace the contents of `frontend/src/components/Imprint.tsx` and `PrivacyPolicy.tsx` with your own information before hosting publicly.
+Operating the site publicly (e.g., in Germany) typically requires an imprint and a privacy policy describing *your* data processing. The app ships legal pages at `/#/imprint` and `/#/privacy` ([ADR 0013](../adr/0013-hash-based-legal-pages.md)), but their **content is the operator's responsibility**: the bundled text reflects the production deployment, not yours. Replace the contents of `frontend/src/components/Imprint.tsx` and `PrivacyPolicy.tsx` with your own information before hosting publicly. Note that specific retention figures in the bundled policy (e.g., log rotation sizes) describe this project's hosting setup and are deployment-specific — verify them against your own infrastructure before reuse.
 
 ## Capacity expectations
 

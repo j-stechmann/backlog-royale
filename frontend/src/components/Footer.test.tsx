@@ -1,16 +1,16 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Footer } from './Footer';
+import { version } from '../../package.json';
 
 beforeAll(() => {
-  vi.stubGlobal('__APP_VERSION__', '1.9.2');
   window.history.replaceState({}, '', '/');
 });
 
 describe('Footer', () => {
   it('renders the version number', () => {
     render(<Footer />);
-    expect(screen.getByText('v1.9.2')).toBeDefined();
+    expect(screen.getByText(`v${version}`)).toBeDefined();
   });
 
   it('renders links for both legal pages', () => {
