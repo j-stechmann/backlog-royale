@@ -4,10 +4,16 @@ A real-time Scrum Poker (Story Pointing) application built for agile teams. Fast
 
 ## 📖 Documentation
 
-- [Architecture](ARCHITECTURE.md) - Deep dive into how it works.
-- [Contributing](CONTRIBUTING.md) - How to help improve the project (uses Git Flow).
-- [Backend README](backend/README.md) - Backend specific details.
-- [Frontend README](frontend/README.md) - Frontend specific details.
+All project documentation lives in the [`docs/`](docs/README.md) directory. Start with the [documentation map](docs/README.md#documentation-map).
+
+- [Features](docs/product/features.md) — the full feature catalog.
+- [Usage guide](docs/guides/usage.md) — how to run a session (for players & facilitators).
+- [Getting started](docs/guides/getting-started.md) — run the app locally.
+- [Self-hosting](docs/guides/self-hosting.md) — deploy it for real.
+- [Architecture](docs/architecture/overview.md) — how it works, deep dive.
+- [Design decisions (ADRs)](docs/adr/README.md) — every significant decision, with trade-offs.
+- [Protocol reference](docs/reference/protocol.md) — the WebSocket wire format.
+- [Contributing](CONTRIBUTING.md) — how to help improve the project (uses Git Flow).
 
 ## Features
 
