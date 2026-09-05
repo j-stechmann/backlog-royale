@@ -75,6 +75,7 @@ function App() {
     return (
       <>
         <Imprint onBack={() => navigate(null)} />
+        <Footer />
         <Toaster position="top-center" richColors theme={theme} />
       </>
     );
@@ -84,6 +85,7 @@ function App() {
     return (
       <>
         <PrivacyPolicy onBack={() => navigate(null)} />
+        <Footer />
         <Toaster position="top-center" richColors theme={theme} />
       </>
     );
