@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.0] - 2026-09-05
+
 ### Documentation
 - Added [ADR 0013](docs/adr/0013-hash-based-legal-pages.md) (hash-based legal pages, no router) and the Frontend architecture section on legal-page routing; documented the new components/hooks in the frontend file map, added the "Legal pages" feature to Features, noted self-hosters' legal-content responsibility in the self-hosting guide (including that retention figures in the bundled privacy policy are deployment-specific), marked ADR 0013 as Accepted in the ADR index, and updated both READMEs.
 - Reorganized all project documentation into a `docs/` tree with a [documentation map](docs/README.md): product (`features`, `game-rules`, `faq`), architecture (`overview`, `backend`, `frontend`, `concurrency`, `security`, `limitations`), 12 Architecture Decision Records (`docs/adr/`), reference (`protocol`, `configuration`), guides (`getting-started`, `usage`, `self-hosting`), development (`setup`, `testing`, `standards`, `release-process`, `dependencies`), and operations (`ci-cd`, `logging`, `troubleshooting`).
