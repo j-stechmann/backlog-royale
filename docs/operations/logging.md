@@ -18,7 +18,7 @@ The backend logs structured JSON to stdout via `log/slog` (`slog.NewJSONHandler`
 
 | Event | Level | Fields | Meaning |
 | :--- | :--- | :--- | :--- |
-| `unregister channel full, dropping disconnect` | Warn | `client`, `id` | Mass disconnect exceeding the 64-slot buffer; the client becomes a ghost until its socket dies |
+| `unregister channel full, dropping disconnect` | Warn | `client`, `id` | Mass disconnect exceeding the 64-slot buffer; no read-pump cleanup follows (the socket is already dead), so the ghost lingers until its outbound send buffer fills or the room self-destructs |
 | `broadcast channel full, dropping message` | Warn | `client`, `id` | Client action dropped — a VOTE was lost; the client should retry |
 | `evict channel full, dropping eviction` | Warn | `client`, `room` | Room switch ghost not evicted now; cleaned up later by the stale socket's read pump |
 | `room register channel full, closing connection` | Warn | `room` | New connection closed at the door rather than queued |
