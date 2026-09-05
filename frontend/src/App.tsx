@@ -4,11 +4,16 @@ import { JoinView } from './components/JoinView';
 import { Header } from './components/Header';
 import { VotingPanel } from './components/VotingPanel';
 import { PlayerList } from './components/PlayerList';
+import { Imprint } from './components/Imprint';
+import { PrivacyPolicy } from './components/PrivacyPolicy';
+import { Footer } from './components/Footer';
 import { useGameState } from './hooks/useGameState';
 import { useTheme } from './hooks/useTheme';
+import { useHashRoute } from './hooks/useHashRoute';
 import { ACTIONS, ROLES } from './constants';
 
 function App() {
+  const { route, navigate } = useHashRoute();
   const {
     roomID,
     name,
@@ -66,6 +71,24 @@ function App() {
     sendAction(ACTIONS.TOGGLE_ROLE);
   };
 
+  if (route === 'imprint') {
+    return (
+      <>
+        <Imprint onBack={() => navigate(null)} />
+        <Toaster position="top-center" richColors theme={theme} />
+      </>
+    );
+  }
+
+  if (route === 'privacy') {
+    return (
+      <>
+        <PrivacyPolicy onBack={() => navigate(null)} />
+        <Toaster position="top-center" richColors theme={theme} />
+      </>
+    );
+  }
+
   return (
     <>
       {!isJoined ? (
@@ -109,9 +132,7 @@ function App() {
           </main>
         </div>
       )}
-      <div className="fixed bottom-1 right-2 text-xs text-muted select-none pointer-events-none">
-        v{__APP_VERSION__}
-      </div>
+      <Footer />
       <Toaster position="top-center" richColors theme={theme} />
     </>
   );

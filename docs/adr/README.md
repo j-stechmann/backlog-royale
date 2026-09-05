@@ -18,6 +18,7 @@ This directory contains the Architecture Decision Records (ADRs) for Backlog Roy
 | [0010](0010-dependency-automation.md) | Accepted | Automated dependency management |
 | [0011](0011-go-version-triangle.md) | Accepted | The Go version triangle |
 | [0012](0012-git-flow.md) | Accepted | Git Flow branching model |
+| [0013](0013-hash-based-legal-pages.md) | Proposed | Hash-based legal pages |
 
 ## Process
 

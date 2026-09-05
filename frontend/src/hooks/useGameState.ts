@@ -63,9 +63,12 @@ export const useGameState = () => {
     setRoomID(newRoomID);
     setName(newName);
     localStorage.setItem('backlog_royale_name', newName);
+    // Serialize without the fragment: a leftover #/imprint hash would
+    // survive the pushState and re-show the legal page over the game.
     const url = new URL(window.location.href);
     url.searchParams.set('room', newRoomID);
-    window.history.pushState({}, '', url);
+    url.hash = '';
+    window.history.pushState({}, '', url.pathname + url.search);
     setIsJoined(true);
   };
 

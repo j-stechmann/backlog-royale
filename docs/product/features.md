@@ -129,6 +129,13 @@ The app version (from `frontend/package.json`, injected at build time) is displa
 - Implemented by: `frontend/vite.config.ts` (`define: { __APP_VERSION__ }`), `frontend/src/App.tsx`.
 - Status: shipped (v1.8.0).
 
+## Legal pages
+
+The app ships legally required pages for public operation: an **Imprint** and a **Privacy Policy**, reachable at `/#/imprint` and `/#/privacy` via hash routing (no router dependency — see [ADR 0013](../adr/0013-hash-based-legal-pages.md)). Links sit in the bottom-right footer next to the version label and always open in a new tab, so a live game is never navigated away; on the legal pages a "Back" link returns to the app. The footer links are built origin-absolute without the query string, so opening them from an in-game tab cannot auto-join the current room in the new tab. The shipped content reflects the production deployment (backlog-royale.com); self-hosters must provide their own legal content ([Self-hosting](../guides/self-hosting.md#legal-compliance)).
+
+- Implemented by: `frontend/src/hooks/useHashRoute.ts`, `frontend/src/components/LegalPage.tsx`, `Imprint.tsx`, `PrivacyPolicy.tsx`, `Footer.tsx` (links), `frontend/src/hooks/useGameState.ts` (`joinRoom` strips the fragment).
+- Status: unreleased.
+
 ## Rate limiting and connection hygiene
 
 Two independent token buckets: per-IP HTTP rate limiting (429 on excess) and per-connection WebSocket message rate limiting (drops excess messages with no client feedback — the server logs a warning). Plus ping/pong keepalive, a 512-byte message cap, and server-enforced timeouts. Details in [Security](../architecture/security.md).
@@ -169,4 +176,4 @@ Dropped connections show a "Reconnecting..." pill and reconnect automatically af
 | 1.8.0 | Version indicator |
 | 1.9.0 | Dark theme + semantic tokens; clean room transitions (`prevId`); multi-tab coexistence |
 | 1.9.2 | Docker builder bumped to Go 1.27 |
-| Unreleased | Automated dependency merging (grouped PRs + auto-merge); Go 1.27 alignment (go.mod, CI, Docker) |
+| Unreleased | Automated dependency merging (grouped PRs + auto-merge); Go 1.27 alignment (go.mod, CI, Docker); legal pages (Imprint, Privacy Policy) |

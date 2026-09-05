@@ -125,6 +125,10 @@ services:
 - Connection state per client is visible in the UI (`Live` / `Reconnecting...`).
 - Logs are JSON on stdout with rooms/clients as structured fields; wire them into your log stack — see [Logging](../operations/logging.md) for the event catalog and [Troubleshooting](../operations/troubleshooting.md) for symptom → fix.
 
+## Legal compliance
+
+Operating the site publicly (e.g., in Germany) typically requires an imprint and a privacy policy describing *your* data processing. The app ships legal pages at `/#/imprint` and `/#/privacy` ([ADR 0013](../adr/0013-hash-based-legal-pages.md)), but their **content is the operator's responsibility**: the bundled text reflects the production deployment, not yours. Replace the contents of `frontend/src/components/Imprint.tsx` and `PrivacyPolicy.tsx` with your own information before hosting publicly.
+
 ## Capacity expectations
 
 - Rooms are O(n) on broadcast; a team-sized room (≤ 50) is trivial. Hundreds of players per room would need design changes ([Limitations](../architecture/limitations.md)).
