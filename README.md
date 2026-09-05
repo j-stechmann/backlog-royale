@@ -26,6 +26,7 @@ All project documentation lives in the [`docs/`](docs/README.md) directory. Star
 - 🔗 **Shareable Links:** Easily invite team members by sharing the URL.
 - 📱 **Responsive Design:** Works great on desktop and mobile.
 - 🌙 **Dark Theme:** Light/dark/system theme with OS-preference detection and a manual override (persisted). Toggle in the header or on the join screen.
+- ⚖️ **Legal Pages:** Imprint and Privacy Policy built into the app, reachable via hash routes (`/#/imprint`, `/#/privacy`) from the footer.
 
 ## Tech Stack
 

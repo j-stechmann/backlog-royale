@@ -23,7 +23,7 @@ export const JoinView: React.FC<JoinViewProps> = ({ initialRoomID, initialName, 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base to-accent-soft flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-base to-accent-soft flex items-center justify-center p-4 pb-16">
       <div className="bg-surface p-8 rounded-3xl shadow-2xl w-full max-w-md border border-glass backdrop-blur-sm relative">
         <ThemeToggle
           theme={theme}
