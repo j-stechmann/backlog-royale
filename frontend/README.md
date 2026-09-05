@@ -11,6 +11,8 @@ A modern, responsive React frontend for real-time Scrum Poker. Built with Vite, 
 - **Version Indicator**: Displays the current app version in the bottom-right corner.
 - **Dark Theme**: Light, dark, and system (follows OS) modes with a persisted manual override. Toggle via the segmented control in the header (joined view) or the top-right of the join card.
 
+Deep dives: [architecture](../docs/architecture/frontend.md) · [theming](../docs/adr/0009-semantic-tokens-and-dark-theme.md) · [docs map](../docs/README.md).
+
 ## 🚀 Getting Started
 
 ### Prerequisites

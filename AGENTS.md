@@ -20,9 +20,17 @@ This project strictly adheres to the **Git Flow** branching model. All agents mu
 
 For every addition, change, or deletion, agents **must** update:
 
-1.  **READMEs**: Update the root `README.md` and any relevant service-specific READMEs (e.g., `backend/README.md`, `frontend/README.md`) to reflect the current state and usage.
-2.  **Changelog**: Add a corresponding entry to `CHANGELOG.md` under the `[Unreleased]` section.
-3.  **Documentation**: Update relevant documentation files such as `ARCHITECTURE.md`, `CONFIGURATION.md`, or `CONTRIBUTING.md`.
+1.  **READMEs**: Update the root `README.md` and any relevant service-specific READMEs (e.g., `backend/README.md`, `frontend/README.md`) to reflect the current state and usage. Service READMEs stay short: quickstart plus pointers into `docs/`.
+2.  **Changelog**: Add a corresponding entry to `CHANGELOG.md` (repository root) under the `[Unreleased]` section.
+3.  **Documentation (`docs/`)**: The full documentation tree lives in `docs/` — see the [documentation map](docs/README.md). Update what is relevant:
+    - Configuration change → `docs/reference/configuration.md` (+ service README).
+    - Architecture/behavior → the relevant `docs/architecture/` page.
+    - New or changed design decision → new ADR in `docs/adr/` (ADRs are immutable once accepted; supersede, don't edit).
+    - User-visible behavior → `docs/product/features.md` and/or `docs/product/game-rules.md`.
+    - Operations/CI → `docs/operations/`.
+
+    Legacy root files (`ARCHITECTURE.md`, `CONFIGURATION.md`) are redirects into `docs/` — do not grow them; put content in `docs/`.
+4.  **Cross-links**: When adding docs pages, add them to the index in `docs/README.md`.
 
 ## Quality Standards
 - Ensure all tests pass before finalizing any task.
