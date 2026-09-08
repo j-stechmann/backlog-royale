@@ -12,7 +12,7 @@ COPY . .
 RUN npm run build
 
 # Final stage (Nginx to serve static files, unprivileged)
-FROM nginxinc/nginx-unprivileged:1.31.4-alpine3.24
+FROM nginxinc/nginx-unprivileged:1.31.5-alpine3.24
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
