@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+- Dropped the human-approval requirement from `main` branch protection ([ADR 0014](docs/adr/0014-solo-maintainer-branch-protection.md)): with a solo maintainer, self-approval is impossible, so the gate could only ever be bypassed via admin merge (as happened for v1.10.1). `main` now enforces the same green CI checks as `develop` (strict, required for admins too) — production remains never updated automatically: auto-merge targets only `develop`, and `main` merges stay manual. ADRs 0010 and 0012 carry supersession notes; docs updated.
+
 ## [1.10.1] - 2026-09-08
 
 ### Technical
@@ -25,7 +28,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - **Legal pages**: an Imprint and a Privacy Policy are now built into the app, reachable at `/#/imprint` and `/#/privacy` via hash routing (no router dependency, [ADR 0013](docs/adr/0013-hash-based-legal-pages.md)). The bottom-right version label became a footer with Imprint/Privacy links that open in a new tab (origin-absolute and query-free, so opening them from an in-game tab cannot auto-join the room as a duplicate player); legal pages have a "Back" link, and `joinRoom` now strips the URL fragment so a leftover hash cannot re-cover the game after joining.
-- **Automated dependency merging**: Dependabot now opens weekly, grouped PRs (minor+patch per ecosystem) against `develop` and auto-merges them once CI is green; major bumps and all PRs targeting `main` always require manual review. Configured via `.github/dependabot.yml` and `.github/workflows/dependabot-auto-merge.yml`, plus branch protection: `develop` requires green CI checks, `main` additionally requires human approval — production can never be updated automatically.
+- **Automated dependency merging**: Dependabot now opens weekly, grouped PRs (minor+patch per ecosystem) against `develop` and auto-merges them once CI is green; major bumps and all PRs targeting `main` always require manual review. Configured via `.github/dependabot.yml` and `.github/workflows/dependabot-auto-merge.yml`, plus branch protection: `develop` requires green CI checks; the same checks gate `main` (as of [ADR 0014], the human-approval requirement was dropped — solo maintainer; production is still never updated automatically).
 - Docker build smoke-test job in CI (`docker`: builds both images without pushing) so base-image updates are validated before they can merge into `develop`.
 
 ### Changed
