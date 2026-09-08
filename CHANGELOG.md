@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.1] - 2026-09-08
+
+### Technical
+- Updated backend dependencies: golang.org/x/time (0.15.0 → 0.16.0).
+- Updated backend Docker builder image: golang (1.27.0-alpine3.23 → 1.27.1-alpine3.23).
+- Updated frontend dependencies: lucide-react (1.37.0 → 1.41.0).
+- Updated frontend dev dependencies: vitest (4.1.11 → 5.0.0, major), eslint (10.9.1 → 10.10.0), typescript-eslint (8.68.0 → 8.69.0), globals (17.11.0 → 17.12.0), @types/node (26.4.0 → 26.4.1), @types/react-dom (19.2.5 → 19.2.7), autoprefixer (10.5.4 → 10.5.5), postcss (8.5.26 → 8.5.28), eslint-plugin-react-refresh (0.5.5 → 0.5.6). The vitest major update was manually reviewed and locally validated (full suite green) before merging, per the major-update policy.
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.1.
+
 ## [1.10.0] - 2026-09-05
 
 ### Documentation
