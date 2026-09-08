@@ -50,6 +50,7 @@ The documentation is organized by audience. Pick the section that matches what y
 - [0011 — The Go version triangle](adr/0011-go-version-triangle.md)
 - [0012 — Git Flow branching model](adr/0012-git-flow.md)
 - [0013 — Hash-based legal pages](adr/0013-hash-based-legal-pages.md)
+- [0014 — Solo-maintainer branch protection](adr/0014-solo-maintainer-branch-protection.md)
 
 ### Reference
 
