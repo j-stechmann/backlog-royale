@@ -2,10 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.10.2] - 2026-09-16
 
 ### Changed
 - Dropped the human-approval requirement from `main` branch protection ([ADR 0014](docs/adr/0014-solo-maintainer-branch-protection.md)): with a solo maintainer, self-approval is impossible, so the gate could only ever be bypassed via admin merge (as happened for v1.10.1). `main` now enforces the same green CI checks as `develop` (strict, required for admins too) — production remains never updated automatically: auto-merge targets only `develop`, and `main` merges stay manual. ADRs 0010 and 0012 carry supersession notes; docs updated.
+
+### Technical
+- Updated frontend dependencies: react and react-dom (19.2.8 → 19.3.0), lucide-react (1.41.0 → 1.45.0).
+- Updated frontend dev dependencies: vite (8.2.2 → 8.3.0), typescript-eslint (8.69.0 → 8.70.0), autoprefixer (10.5.5 → 10.5.6), @types/node (26.4.1 → 26.5.1), @types/react and @types/react-dom (19.2.x → 19.3.0).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.2.
 
 ## [1.10.1] - 2026-09-08
 
