@@ -58,7 +58,7 @@ Steps 6 and 7 are what publish: the tag triggers `docker-publish.yml`, which bui
 For critical production bugs:
 
 1. Branch `hotfix/name` off **`main`**.
-2. Fix, test, open PR against `main` (human approval required — production is never auto-updated, [ADR 0010](../adr/0010-dependency-automation.md)).
+2. Fix, test, open PR against `main` (production is never auto-updated, [ADR 0010](../adr/0010-dependency-automation.md)).
 3. After merge, tag if needed and **merge the hotfix into `develop` too** — a hotfix that skips `develop` will resurface in the next release.
 
 The Dependabot config fix in v1.4.2 followed exactly this path (`b1b5505`, "hotfix: fix dependabot config and sync package-lock.json").
@@ -69,7 +69,7 @@ The Dependabot config fix in v1.4.2 followed exactly this path (`b1b5505`, "hotf
 | :--- | :--- |
 | Weekly grouped dependency PRs → auto-merge on green CI ([ADR 0010](../adr/0010-dependency-automation.md)) | Release branch, changelog, version bumps |
 | Security PRs (immediate, individual) | Major dependency updates (labeled `major`, human-reviewed) |
-| Image publishing on `main`/tags | PRs against `main` (approval gate) |
+| Image publishing on `main`/tags | PRs against `main` (CI gate) |
 | CI on `main` + `develop` | The Go version triangle ([ADR 0011](../adr/0011-go-version-triangle.md)) |
 
 ## Release history

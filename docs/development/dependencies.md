@@ -15,7 +15,7 @@ The operating manual for the automation policy. The decision record is [ADR 0010
 | **Any major update** | Weekly group is bypassed; individual PR | **Never auto-merged** — labeled `major`, manual review |
 | `go` directive (all types) | **Never** by automation | Manual, via the triangle ([ADR 0011](../adr/0011-go-version-triangle.md)) |
 
-PRs against `main` always require human approval — production is never updated automatically.
+PRs against `main` require the same green CI checks — production is never updated automatically ([ADR 0014](../adr/0014-solo-maintainer-branch-protection.md): no separate approval gate, the maintainer is a team of one).
 
 ## How a week looks
 

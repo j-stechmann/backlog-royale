@@ -22,7 +22,7 @@ Strict **Git Flow**:
 Supporting rules:
 
 - PRs for features target `develop`; hotfix PRs target `main`.
-- Branch protection: `develop` requires green CI (`backend`, `frontend`, `docker`); `main` additionally requires human approval — production is never updated automatically (see [ADR 0010](0010-dependency-automation.md)).
+- Branch protection: `develop` requires green CI (`backend`, `frontend`, `docker`); `main` additionally requires human approval — production is never updated automatically (see [ADR 0010](0010-dependency-automation.md)). *Superseded 2026-09-08 by [ADR 0014](0014-solo-maintainer-branch-protection.md): the approval requirement on `main` was dropped (solo maintainer); the CI gate still applies.*
 - Releases are cut by bumping versions (`frontend/package.json`), merging the `release/x.x.x` branch into `main`, then back into `develop`, and tagging — `docker-publish.yml` builds GHCR images on `main` pushes and `v*.*.*` tags.
 - CI runs on pushes/PRs for both `main` and `develop` (extended in v1.6.1 to cover `develop` explicitly).
 

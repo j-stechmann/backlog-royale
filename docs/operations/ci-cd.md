@@ -29,7 +29,7 @@ All three run on `ubuntu-latest` for every push and PR touching `main` or `devel
 - `docker/setup-buildx-action@v4`, then `docker/build-push-action@v7` for both contexts (`./backend`, `./frontend`) with `push: false`.
 - Exists so **base-image bumps are validated before they can merge** (see [ADR 0010](../adr/0010-dependency-automation.md)) — a broken Dockerfile cannot auto-merge.
 
-Branch protection requires all three jobs on every PR; PRs against `main` additionally require human approval.
+Branch protection requires all three jobs on every PR; the same checks gate PRs against `main` ([ADR 0014](../adr/0014-solo-maintainer-branch-protection.md)).
 
 ## Dependabot auto-merge
 

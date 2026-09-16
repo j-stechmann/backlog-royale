@@ -13,7 +13,7 @@ A three-part policy (configured in `.github/dependabot.yml` + `.github/workflows
 
 1. **Grouped weekly PRs:** one PR per ecosystem (npm split into production/development groups, gomod, Docker frontend/backend, GitHub Actions), containing minor+patch updates only, capped at 10 open PRs. Security updates bypass grouping and arrive immediately as individual PRs.
 2. **Auto-merge for grouped PRs:** enabled via `gh pr merge --auto --merge` once CI is green. Majors are never auto-merged — they are labeled `major` for manual review. Guards: repository name, `dependabot[bot]` author, `base.ref == develop`.
-3. **Branch protection:** all PRs require the `backend`/`frontend`/`docker` CI checks; PRs against `main` additionally require human approval — **production is never updated automatically**.
+3. **Branch protection:** all PRs require the `backend`/`frontend`/`docker` CI checks; PRs against `main` additionally require human approval — **production is never updated automatically**. *Superseded 2026-09-08 by [ADR 0014](0014-solo-maintainer-branch-protection.md): with a solo maintainer the approval requirement on `main` was unenforceable (self-approval is impossible) and was dropped; the CI gate and the never-auto-update-production guarantee remain.*
 4. **Go directive:** Dependabot ignores *all* version updates of the `go` directive (major/minor/patch) — manual-only via the version triangle ([ADR 0011](0011-go-version-triangle.md)).
 
 The `docker` CI job (build both images without pushing) exists specifically so base-image bumps are validated before they can merge.

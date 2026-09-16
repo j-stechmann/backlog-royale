@@ -65,7 +65,7 @@ Vitest + React Testing Library; hooks via `renderHook`; a synchronous `MockWebSo
 ### Pull requests
 
 - Git Flow: `feature/name` → `develop`; `hotfix/name` → `main` ([ADR 0012](../adr/0012-git-flow.md)).
-- CI must be green (`backend`, `frontend`, `docker`); PRs against `main` require human approval.
+- CI must be green (`backend`, `frontend`, `docker`); the same checks gate PRs against `main`.
 - Dependabot PRs are exempt from manual work by policy — majors are labeled and wait ([Dependency management](dependencies.md)).
 - Review findings are fixed in follow-up commits on the same branch (the project's history shows `Fix review finding: …` commits) — no force-pushed rewrites of reviewed work.
 
