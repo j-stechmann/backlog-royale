@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.10.3] - 2026-09-22
+
+### Technical
+- Updated backend base image: alpine (3.24.1 → 3.24.2).
+- Updated frontend build image: node (26.8.2-alpine3.23 → 26.9.0-alpine3.23).
+- Updated frontend dependencies: lucide-react (1.45.0 → 1.47.0).
+- Updated frontend dev dependencies: @types/node (26.5.1 → 26.6.2), autoprefixer (10.6.0 → 10.6.1), eslint (10.10.0 → 10.11.0), eslint-plugin-react-refresh (0.5.6 → 0.5.7), jsdom (30.0.1 → 30.1.0), vitest (5.0.0 → 5.0.1), plus transitive dev-dependency bumps (incl. @asamuzakjp/css-color 6.0.5 → 7.0.0, @asamuzakjp/dom-selector 8.3.2 → 9.2.0).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.3.
+
 ## [1.10.2] - 2026-09-16
 
 ### Changed
