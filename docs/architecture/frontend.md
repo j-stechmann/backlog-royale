@@ -67,7 +67,7 @@ Hash-based view switch for the legal pages — no router dependency ([ADR 0013](
 | `App.tsx` | Orchestration: joins state, role-change toasts ("You are now the Dealer/AFK/Player"), vote/reveal/reset handlers, legal-route switching, sonner `<Toaster>` (receives the theme so toasts follow light/dark). |
 | `JoinView` | Room + display name form; reads `?room=` from the URL so shared links prefill. |
 | `Header` | Room ID, copy-invite-link button, AFK and Dealer toggles with active/inactive styling, live/reconnecting pill, `ThemeToggle`. |
-| `VotingPanel` | Renders one of four states by role/phase: AFK notice, vote summary (after reveal), dealer notice, or the card grid. |
+| `VotingPanel` | One panel shell for the three stacked views (card grid, vote summary, dealer notice; AFK is a separate swap). All layers share one CSS grid cell, so the panel height always equals the tallest view and reveal/reset never shift the layout. Visibility switches `opacity-100` ↔ `opacity-0 invisible pointer-events-none` with a 300 ms crossfade; hidden layers also get `inert` + `aria-hidden` so buttons stay unreachable. Summary/dealer layers are vertically centered in the shell. |
 | `PlayerList` | Voting progress (`x / y Voted`, players only), Reveal/Next-Round buttons for those authorized, per-player rows. |
 | `UserStatus` | Per-player status glyph: dealer hand, AFK coffee, revealed vote card, voted checkmark, or an empty dashed slot; hover overlay lets the dealer send a player AFK. Voted players bounce subtly before the reveal. |
 | `Card` / `CardFace` | Playing-card UI. `CardFace` renders the "A" abstain card as a Ban icon (`ABSTAIN_VALUE` sentinel centralized in `constants.ts`). |

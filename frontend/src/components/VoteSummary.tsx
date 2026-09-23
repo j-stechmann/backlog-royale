@@ -25,7 +25,7 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
   if (sortedVotes.length === 0) return null;
 
   return (
-    <div className="bg-surface p-8 sm:p-12 rounded-3xl shadow-sm border border-line relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div>
       <div className="text-center mb-10">
         <h2 className="text-2xl font-black text-content-soft mb-2">Voting Summary</h2>
         <p className="text-muted text-sm font-medium">Distribution of points for this round</p>

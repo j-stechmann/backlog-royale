@@ -15,6 +15,11 @@ interface VotingPanelProps {
   users: User[];
 }
 
+const layerBase =
+  '[grid-area:1/1] transition-opacity duration-300 ease-out';
+const layerVisible = 'opacity-100';
+const layerHidden = 'opacity-0 invisible pointer-events-none';
+
 export const VotingPanel: React.FC<VotingPanelProps> = ({
   isAFK,
   isDealer,
@@ -44,41 +49,57 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
     );
   }
 
-  if (reveal) {
-    return <VoteSummary users={users} />;
-  }
-
-  if (isDealer) {
-    return (
-      <div className="bg-warn-soft p-8 rounded-3xl border border-warn/30 flex flex-col items-center text-center">
-        <div className="w-16 h-16 bg-warn-soft text-warn rounded-2xl flex items-center justify-center mb-4">
-          <HandHelping size={32} />
-        </div>
-        <h2 className="text-xl font-bold text-warn-strong mb-1">You are the Dealer</h2>
-        <p className="text-warn-strong text-sm max-w-xs">
-          You can see the voting progress and manage the rounds, but you don't participate in voting.
-        </p>
-      </div>
-    );
-  }
+  const showVoteGrid = !reveal && !isDealer;
+  const showSummary = reveal;
+  const showDealerNotice = isDealer && !reveal;
 
   return (
-    <div className="bg-surface p-8 sm:p-12 rounded-3xl shadow-sm border border-line relative overflow-hidden">
-      <div className="text-center mb-10">
-        <h2 className="text-2xl font-black text-content-soft mb-2">Cast your vote</h2>
-        <p className="text-muted text-sm">Select a card to point this story</p>
+    <div className="bg-surface p-8 sm:p-12 rounded-3xl shadow-sm border border-line relative overflow-hidden grid">
+      <div
+        aria-hidden={!showVoteGrid}
+        inert={!showVoteGrid}
+        className={`${layerBase} ${showVoteGrid ? layerVisible : layerHidden}`}
+      >
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-black text-content-soft mb-2">Cast your vote</h2>
+          <p className="text-muted text-sm">Select a card to point this story</p>
+        </div>
+
+        <div className="flex flex-wrap justify-center max-w-3xl mx-auto gap-2">
+          {CARD_VALUES.map((val) => (
+            <Card
+              key={val}
+              value={val}
+              selected={selectedVote === val}
+              onClick={() => onVote(val)}
+              disabled={reveal}
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="flex flex-wrap justify-center max-w-3xl mx-auto gap-2">
-        {CARD_VALUES.map((val) => (
-          <Card
-            key={val}
-            value={val}
-            selected={selectedVote === val}
-            onClick={() => onVote(val)}
-            disabled={reveal}
-          />
-        ))}
+      <div
+        aria-hidden={!showSummary}
+        inert={!showSummary}
+        className={`${layerBase} ${showSummary ? layerVisible : layerHidden} flex items-center justify-center`}
+      >
+        <VoteSummary users={users} />
+      </div>
+
+      <div
+        aria-hidden={!showDealerNotice}
+        inert={!showDealerNotice}
+        className={`${layerBase} ${showDealerNotice ? layerVisible : layerHidden} flex items-center justify-center`}
+      >
+        <div className="bg-warn-soft p-8 rounded-3xl border border-warn/30 flex flex-col items-center text-center">
+          <div className="w-16 h-16 bg-warn-soft text-warn rounded-2xl flex items-center justify-center mb-4">
+            <HandHelping size={32} />
+          </div>
+          <h2 className="text-xl font-bold text-warn-strong mb-1">You are the Dealer</h2>
+          <p className="text-warn-strong text-sm max-w-xs">
+            You can see the voting progress and manage the rounds, but you don't participate in voting.
+          </p>
+        </div>
       </div>
     </div>
   );
