@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixed
+- The footer (version label + Imprint/Privacy links) no longer scrolls over page content ([#126](https://github.com/j-stechmann/backlog-royale/issues/126)): it was `position: fixed` in the bottom-right corner, so cards and rows rendered underneath it while scrolling. It now sits in the normal document flow — every view (join screen, game, legal pages) is a flex column that pushes the footer to the viewport bottom on short pages and keeps it below the content on long ones. The wrappers use `min-h-dvh` (dynamic viewport height) instead of `min-h-screen`, so on mobile browsers with dynamic toolbars the footer stays within the visible viewport. Also fixed a stale "bottom-right corner" reference in the bug-reporting guide ([docs/CONTRIBUTING.md](docs/CONTRIBUTING.md)).
+
 ## [1.10.3] - 2026-09-22
 
 ### Technical

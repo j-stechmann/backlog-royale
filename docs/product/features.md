@@ -124,7 +124,7 @@ Three modes — light, dark, and system (follows the OS `prefers-color-scheme`).
 
 ## Version indicator
 
-The app version (from `frontend/package.json`, injected at build time) is displayed as a small unobtrusive label in the bottom-right corner on all views, including the join screen — so bug reports are self-identifying.
+The app version (from `frontend/package.json`, injected at build time) is displayed as a small unobtrusive label at the bottom-right of the page on all views, including the join screen — so bug reports are self-identifying. The label lives in a footer that is part of the normal page flow (pushed to the viewport bottom on short pages), so content never scrolls underneath it.
 
 - Implemented by: `frontend/vite.config.ts` (`define: { __APP_VERSION__ }`), `frontend/src/App.tsx`.
 - Status: shipped (v1.8.0).

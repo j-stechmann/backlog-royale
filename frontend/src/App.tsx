@@ -73,30 +73,36 @@ function App() {
 
   if (route === 'imprint') {
     return (
-      <>
-        <Imprint onBack={() => navigate(null)} />
+      <div className="min-h-dvh flex flex-col">
+        <div className="flex-1 flex flex-col">
+          <Imprint onBack={() => navigate(null)} />
+        </div>
         <Footer />
         <Toaster position="top-center" richColors theme={theme} />
-      </>
+      </div>
     );
   }
 
   if (route === 'privacy') {
     return (
-      <>
-        <PrivacyPolicy onBack={() => navigate(null)} />
+      <div className="min-h-dvh flex flex-col">
+        <div className="flex-1 flex flex-col">
+          <PrivacyPolicy onBack={() => navigate(null)} />
+        </div>
         <Footer />
         <Toaster position="top-center" richColors theme={theme} />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="min-h-dvh flex flex-col">
       {!isJoined ? (
-        <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} theme={theme} onSetTheme={setTheme} />
+        <div className="flex-1 flex flex-col">
+          <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} theme={theme} onSetTheme={setTheme} />
+        </div>
       ) : (
-        <div className="min-h-screen bg-base pb-12">
+        <div className="flex-1 bg-base pb-4">
           <Header
             roomID={roomID}
             connected={connected}
@@ -136,7 +142,7 @@ function App() {
       )}
       <Footer />
       <Toaster position="top-center" richColors theme={theme} />
-    </>
+    </div>
   );
 }
 
