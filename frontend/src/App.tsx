@@ -73,7 +73,7 @@ function App() {
 
   if (route === 'imprint') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-dvh flex flex-col">
         <div className="flex-1 flex flex-col">
           <Imprint onBack={() => navigate(null)} />
         </div>
@@ -85,7 +85,7 @@ function App() {
 
   if (route === 'privacy') {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-dvh flex flex-col">
         <div className="flex-1 flex flex-col">
           <PrivacyPolicy onBack={() => navigate(null)} />
         </div>
@@ -96,7 +96,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-dvh flex flex-col">
       {!isJoined ? (
         <div className="flex-1 flex flex-col">
           <JoinView initialRoomID={roomID} initialName={name} onJoin={joinRoom} theme={theme} onSetTheme={setTheme} />

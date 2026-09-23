@@ -45,6 +45,8 @@ describe('Footer', () => {
     // normal flow now, pushed to the viewport bottom by the app layout.
     const { container } = render(<Footer />);
     const footer = container.firstElementChild as HTMLElement;
+    expect(footer.className).toContain('shrink-0');
+    expect(footer.className).toContain('w-full');
     expect(footer.className).not.toContain('fixed');
   });
 });
