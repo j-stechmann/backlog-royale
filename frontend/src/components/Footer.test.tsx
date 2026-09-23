@@ -38,4 +38,13 @@ describe('Footer', () => {
     const link = screen.getByText('Imprint').closest('a');
     expect(link?.getAttribute('href')).toBe(`${window.location.origin}/#/imprint`);
   });
+
+  it('renders in document flow, not as a fixed overlay (#126)', () => {
+    // Regression for #126: the footer used to be position:fixed, so page
+    // content (e.g. vote cards) scrolled underneath it. It must stay in
+    // normal flow now, pushed to the viewport bottom by the app layout.
+    const { container } = render(<Footer />);
+    const footer = container.firstElementChild as HTMLElement;
+    expect(footer.className).not.toContain('fixed');
+  });
 });

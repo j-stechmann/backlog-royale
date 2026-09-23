@@ -73,7 +73,7 @@ Hash-based view switch for the legal pages — no router dependency ([ADR 0013](
 | `Card` / `CardFace` | Playing-card UI. `CardFace` renders the "A" abstain card as a Ban icon (`ABSTAIN_VALUE` sentinel centralized in `constants.ts`). |
 | `VoteSummary` | Distribution as `count × card`, sorted by count with ties broken by `CARD_VALUES` order (matches the voting screen order). |
 | `ThemeToggle` | Shared segmented control used in both the header and the join screen (`role="group"` + `aria-pressed`, a plain-button pattern chosen over a `radiogroup` that lacked the arrow-key pattern). |
-| `Footer` | Fixed bottom-right label on all app views: version + Imprint/Privacy links. Links are origin-absolute **without the query string** and open in a new tab — a bare relative hash would inherit `?room=` and the new tab would silently auto-join the room as a duplicate player. |
+| `Footer` | In-flow footer on all app views, pushed to the viewport bottom by the app's flex-column layout: version + Imprint/Privacy links. Not `position: fixed` — content must never scroll underneath it ([#126](https://github.com/j-stechmann/backlog-royale/issues/126)). Links are origin-absolute **without the query string** and open in a new tab — a bare relative hash would inherit `?room=` and the new tab would silently auto-join the room as a duplicate player. |
 | `LegalPage` / `Imprint` / `PrivacyPolicy` | Legal views rendered by hash route: shared wrapper (heading, intro, back link, section layout) plus the imprint (§ 5 DDG) and privacy policy content. Replaces the app view tree entirely while active. |
 | `Logo` | SVG card + crown; card chrome reads raw CSS variables (`var(--surface)`, …) because Tailwind's `@theme inline` does not emit `--color-*` variables to `:root`. Crown and jewels are fixed brand colors. |
 
@@ -114,4 +114,4 @@ The server-side half of this lifecycle is in [Backend architecture](backend.md#i
 
 ## Build-time version injection
 
-`vite.config.ts` injects `__APP_VERSION__` from `frontend/package.json` via `define`; the `Footer` component renders it as a small fixed label on every view ([Features](../product/features.md#version-indicator)). The same define is configured in `vitest.config.ts` so component tests can render the footer.
+`vite.config.ts` injects `__APP_VERSION__` from `frontend/package.json` via `define`; the `Footer` component renders it as a small in-flow label on every view ([Features](../product/features.md#version-indicator)). The same define is configured in `vitest.config.ts` so component tests can render the footer.
