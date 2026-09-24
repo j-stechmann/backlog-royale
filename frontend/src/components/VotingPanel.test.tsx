@@ -27,8 +27,9 @@ describe('VotingPanel', () => {
         users={mockUsers}
       />
     );
-    expect(screen.getByText('Cast your vote')).toBeDefined();
-    expect(screen.queryByText('Voting Summary')).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Cast your vote' })).toBeDefined();
+    expect(screen.queryByRole('heading', { name: 'Voting Summary' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'You are the Dealer' })).toBeNull();
   });
 
   it('shows the VoteSummary to a regular player after reveal', () => {
@@ -41,10 +42,11 @@ describe('VotingPanel', () => {
         users={mockUsers}
       />
     );
-    expect(screen.getByText('Voting Summary')).toBeDefined();
+    expect(screen.getByRole('heading', { name: 'Voting Summary' })).toBeDefined();
     expect(screen.getAllByText('2').length).toBeGreaterThan(0);
     expect(screen.getAllByText('1').length).toBeGreaterThan(0);
-    expect(screen.queryByText('Cast your vote')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Cast your vote' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Abstain' })).toBeNull();
   });
 
   it('shows the VoteSummary to the dealer after reveal', () => {
@@ -57,8 +59,8 @@ describe('VotingPanel', () => {
         users={mockUsers}
       />
     );
-    expect(screen.getByText('Voting Summary')).toBeDefined();
-    expect(screen.queryByText('You are the Dealer')).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Voting Summary' })).toBeDefined();
+    expect(screen.queryByRole('heading', { name: 'You are the Dealer' })).toBeNull();
   });
 
   it('shows the dealer panel to the dealer before reveal', () => {
@@ -71,8 +73,9 @@ describe('VotingPanel', () => {
         users={mockUsers}
       />
     );
-    expect(screen.getByText('You are the Dealer')).toBeDefined();
-    expect(screen.queryByText('Voting Summary')).toBeNull();
+    expect(screen.getByRole('heading', { name: 'You are the Dealer' })).toBeDefined();
+    expect(screen.queryByRole('heading', { name: 'Voting Summary' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Abstain' })).toBeNull();
   });
 
   it('shows the AFK panel when the user is AFK, even after reveal', () => {
@@ -105,5 +108,119 @@ describe('VotingPanel', () => {
     expect(abstainCard).toBeDefined();
     fireEvent.click(abstainCard);
     expect(onVote).toHaveBeenCalledWith('A');
+  });
+
+  it('marks the hidden layers aria-hidden and inert after reveal', () => {
+    const { container } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    expect(screen.getByText('Cast your vote').closest('[aria-hidden]')).not.toBeNull();
+    expect(screen.getByText('Cast your vote').closest('[inert]')).not.toBeNull();
+    const abstainButton = container.querySelector('[aria-label="Abstain"]');
+    expect(abstainButton).not.toBeNull();
+    expect(abstainButton!.closest('[inert]')).not.toBeNull();
+    expect(screen.getByText('You are the Dealer').closest('[inert]')).not.toBeNull();
+  });
+
+  it('moves focus to the summary heading on reveal', () => {
+    const { rerender } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    rerender(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Voting Summary' }));
+  });
+
+  it('moves focus to the vote-grid heading on next round', () => {
+    const { rerender } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    rerender(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Cast your vote' }));
+  });
+
+  it('moves focus to the dealer heading when the dealer role is taken', () => {
+    const { rerender } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    rerender(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={true}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'You are the Dealer' }));
+  });
+
+  it('does not steal focus on initial mount', () => {
+    render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it('layers crossfade via opacity and visibility transitions', () => {
+    const { container } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    const layers = container.firstElementChild!.children;
+    expect(layers.length).toBe(3);
+    for (const layer of layers) {
+      expect(layer.className).toContain('transition-[opacity,visibility]');
+    }
   });
 });

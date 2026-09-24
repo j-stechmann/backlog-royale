@@ -39,7 +39,7 @@ Votes are hidden until someone reveals. This is enforced **server-side** — the
 
 ## Vote reveal
 
-Reveal shows every vote at once, replacing the voting grid with a **vote summary** (distribution of points, visible to everyone — shipped v1.5.0). Reveal is authorized for the dealer, or for any non-AFK player when no dealer is present.
+Reveal shows every vote at once: the voting panel crossfades from the card grid to the **vote summary** (distribution of points, visible to everyone — shipped v1.5.0). Both views stay mounted in one fixed-size panel, so the reveal causes no layout shift in any viewport, and focus moves to the summary heading so keyboard and screen-reader users keep their place (the same happens in the other direction on the next round). Reveal is authorized for the dealer, or for any non-AFK player when no dealer is present.
 
 - Implemented by: `backend/room.go` (`handleReveal`), `frontend/src/components/VoteSummary.tsx`, `frontend/src/components/PlayerList.tsx` (button).
 - Status: shipped (v0.1.0; summary-to-all v1.5.0).
