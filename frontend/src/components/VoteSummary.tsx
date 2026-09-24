@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Ref } from 'react';
 import type { User } from '../hooks/useBacklogRoyale';
 import { getTheme } from '../utils/theme';
 import { CARD_VALUES, ROLES } from '../constants';
@@ -6,9 +7,10 @@ import { CardFace } from './CardFace';
 
 interface VoteSummaryProps {
   users: User[];
+  headingRef?: Ref<HTMLHeadingElement>;
 }
 
-export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
+export const VoteSummary: React.FC<VoteSummaryProps> = ({ users, headingRef }) => {
   const votes = users
     .filter(u => u.role === ROLES.PLAYER && u.vote)
     .reduce((acc, u) => {
@@ -27,7 +29,7 @@ export const VoteSummary: React.FC<VoteSummaryProps> = ({ users }) => {
   return (
     <div>
       <div className="text-center mb-10">
-        <h2 className="text-2xl font-black text-content-soft mb-2">Voting Summary</h2>
+        <h2 ref={headingRef} tabIndex={-1} className="text-2xl font-black text-content-soft mb-2 outline-none">Voting Summary</h2>
         <p className="text-muted text-sm font-medium">Distribution of points for this round</p>
       </div>
 

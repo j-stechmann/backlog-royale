@@ -127,4 +127,100 @@ describe('VotingPanel', () => {
     expect(abstainButton!.closest('[inert]')).not.toBeNull();
     expect(screen.getByText('You are the Dealer').closest('[inert]')).not.toBeNull();
   });
+
+  it('moves focus to the summary heading on reveal', () => {
+    const { rerender } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    rerender(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Voting Summary' }));
+  });
+
+  it('moves focus to the vote-grid heading on next round', () => {
+    const { rerender } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    rerender(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'Cast your vote' }));
+  });
+
+  it('moves focus to the dealer heading when the dealer role is taken', () => {
+    const { rerender } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    rerender(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={true}
+        reveal={false}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(screen.getByRole('heading', { name: 'You are the Dealer' }));
+  });
+
+  it('does not steal focus on initial mount', () => {
+    render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  it('layers crossfade via opacity and visibility transitions', () => {
+    const { container } = render(
+      <VotingPanel
+        {...baseProps}
+        isAFK={false}
+        isDealer={false}
+        reveal={true}
+        users={mockUsers}
+      />
+    );
+    const layers = container.firstElementChild!.children;
+    expect(layers.length).toBe(3);
+    for (const layer of layers) {
+      expect(layer.className).toContain('transition-[opacity,visibility]');
+    }
+  });
 });
