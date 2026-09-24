@@ -109,10 +109,10 @@ Participants are sorted case-insensitively by name in every state broadcast, so 
 
 ## Responsive design
 
-The layout works on desktop and mobile: cards resize down, header actions collapse to icons on narrow screens, controls stack. Optimized for the "someone forgot their laptop" use case.
+The layout works on desktop and mobile: cards resize down, controls stack. On narrow screens the header controls collapse into a burger menu (an accessible dropdown with full-width labeled rows for the AFK/Dealer toggles, connection indicator, theme toggle, and copy-invite action; closes on outside click, Escape, and after any action), and long room names truncate instead of pushing the page wide. Optimized for the "someone forgot their laptop" use case.
 
-- Implemented by: Tailwind responsive variants across `frontend/src/components/`.
-- Status: shipped (v0.1.0; header separator fix v0.1.0; player-list scroll fix v0.8.1).
+- Implemented by: Tailwind responsive variants across `frontend/src/components/`; burger menu in `frontend/src/components/Header.tsx`.
+- Status: shipped (v0.1.0; header separator fix v0.1.0; player-list scroll fix v0.8.1; header burger menu + truncation unreleased).
 
 ## Dark theme with OS-preference switching
 
