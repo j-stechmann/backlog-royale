@@ -11,7 +11,7 @@ Every action (vote, reveal, reset, role change, disconnect) is processed by the 
 
 ## Room-based sessions
 
-Any room name of up to 40 characters forms an instant session — no creation step, no auth, no lobby (the 40-character cap is enforced server-side; longer names are rejected with HTTP 400, and the join form's input enforces the same limit). Sharing the room name (or the URL, which carries `?room=`) is all it takes to bring someone in. Empty rooms are destroyed automatically.
+Any room name of up to 40 characters (counted as Unicode characters, not bytes) forms an instant session — no creation step, no auth, no lobby (the 40-character cap is enforced server-side; longer names are rejected with HTTP 400, and the join form's input enforces the same limit). Sharing the room name (or the URL, which carries `?room=`) is all it takes to bring someone in. Empty rooms are destroyed automatically.
 
 - Implemented by: `backend/hub.go` (`GetOrCreateRoom`), `backend/room.go` (empty-room teardown).
 - The URL is updated via `history.pushState` on join (`frontend/src/hooks/useGameState.ts`).
@@ -152,10 +152,10 @@ Switching rooms is ghost-free: the client sends its previous server-assigned ID 
 
 ## Reconnect handling
 
-Dropped connections show a "Reconnecting..." pill and reconnect automatically after 3 seconds with a fresh identity; the stale participant row is cleaned up server-side. A generation counter keeps stale socket handlers from interfering across room switches or StrictMode remounts.
+Dropped connections show a "Reconnecting..." pill and reconnect automatically after 3 seconds with a fresh identity; the stale participant row is cleaned up server-side. A generation counter keeps stale socket handlers from interfering across room switches or StrictMode remounts. If the handshake keeps failing (e.g. an HTTP 400 for an invalid room link shared via URL), three consecutive failures switch the pill to an error message while the retry loop keeps running, so recovery is automatic once the server (or a valid link) is reachable again.
 
-- Implemented by: `frontend/src/hooks/useBacklogRoyale.ts` (`genRef`, reconnect timer), `frontend/src/components/Header.tsx` (live pill).
-- Status: shipped (v0.1.0; generation counter v1.9.0).
+- Implemented by: `frontend/src/hooks/useBacklogRoyale.ts` (`genRef`, reconnect timer, handshake-failure counter), `frontend/src/components/Header.tsx` (live pill).
+- Status: shipped (v0.1.0; generation counter v1.9.0; handshake-failure surfacing unreleased).
 
 ## Feature index by release
 

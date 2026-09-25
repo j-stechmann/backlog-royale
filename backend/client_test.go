@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"unicode/utf8"
 
 	"github.com/gorilla/websocket"
 )
@@ -53,6 +54,37 @@ func TestServeWsRoomNameTooLong(t *testing.T) {
 	rec := serveWsRejection(t, url.Values{"room": {long}, "name": {"Alice"}})
 	if rec.Code != http.StatusBadRequest {
 		t.Errorf("expected 400 for a %d-character room name, got %d", len(long), rec.Code)
+	}
+}
+
+func TestServeWsRoomNameAtLimitMultibyteAccepted(t *testing.T) {
+	// 40 "ä" are 40 runes (the form's maxLength accepts them) but 80
+	// bytes; the validation must count runes, not bytes.
+	multibyte := strings.Repeat("ä", MaxRoomNameLength)
+	if utf8.RuneCountInString(multibyte) != MaxRoomNameLength {
+		t.Fatalf("test setup: expected %d runes, got %d", MaxRoomNameLength, utf8.RuneCountInString(multibyte))
+	}
+
+	hub := NewHub()
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		serveWs(hub, w, r, "*")
+	}))
+	defer ts.Close()
+
+	query := url.Values{"room": {multibyte}, "name": {"Alice"}}
+	wsURL := "ws" + strings.TrimPrefix(ts.URL, "http") + "/ws?" + query.Encode()
+	conn, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
+	if err != nil {
+		t.Fatalf("expected a %d-rune multibyte room name to be accepted, dial failed: %v", MaxRoomNameLength, err)
+	}
+	defer conn.Close()
+}
+
+func TestServeWsRoomNameOverLimitMultibyte(t *testing.T) {
+	over := strings.Repeat("ä", MaxRoomNameLength+1)
+	rec := serveWsRejection(t, url.Values{"room": {over}, "name": {"Alice"}})
+	if rec.Code != http.StatusBadRequest {
+		t.Errorf("expected 400 for a %d-rune multibyte room name, got %d", utf8.RuneCountInString(over), rec.Code)
 	}
 }
 

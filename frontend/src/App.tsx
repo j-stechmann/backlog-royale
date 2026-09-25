@@ -23,6 +23,7 @@ function App() {
     setSelectedVote,
     state,
     connected,
+    connectionError,
     sendAction,
     joinRoom
   } = useGameState();
@@ -106,6 +107,7 @@ function App() {
           <Header
             roomID={roomID}
             connected={connected}
+            connectionError={connectionError}
             isAFK={isAFK}
             isDealer={isDealer}
             onToggleAFK={() => toggleAFK()}

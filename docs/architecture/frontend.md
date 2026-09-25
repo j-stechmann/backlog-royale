@@ -93,7 +93,7 @@ The legal content itself (imprint, privacy policy) is deployment-specific: self-
 
 ## Theming and semantic tokens
 
-- 22 semantic CSS color tokens (`base`, `surface`, `surface-2/3`, `surface-inverse`, `surface-highlight`, `line`, `glass`, `content`, `content-soft`, `mid-text`, `muted`, `content-inverse`, `accent`, `accent-text`, `accent-strong`, `accent-soft`, `warn`, `warn-strong`, `warn-soft`, `ok`, `danger`) are defined as raw `:root` variables with a single `.dark` override block, exposed to Tailwind v4 via `@theme inline` (so `bg-surface`, `text-content`, `border-line`, … work everywhere). Full rationale in [ADR 0009](../adr/0009-semantic-tokens-and-dark-theme.md).
+- 24 semantic CSS color tokens (`base`, `surface`, `surface-2/3`, `surface-inverse`, `surface-highlight`, `line`, `glass`, `content`, `content-soft`, `mid-text`, `muted`, `content-inverse`, `accent`, `accent-text`, `accent-strong`, `accent-soft`, `warn`, `warn-strong`, `warn-soft`, `ok`, `danger`, `danger-strong`, `danger-soft`) are defined as raw `:root` variables with a single `.dark` override block, exposed to Tailwind v4 via `@theme inline` (so `bg-surface`, `text-content`, `border-line`, … work everywhere). Full rationale in [ADR 0009](../adr/0009-semantic-tokens-and-dark-theme.md).
 - Components consume semantic utilities only; dark mode is a variable swap, not scattered `dark:` classes (the vote-band utility strings in `src/utils/theme.ts` are the deliberate exception, since they encode per-card hue rather than surface semantics).
 - **Vote-band colors** (`getTheme`): ≤3 points → emerald, ≤8 → blue, ≤21 → rose, `?`/`A`/unknown → gray; each band carries text/bg/border/ring/shadow/hoverBorder with `dark:` variants (the point bands use `-900` backgrounds in dark mode so hue stays visible on the dark surface; the gray band uses `-800`).
 - Accessibility decisions: `accent` (surfaces, blue-600 both modes) is split from `accent-text` (on-surface text/icons, blue-600/blue-400) to keep WCAG AA contrast; `accent-strong`/`warn-strong` provide hover and active states; the "voted" checkmark is a dark glyph on the green pill.
@@ -102,11 +102,12 @@ The legal content itself (imprint, privacy policy) is deployment-specific: self-
 
 ```text
 join ──► connect ──► WELCOME (store ID) ──► STATE loop ──► (close?)
-               ▲                                        │
-               └──────── 3 s reconnect ◄────────────────┘
+                ▲                                        │
+                └──────── 3 s reconnect ◄────────────────┘
 ```
 
 - **On close:** if the socket's generation is still current, mark disconnected and schedule a reconnect in 3 s. Stale sockets (generation mismatch) do nothing.
+- **Failed handshakes:** a close *without* a prior `WELCOME` counts as a failed handshake (e.g. the server rejected the upgrade with HTTP 400 — the browser only surfaces a generic close, so a bad room link is indistinguishable from a transient outage). Three consecutive failed handshakes switch the header pill to an error message, but the retry loop keeps running so a server that comes back is still reachable; `WELCOME` clears the error and resets the counter. The counter also resets on every room/name change, so ordinary network blips never surface the error.
 - **On room switch:** cleanup closes the socket and bumps the generation; the new connection carries `prevId` so the server evicts the ghost from the old room.
 - **Multi-tab:** additional tabs of the same room never send `prevId`, so they do not evict each other. Sharp edge: `joinRoom` sets `prevIdToEvict` unconditionally, so a second tab that *submits the join form* (open URL without `?room=`, type a name, join) sends the shared localStorage ID and evicts the first tab's live connection — it reconnects fresh a moment later. Only the URL/auto-join and reconnect paths are guaranteed coexistence.
 

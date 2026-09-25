@@ -8,6 +8,7 @@ import type { ThemeMode } from '../hooks/useTheme';
 interface HeaderProps {
   roomID: string;
   connected: boolean;
+  connectionError?: string | null;
   isAFK: boolean;
   isDealer: boolean;
   onToggleAFK: () => void;
@@ -33,16 +34,19 @@ const dealerToggleClasses = (isDealer: boolean) =>
 const shareButtonClasses =
   'flex items-center justify-center h-9 w-9 rounded-xl bg-surface text-mid-text border border-line hover:border-accent hover:text-accent-text transition-all active:scale-95 shadow-sm';
 
-const livePillClasses = (connected: boolean) =>
+const livePillClasses = (connected: boolean, failed: boolean) =>
   `flex items-center h-9 px-3 rounded-lg text-xs font-bold transition-colors ${
     connected
       ? 'bg-accent-soft border border-accent/30 text-accent-strong'
-      : 'bg-danger text-white'
+      : failed
+        ? 'bg-danger-soft text-danger-strong border border-danger/30'
+        : 'bg-danger text-white'
   }`;
 
 export const Header: React.FC<HeaderProps> = ({
   roomID,
   connected,
+  connectionError,
   isAFK,
   isDealer,
   onToggleAFK,
@@ -90,18 +94,21 @@ export const Header: React.FC<HeaderProps> = ({
   const livePill = (className?: string) => (
     <div
       data-testid="connection-status"
-      className={`${livePillClasses(connected)} ${className ?? ''}`}
+      className={`${livePillClasses(connected, !!connectionError)} ${className ?? ''}`}
     >
       <div
         className={`w-2 h-2 rounded-full mr-2 ${
-          connected ? 'bg-ok animate-pulse' : 'bg-white'
+          connected ? 'bg-ok animate-pulse' : connectionError ? 'bg-danger-strong' : 'bg-white'
         }`}
       />
-      <span>{connected ? 'Live' : 'Reconnecting...'}</span>
+      <span>{connected ? 'Live' : connectionError ?? 'Reconnecting...'}</span>
     </div>
   );
 
-  const afkToggle = (className?: string) => (
+  // labelClass controls the text label's visibility independently of the
+  // button's layout class: the desktop row passes none (label appears from
+  // `sm:` up), the burger menu passes '' (label always visible).
+  const afkToggle = (className?: string, labelClass = 'hidden sm:inline') => (
     <button
       type="button"
       data-testid="toggle-afk"
@@ -114,13 +121,13 @@ export const Header: React.FC<HeaderProps> = ({
       title={isAFK ? 'Return to Game' : 'Go AFK'}
     >
       <Coffee size={16} />
-      <span className={className ? '' : 'hidden sm:inline'}>
+      <span className={labelClass}>
         {isAFK ? 'AFK' : 'Go AFK'}
       </span>
     </button>
   );
 
-  const dealerToggle = (className?: string) => (
+  const dealerToggle = (className?: string, labelClass = 'hidden sm:inline') => (
     <button
       type="button"
       data-testid="toggle-dealer"
@@ -133,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
       title={isDealer ? 'Switch to Player' : 'Become Dealer'}
     >
       <HandHelping size={16} />
-      <span className={className ? '' : 'hidden sm:inline'}>
+      <span className={labelClass}>
         {isDealer ? 'Dealer' : 'Become Dealer'}
       </span>
     </button>
@@ -155,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
     <button
       type="button"
       data-testid="share-link"
-      onClick={copyLinkFromMenu}
+      onClick={copyLink}
       className={shareButtonClasses}
       title="Copy Invite Link"
     >
@@ -211,8 +218,8 @@ export const Header: React.FC<HeaderProps> = ({
                 menuOpen ? 'block' : 'hidden'
               }`}
             >
-              {afkToggle('w-full justify-start')}
-              {dealerToggle('w-full justify-start')}
+              {afkToggle('w-full justify-start', '')}
+              {dealerToggle('w-full justify-start', '')}
               {livePill('justify-start')}
               <div className="flex items-center justify-between h-9 px-1">
                 <span className="text-xs font-bold text-muted">Theme</span>

@@ -6,6 +6,7 @@ import type { ThemeMode } from '../hooks/useTheme';
 const renderHeader = ({
   roomID = 'engineering-sprint-21',
   connected = true,
+  connectionError = null as string | null,
   isAFK = false,
   isDealer = false,
   onToggleAFK = vi.fn(),
@@ -17,6 +18,7 @@ const renderHeader = ({
     <Header
       roomID={roomID}
       connected={connected}
+      connectionError={connectionError}
       isAFK={isAFK}
       isDealer={isDealer}
       onToggleAFK={onToggleAFK}
@@ -61,6 +63,15 @@ describe('Header', () => {
       .getAllByTestId('connection-status')
       .find((el) => !el.closest('[data-testid="header-menu"]'))!;
     expect(pillDisconnected.textContent).toContain('Reconnecting...');
+  });
+
+  it('shows the connection error in the pill instead of Reconnecting', () => {
+    renderHeader({ connected: false, connectionError: 'Could not reach the room.' });
+    const pill = screen
+      .getAllByTestId('connection-status')
+      .find((el) => !el.closest('[data-testid="header-menu"]'))!;
+    expect(pill.textContent).toContain('Could not reach the room.');
+    expect(pill.textContent).not.toContain('Reconnecting...');
   });
 
   it('toggles AFK from the inline control and reports pressed state', () => {
