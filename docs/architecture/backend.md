@@ -10,7 +10,7 @@ The backend lives in `/backend` as a single Go module (`github.com/j-stechmann/b
 | `hub.go` | Registry of active rooms plus a global client-ID → room index used for eviction. |
 | `room.go` | Room state, the per-room event loop, action handling, state broadcasting. |
 | `client.go` | Per-connection read/write pumps, ping/pong keepalive, per-connection message rate limiter, `serveWs` upgrade handler. |
-| `constants.go` | Role, action, and message-type string constants shared by both sides of the wire. |
+| `constants.go` | Role, action, and message-type string constants shared by both sides of the wire, plus the room-name length cap (`MaxRoomNameLength`). |
 | `room_test.go` | Game-rule and lifecycle tests (see [Testing strategy](../development/testing.md)). |
 
 ## The three types

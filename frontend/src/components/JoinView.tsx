@@ -44,6 +44,7 @@ export const JoinView: React.FC<JoinViewProps> = ({ initialRoomID, initialName, 
               type="text"
               value={roomID}
               onChange={(e) => setRoomID(e.target.value)}
+              maxLength={40}
               placeholder="e.g. engineering-sprint-21"
               className="w-full px-4 py-3 bg-surface-2 border border-line rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none transition-all placeholder:text-muted"
               required

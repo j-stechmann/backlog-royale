@@ -24,6 +24,8 @@
   --warn-soft: #fffbeb;
   --ok: #22c55e;
   --danger: #ef4444;
+  --danger-strong: #b91c1c;
+  --danger-soft: #fef2f2;
   color-scheme: light;
 }
 
@@ -50,6 +52,8 @@
   --warn-soft: #78350f;
   --ok: #22c55e;
   --danger: #ef4444;
+  --danger-strong: #fca5a5;
+  --danger-soft: #7f1d1d;
   color-scheme: dark;
 }
 
@@ -76,6 +80,8 @@
   --color-warn-soft: var(--warn-soft);
   --color-ok: var(--ok);
   --color-danger: var(--danger);
+  --color-danger-strong: var(--danger-strong);
+  --color-danger-soft: var(--danger-soft);
 }
 
 html, body, #root {

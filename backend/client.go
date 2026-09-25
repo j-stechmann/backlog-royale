@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 	"time"
+	"unicode/utf8"
 
 	"github.com/gorilla/websocket"
 	"golang.org/x/time/rate"
@@ -118,6 +119,17 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 
 	if roomID == "" || name == "" {
 		http.Error(w, "Missing room or name", http.StatusBadRequest)
+		return
+	}
+
+	// Count runes, not bytes, so the cap aligns with what the join form
+	// enforces (its maxLength counts UTF-16 units). For BMP characters —
+	// the realistic case — rune count equals UTF-16 length; astral-plane
+	// input (emoji) makes the server accept names the form would reject,
+	// the safe direction. Byte counting would wrongly reject 40 multibyte
+	// characters (80+ bytes) that the form accepted.
+	if utf8.RuneCountInString(roomID) > MaxRoomNameLength {
+		http.Error(w, "Room name too long", http.StatusBadRequest)
 		return
 	}
 

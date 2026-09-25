@@ -25,7 +25,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
     <div
       role="group"
       aria-label="Color theme"
-      className={`inline-flex rounded-full bg-surface-3 p-0.5 ${className ?? ''}`}
+      className={`inline-flex rounded-xl border border-line bg-surface p-0.5 ${className ?? ''}`}
     >
       {THEME_OPTIONS.map(({ mode, Icon, label }) => {
         const active = theme === mode;
@@ -37,7 +37,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
             aria-label={label}
             title={label}
             onClick={() => onSetTheme(mode)}
-            className={`p-1.5 rounded-full transition-colors ${active ? 'bg-surface-highlight shadow-sm' : 'hover:bg-surface-3/80'}`}
+            className={`flex items-center justify-center p-2 rounded-lg transition-colors ${active ? 'bg-surface-highlight shadow-sm' : 'hover:bg-surface-3/80'}`}
           >
             <Icon size={iconSize} />
           </button>

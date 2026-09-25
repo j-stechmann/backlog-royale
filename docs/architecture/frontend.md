@@ -18,7 +18,7 @@ src/
 │   └── useTheme.ts         light/dark/system theme
 ├── components/
 │   ├── JoinView.tsx        room + name form
-│   ├── Header.tsx          room ID, share link, AFK/dealer toggles, live pill
+│   ├── Header.tsx          room ID, share link, AFK/dealer toggles, live pill, mobile burger menu
 │   ├── VotingPanel.tsx     AFK panel | summary | dealer panel | card grid
 │   ├── PlayerList.tsx      progress + reveal/next-round controls + rows
 │   ├── UserStatus.tsx      per-player glyph, dealer AFK hover control
@@ -66,13 +66,13 @@ Hash-based view switch for the legal pages — no router dependency ([ADR 0013](
 | :--- | :--- |
 | `App.tsx` | Orchestration: joins state, role-change toasts ("You are now the Dealer/AFK/Player"), vote/reveal/reset handlers, legal-route switching, sonner `<Toaster>` (receives the theme so toasts follow light/dark). |
 | `JoinView` | Room + display name form; reads `?room=` from the URL so shared links prefill. |
-| `Header` | Room ID, copy-invite-link button, AFK and Dealer toggles with active/inactive styling, live/reconnecting pill, `ThemeToggle`. |
+| `Header` | Room ID (truncated, `min-w-0`), copy-invite-link button, AFK and Dealer toggles with active/inactive styling, live/reconnecting pill (status-tinted), `ThemeToggle`. Below `sm` the controls collapse into a burger menu (`aria-expanded`/`aria-controls`; closes on outside pointer-down, Escape — refocusing the burger — and after any action); the brand row keeps a truncated room ID so long names cannot push the page horizontally. |
 | `VotingPanel` | One panel shell for the three stacked views (card grid, vote summary, dealer notice; AFK is a separate swap). All layers share one CSS grid cell, so the panel height always equals the tallest view and reveal/reset never shift the layout. Visibility switches `opacity-100` ↔ `opacity-0 invisible pointer-events-none` with a 300 ms crossfade (opacity + visibility, so the outgoing view fades out rather than vanishing); hidden layers also get `inert` + `aria-hidden` so buttons stay unreachable. Summary/dealer layers are vertically centered in the shell without nested panel chrome of their own. When the visible view changes (reveal, next round, dealer takeover, AFK toggling), focus moves to the new view's heading; the mount-time render is skipped so initial page load never steals focus. |
 | `PlayerList` | Voting progress (`x / y Voted`, players only), Reveal/Next-Round buttons for those authorized, per-player rows. |
 | `UserStatus` | Per-player status glyph: dealer hand, AFK coffee, revealed vote card, voted checkmark, or an empty dashed slot; hover overlay lets the dealer send a player AFK. Voted players bounce subtly before the reveal. |
 | `Card` / `CardFace` | Playing-card UI. `CardFace` renders the "A" abstain card as a Ban icon (`ABSTAIN_VALUE` sentinel centralized in `constants.ts`). |
 | `VoteSummary` | Distribution as `count × card`, sorted by count with ties broken by `CARD_VALUES` order (matches the voting screen order). Accepts an optional `headingRef` so `VotingPanel` can move focus to its heading on reveal. |
-| `ThemeToggle` | Shared segmented control used in both the header and the join screen (`role="group"` + `aria-pressed`, a plain-button pattern chosen over a `radiogroup` that lacked the arrow-key pattern). |
+| `ThemeToggle` | Shared segmented control used in both the header and the join screen (`role="group"` + `aria-pressed`, a plain-button pattern chosen over a `radiogroup` that lacked the arrow-key pattern). Chrome matches the app's outlined-surface button language: `rounded-xl` bordered surface with a `rounded-lg` highlighted active segment. |
 | `Footer` | In-flow footer on all app views, pushed to the viewport bottom by the app's flex-column layout: version + Imprint/Privacy links. Not `position: fixed` — content must never scroll underneath it ([#126](https://github.com/j-stechmann/backlog-royale/issues/126)). Links are origin-absolute **without the query string** and open in a new tab — a bare relative hash would inherit `?room=` and the new tab would silently auto-join the room as a duplicate player. |
 | `LegalPage` / `Imprint` / `PrivacyPolicy` | Legal views rendered by hash route: shared wrapper (heading, intro, back link, section layout) plus the imprint (§ 5 DDG) and privacy policy content. Replaces the app view tree entirely while active. |
 | `Logo` | SVG card + crown; card chrome reads raw CSS variables (`var(--surface)`, …) because Tailwind's `@theme inline` does not emit `--color-*` variables to `:root`. Crown and jewels are fixed brand colors. |
@@ -93,7 +93,7 @@ The legal content itself (imprint, privacy policy) is deployment-specific: self-
 
 ## Theming and semantic tokens
 
-- 22 semantic CSS color tokens (`base`, `surface`, `surface-2/3`, `surface-inverse`, `surface-highlight`, `line`, `glass`, `content`, `content-soft`, `mid-text`, `muted`, `content-inverse`, `accent`, `accent-text`, `accent-strong`, `accent-soft`, `warn`, `warn-strong`, `warn-soft`, `ok`, `danger`) are defined as raw `:root` variables with a single `.dark` override block, exposed to Tailwind v4 via `@theme inline` (so `bg-surface`, `text-content`, `border-line`, … work everywhere). Full rationale in [ADR 0009](../adr/0009-semantic-tokens-and-dark-theme.md).
+- 24 semantic CSS color tokens (`base`, `surface`, `surface-2/3`, `surface-inverse`, `surface-highlight`, `line`, `glass`, `content`, `content-soft`, `mid-text`, `muted`, `content-inverse`, `accent`, `accent-text`, `accent-strong`, `accent-soft`, `warn`, `warn-strong`, `warn-soft`, `ok`, `danger`, `danger-strong`, `danger-soft`) are defined as raw `:root` variables with a single `.dark` override block, exposed to Tailwind v4 via `@theme inline` (so `bg-surface`, `text-content`, `border-line`, … work everywhere). Full rationale in [ADR 0009](../adr/0009-semantic-tokens-and-dark-theme.md).
 - Components consume semantic utilities only; dark mode is a variable swap, not scattered `dark:` classes (the vote-band utility strings in `src/utils/theme.ts` are the deliberate exception, since they encode per-card hue rather than surface semantics).
 - **Vote-band colors** (`getTheme`): ≤3 points → emerald, ≤8 → blue, ≤21 → rose, `?`/`A`/unknown → gray; each band carries text/bg/border/ring/shadow/hoverBorder with `dark:` variants (the point bands use `-900` backgrounds in dark mode so hue stays visible on the dark surface; the gray band uses `-800`).
 - Accessibility decisions: `accent` (surfaces, blue-600 both modes) is split from `accent-text` (on-surface text/icons, blue-600/blue-400) to keep WCAG AA contrast; `accent-strong`/`warn-strong` provide hover and active states; the "voted" checkmark is a dark glyph on the green pill.
@@ -102,11 +102,12 @@ The legal content itself (imprint, privacy policy) is deployment-specific: self-
 
 ```text
 join ──► connect ──► WELCOME (store ID) ──► STATE loop ──► (close?)
-               ▲                                        │
-               └──────── 3 s reconnect ◄────────────────┘
+                ▲                                        │
+                └──────── 3 s reconnect ◄────────────────┘
 ```
 
 - **On close:** if the socket's generation is still current, mark disconnected and schedule a reconnect in 3 s. Stale sockets (generation mismatch) do nothing.
+- **Failed handshakes:** a close *without* a prior `WELCOME` counts as a failed handshake (e.g. the server rejected the upgrade with HTTP 400 — the browser only surfaces a generic close, so a bad room link is indistinguishable from a transient outage). Three consecutive failed handshakes switch the header pill to an error message, but the retry loop keeps running so a server that comes back is still reachable; `WELCOME` clears the error and resets the counter. The counter also resets on every room/name change, so ordinary network blips never surface the error.
 - **On room switch:** cleanup closes the socket and bumps the generation; the new connection carries `prevId` so the server evicts the ghost from the old room.
 - **Multi-tab:** additional tabs of the same room never send `prevId`, so they do not evict each other. Sharp edge: `joinRoom` sets `prevIdToEvict` unconditionally, so a second tab that *submits the join form* (open URL without `?room=`, type a name, join) sends the shared localStorage ID and evicts the first tab's live connection — it reconnects fresh a moment later. Only the URL/auto-join and reconnect paths are guaranteed coexistence.
 
