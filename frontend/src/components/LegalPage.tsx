@@ -10,7 +10,7 @@ interface LegalPageProps {
 
 const LegalPage: React.FC<LegalPageProps> = ({ title, intro, onBack, children }) => {
   return (
-    <div className="min-h-screen bg-base">
+    <div className="flex-1 bg-base">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10">
         <button
           type="button"

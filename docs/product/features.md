@@ -11,7 +11,7 @@ Every action (vote, reveal, reset, role change, disconnect) is processed by the 
 
 ## Room-based sessions
 
-Any room name forms an instant session — no creation step, no auth, no lobby. Sharing the room name (or the URL, which carries `?room=`) is all it takes to bring someone in. Empty rooms are destroyed automatically.
+Any room name of up to 40 characters (counted as Unicode characters, not bytes) forms an instant session — no creation step, no auth, no lobby (the 40-character cap is enforced server-side; longer names are rejected with HTTP 400, and the join form's input enforces the same limit). Sharing the room name (or the URL, which carries `?room=`) is all it takes to bring someone in. Empty rooms are destroyed automatically.
 
 - Implemented by: `backend/hub.go` (`GetOrCreateRoom`), `backend/room.go` (empty-room teardown).
 - The URL is updated via `history.pushState` on join (`frontend/src/hooks/useGameState.ts`).
@@ -39,7 +39,7 @@ Votes are hidden until someone reveals. This is enforced **server-side** — the
 
 ## Vote reveal
 
-Reveal shows every vote at once, replacing the voting grid with a **vote summary** (distribution of points, visible to everyone — shipped v1.5.0). Reveal is authorized for the dealer, or for any non-AFK player when no dealer is present.
+Reveal shows every vote at once: the voting panel crossfades from the card grid to the **vote summary** (distribution of points, visible to everyone — shipped v1.5.0). Both views stay mounted in one fixed-size panel, so the reveal causes no layout shift in any viewport, and focus moves to the summary heading so keyboard and screen-reader users keep their place (the same happens in the other direction on the next round). Reveal is authorized for the dealer, or for any non-AFK player when no dealer is present.
 
 - Implemented by: `backend/room.go` (`handleReveal`), `frontend/src/components/VoteSummary.tsx`, `frontend/src/components/PlayerList.tsx` (button).
 - Status: shipped (v0.1.0; summary-to-all v1.5.0).
@@ -109,10 +109,10 @@ Participants are sorted case-insensitively by name in every state broadcast, so 
 
 ## Responsive design
 
-The layout works on desktop and mobile: cards resize down, header actions collapse to icons on narrow screens, controls stack. Optimized for the "someone forgot their laptop" use case.
+The layout works on desktop and mobile: cards resize down, controls stack. On narrow screens the header controls collapse into a burger menu (an accessible dropdown with full-width labeled rows for the AFK/Dealer toggles, connection indicator, theme toggle, and copy-invite action; closes on outside click, Escape, and after any action, returning focus to the burger), and long room names truncate instead of pushing the page wide. Optimized for the "someone forgot their laptop" use case.
 
-- Implemented by: Tailwind responsive variants across `frontend/src/components/`.
-- Status: shipped (v0.1.0; header separator fix v0.1.0; player-list scroll fix v0.8.1).
+- Implemented by: Tailwind responsive variants across `frontend/src/components/`; burger menu in `frontend/src/components/Header.tsx`.
+- Status: shipped (v0.1.0; header separator fix v0.1.0; player-list scroll fix v0.8.1; header burger menu + truncation unreleased).
 
 ## Dark theme with OS-preference switching
 
@@ -124,7 +124,7 @@ Three modes — light, dark, and system (follows the OS `prefers-color-scheme`).
 
 ## Version indicator
 
-The app version (from `frontend/package.json`, injected at build time) is displayed as a small unobtrusive label in the bottom-right corner on all views, including the join screen — so bug reports are self-identifying.
+The app version (from `frontend/package.json`, injected at build time) is displayed as a small unobtrusive label at the bottom-right of the page on all views, including the join screen — so bug reports are self-identifying. The label lives in a footer that is part of the normal page flow (pushed to the viewport bottom on short pages), so content never scrolls underneath it.
 
 - Implemented by: `frontend/vite.config.ts` (`define: { __APP_VERSION__ }`), `frontend/src/App.tsx`.
 - Status: shipped (v1.8.0).
@@ -152,10 +152,10 @@ Switching rooms is ghost-free: the client sends its previous server-assigned ID 
 
 ## Reconnect handling
 
-Dropped connections show a "Reconnecting..." pill and reconnect automatically after 3 seconds with a fresh identity; the stale participant row is cleaned up server-side. A generation counter keeps stale socket handlers from interfering across room switches or StrictMode remounts.
+Dropped connections show a "Reconnecting..." pill and reconnect automatically after 3 seconds with a fresh identity; the stale participant row is cleaned up server-side. A generation counter keeps stale socket handlers from interfering across room switches or StrictMode remounts. If the handshake keeps failing (e.g. an HTTP 400 for an invalid room link shared via URL), three consecutive failures switch the pill to an error message while the retry loop keeps running, so recovery is automatic once the server (or a valid link) is reachable again.
 
-- Implemented by: `frontend/src/hooks/useBacklogRoyale.ts` (`genRef`, reconnect timer), `frontend/src/components/Header.tsx` (live pill).
-- Status: shipped (v0.1.0; generation counter v1.9.0).
+- Implemented by: `frontend/src/hooks/useBacklogRoyale.ts` (`genRef`, reconnect timer, handshake-failure counter), `frontend/src/components/Header.tsx` (live pill).
+- Status: shipped (v0.1.0; generation counter v1.9.0; handshake-failure surfacing unreleased).
 
 ## Feature index by release
 

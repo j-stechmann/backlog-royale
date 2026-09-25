@@ -238,6 +238,113 @@ test('should reconnect after an unintentional close', async () => {
   vi.useRealTimers();
 });
 
+test('should surface the connection error after three consecutive failed handshakes but keep retrying', async () => {
+  vi.useFakeTimers();
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
+
+  await act(async () => {
+    vi.runAllTimers();
+  });
+
+  await vi.waitFor(() => {
+    expect(result.current.connected).toBe(true);
+  });
+
+  // Three sockets, each closed before any WELCOME arrived (e.g. the
+  // server rejected the upgrade with HTTP 400).
+  for (let i = 0; i < 3; i++) {
+    await vi.waitFor(() => {
+      expect(wsInstances).toHaveLength(i + 1);
+    });
+    await act(async () => {
+      wsInstances[i].onclose();
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(3000);
+    });
+  }
+
+  expect(result.current.connectionError).toBe(
+    'Could not reach the room — the link may be invalid or outdated.'
+  );
+  expect(result.current.connected).toBe(false);
+
+  // The retry loop keeps running: a failed-handshake streak is
+  // indistinguishable from a transient outage, so a fourth socket
+  // appears and a later WELCOME recovers the connection.
+  await act(async () => {
+    vi.advanceTimersByTime(3000);
+  });
+  await vi.waitFor(() => {
+    expect(wsInstances).toHaveLength(4);
+  });
+  await act(async () => {
+    wsInstances[3].onmessage({ data: JSON.stringify({ type: MESSAGE_TYPES.WELCOME, id: 'id-recovered' }) });
+  });
+
+  expect(result.current.connectionError).toBeNull();
+  expect(result.current.connected).toBe(true);
+
+  vi.useRealTimers();
+});
+
+test('should reset the handshake-failure counter after a WELCOME', async () => {
+  vi.useFakeTimers();
+  const { result } = renderHook(() => useBacklogRoyale('test-room', 'Alice'));
+
+  await act(async () => {
+    vi.runAllTimers();
+  });
+
+  await vi.waitFor(() => {
+    expect(result.current.connected).toBe(true);
+  });
+
+  // Two failed handshakes...
+  for (let i = 0; i < 2; i++) {
+    await vi.waitFor(() => {
+      expect(wsInstances).toHaveLength(i + 1);
+    });
+    await act(async () => {
+      wsInstances[i].onclose();
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(3000);
+    });
+  }
+
+  // ...then a successful connection: WELCOME arrives before close.
+  await vi.waitFor(() => {
+    expect(wsInstances).toHaveLength(3);
+  });
+  await act(async () => {
+    wsInstances[2].onmessage({ data: JSON.stringify({ type: MESSAGE_TYPES.WELCOME, id: 'id-1' }) });
+    wsInstances[2].onclose();
+  });
+  await act(async () => {
+    vi.advanceTimersByTime(3000);
+  });
+
+  await vi.waitFor(() => {
+    expect(wsInstances).toHaveLength(4);
+  });
+  await act(async () => {
+    wsInstances[3].onmessage({ data: JSON.stringify({ type: MESSAGE_TYPES.WELCOME, id: 'id-2' }) });
+  });
+
+  // A subsequent failure reconnects again instead of erroring.
+  await act(async () => {
+    wsInstances[3].onclose();
+  });
+  await act(async () => {
+    vi.advanceTimersByTime(3000);
+  });
+  expect(wsInstances).toHaveLength(5);
+  expect(result.current.connectionError).toBeNull();
+
+  vi.useRealTimers();
+});
+
 test('sendAction should target the new socket after a room switch', async () => {
   const { result, rerender } = renderHook(
     ({ roomId, name, prevId }) => useBacklogRoyale(roomId, name, undefined, prevId),

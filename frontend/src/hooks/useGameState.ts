@@ -32,7 +32,7 @@ export const useGameState = () => {
     setPrevIdToEvict('');
   }, []);
 
-  const { state, connected, sendAction } = useBacklogRoyale(
+  const { state, connected, connectionError, sendAction } = useBacklogRoyale(
     isJoined ? roomID : '', 
     isJoined ? name : '', 
     handleIDAssigned,
@@ -81,6 +81,7 @@ export const useGameState = () => {
     setSelectedVote,
     state,
     connected,
+    connectionError,
     sendAction,
     joinRoom
   };

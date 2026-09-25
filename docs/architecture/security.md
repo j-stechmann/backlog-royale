@@ -9,6 +9,7 @@ What the application protects, how, and — just as importantly — what it does
 | HTTP rate limiting | Per-IP token bucket | 1 req/s, burst 10; 429 on excess | `main.go` (`getIPLimiter`, `securityMiddleware`) |
 | WS message rate limiting | Per-connection token bucket | 10 msg/s, burst 20; excess dropped + logged | `client.go` (`readPump`) |
 | Message size | `SetReadLimit` | 512 bytes | `client.go` |
+| Room name length | `serveWs` validation | 40 characters max (Unicode characters, not bytes); longer names rejected with HTTP 400 before upgrade | `client.go`, `constants.go` (`MaxRoomNameLength`) |
 | Keepalive | Ping/pong + deadlines | 60 s read deadline (pong-refreshed), ping every 54 s, 10 s write deadline | `client.go` |
 | Origin check | `upgrader.CheckOrigin` | Exact, case-insensitive match when `ALLOWED_ORIGIN` ≠ `*`; empty `Origin` rejected | `client.go` (`serveWs`) |
 | Security headers | Middleware | `nosniff`, `DENY`, XSS filter, `no-referrer`, CSP (`default-src 'self'; connect-src 'self' ws: wss:`) | `main.go` |

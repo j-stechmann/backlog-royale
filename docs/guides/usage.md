@@ -12,7 +12,7 @@ Anyone with the same room name ends up in the same session — the room name is 
 
 ## The room at a glance
 
-- **Header:** room name, copy-invite button (share the link with teammates), your AFK/Dealer toggles, a connection indicator (`Live` / `Reconnecting...`), and the theme toggle.
+- **Header:** room name, copy-invite button (share the link with teammates), your AFK/Dealer toggles, a connection indicator (`Live` / `Reconnecting...`), and the theme toggle. On phones the controls live behind the burger menu (top right); long room names are truncated.
 - **Voting area (center):** the card grid, or one of the special panels depending on your role and the round phase.
 - **Player list (bottom):** everyone in the room with their status; the `x / y Voted` counter and the round controls at the top.
 

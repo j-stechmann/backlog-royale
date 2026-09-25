@@ -10,11 +10,11 @@ GET /ws?room=<id>&name=<name>[&prevId=<id>]
 
 | Parameter | Required | Purpose |
 | :--- | :--- | :--- |
-| `room` | yes | Room name (= room ID). Creates the room on first join. |
+| `room` | yes | Room name (= room ID). Creates the room on first join. Max 40 characters (Unicode characters, not bytes) — longer names are rejected with HTTP 400 before the upgrade. |
 | `name` | yes | Display name. Display-only; not an identity ([ADR 0003](../adr/0003-server-authoritative-identity.md)). |
 | `prevId` | no | Previous server-assigned ID to evict. Send **only when switching rooms** — see the multi-tab caveat below. |
 
-- Missing `room` or `name` → HTTP 400 before upgrade.
+- Missing `room` or `name`, or a `room` longer than 40 characters (Unicode characters, not bytes) → HTTP 400 before upgrade.
 - `ALLOWED_ORIGIN` ≠ `*` enforces an exact, case-insensitive `Origin` match; an empty `Origin` header is rejected.
 - The upgrade response is followed immediately by a `WELCOME` message, then a full `STATE`.
 

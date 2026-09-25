@@ -10,7 +10,7 @@ First off, thank you for considering contributing to Backlog Royale! It's people
 
 - Check the [Issues](https://github.com/j-stechmann/backlog-royale/issues) to see if the bug has already been reported.
 - If not, create a new issue. Provide a clear title, a detailed description, and steps to reproduce the bug.
-- Include the version label shown in the bottom-right corner of the frontend, plus browser/OS details for frontend issues or logs for backend issues (the backend logs structured JSON — see [Logging](operations/logging.md)).
+- Include the version label shown in the footer at the bottom of the page (scroll down on long pages), plus browser/OS details for frontend issues or logs for backend issues (the backend logs structured JSON — see [Logging](operations/logging.md)).
 
 ### Suggesting Enhancements
 
