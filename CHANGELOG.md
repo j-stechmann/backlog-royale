@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.4] - 2026-09-25
+
 ### Fixed
 - Room-name validation now counts Unicode characters, not bytes, on both sides of the wire. The server previously compared the byte length of the `room` query parameter against the 40-character cap, so a room name the join form accepted (its `maxLength` counts UTF-16 units) could be rejected with HTTP 400 — e.g. 40 "ä" are 40 characters but 80 bytes. Multibyte names at the limit are now accepted (`utf8.RuneCountInString`), with regression tests for the accepted and rejected multibyte paths.
 - A persistently rejected WebSocket handshake is now surfaced instead of looping in silence: `useBacklogRoyale` previously showed an eternal "Reconnecting..." pill on any close, so a stale/invalid room link (server answers HTTP 400, the browser only surfaces a generic close) never told the user anything was wrong. Three consecutive closes without a `WELCOME` now switch the pill to a `connectionError` message (new `danger-soft`/`danger-strong` semantic tokens) — but the 3-second retry loop keeps running, since a failed-handshake streak is indistinguishable from a transient outage; a `WELCOME` clears the error and the counter resets on a room/name change.
