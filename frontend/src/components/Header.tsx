@@ -84,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const copyLinkFromMenu = () => {
     copyLink();
-    closeMenu();
+    closeMenu(true);
   };
 
   const livePill = (className?: string) => (
@@ -108,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
       aria-pressed={isAFK}
       onClick={() => {
         onToggleAFK();
-        closeMenu();
+        closeMenu(true);
       }}
       className={`${afkToggleClasses(isAFK)} ${className ?? ''}`}
       title={isAFK ? 'Return to Game' : 'Go AFK'}
@@ -127,7 +127,7 @@ export const Header: React.FC<HeaderProps> = ({
       aria-pressed={isDealer}
       onClick={() => {
         onToggleRole();
-        closeMenu();
+        closeMenu(true);
       }}
       className={`${dealerToggleClasses(isDealer)} ${className ?? ''}`}
       title={isDealer ? 'Switch to Player' : 'Become Dealer'}
@@ -140,7 +140,15 @@ export const Header: React.FC<HeaderProps> = ({
   );
 
   const themeToggle = (iconSize: number, className?: string) => (
-    <ThemeToggle theme={theme} onSetTheme={onSetTheme} iconSize={iconSize} className={className} />
+    <ThemeToggle
+      theme={theme}
+      onSetTheme={(mode) => {
+        onSetTheme(mode);
+        closeMenu(true);
+      }}
+      iconSize={iconSize}
+      className={className}
+    />
   );
 
   const shareButton = () => (

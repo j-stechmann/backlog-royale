@@ -11,7 +11,7 @@ Every action (vote, reveal, reset, role change, disconnect) is processed by the 
 
 ## Room-based sessions
 
-Any room name forms an instant session — no creation step, no auth, no lobby. Sharing the room name (or the URL, which carries `?room=`) is all it takes to bring someone in. Empty rooms are destroyed automatically.
+Any room name of up to 40 characters forms an instant session — no creation step, no auth, no lobby (the 40-character cap is enforced server-side; longer names are rejected with HTTP 400, and the join form's input enforces the same limit). Sharing the room name (or the URL, which carries `?room=`) is all it takes to bring someone in. Empty rooms are destroyed automatically.
 
 - Implemented by: `backend/hub.go` (`GetOrCreateRoom`), `backend/room.go` (empty-room teardown).
 - The URL is updated via `history.pushState` on join (`frontend/src/hooks/useGameState.ts`).
@@ -109,7 +109,7 @@ Participants are sorted case-insensitively by name in every state broadcast, so 
 
 ## Responsive design
 
-The layout works on desktop and mobile: cards resize down, controls stack. On narrow screens the header controls collapse into a burger menu (an accessible dropdown with full-width labeled rows for the AFK/Dealer toggles, connection indicator, theme toggle, and copy-invite action; closes on outside click, Escape, and after any action), and long room names truncate instead of pushing the page wide. Optimized for the "someone forgot their laptop" use case.
+The layout works on desktop and mobile: cards resize down, controls stack. On narrow screens the header controls collapse into a burger menu (an accessible dropdown with full-width labeled rows for the AFK/Dealer toggles, connection indicator, theme toggle, and copy-invite action; closes on outside click, Escape, and after any action, returning focus to the burger), and long room names truncate instead of pushing the page wide. Optimized for the "someone forgot their laptop" use case.
 
 - Implemented by: Tailwind responsive variants across `frontend/src/components/`; burger menu in `frontend/src/components/Header.tsx`.
 - Status: shipped (v0.1.0; header separator fix v0.1.0; player-list scroll fix v0.8.1; header burger menu + truncation unreleased).

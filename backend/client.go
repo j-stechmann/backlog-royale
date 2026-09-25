@@ -121,6 +121,11 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request, allowedOrigin str
 		return
 	}
 
+	if len(roomID) > MaxRoomNameLength {
+		http.Error(w, "Room name too long", http.StatusBadRequest)
+		return
+	}
+
 	// Always generate ID server-side to prevent impersonation
 	id := generateID()
 

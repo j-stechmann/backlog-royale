@@ -18,3 +18,7 @@ const (
 	MessageTypeState   = "STATE"
 	MessageTypeWelcome = "WELCOME"
 )
+
+// MaxRoomNameLength caps the user-supplied room identifier accepted by
+// the /ws endpoint. Mirrors the join form's maxLength in the frontend.
+const MaxRoomNameLength = 40

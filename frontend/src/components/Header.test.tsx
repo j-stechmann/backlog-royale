@@ -152,12 +152,27 @@ describe('Header', () => {
       fireEvent.click(menuAfk);
       expect(onToggleAFK).toHaveBeenCalledTimes(1);
       expect(screen.getByTestId('header-menu-toggle').getAttribute('aria-expanded')).toBe('false');
+      expect(document.activeElement).toBe(screen.getByTestId('header-menu-toggle'));
 
       fireEvent.click(screen.getByTestId('header-menu-toggle'));
       const menuDealer = within(screen.getByTestId('header-menu')).getByTestId('toggle-dealer');
       fireEvent.click(menuDealer);
       expect(onToggleRole).toHaveBeenCalledTimes(1);
       expect(screen.getByTestId('header-menu-toggle').getAttribute('aria-expanded')).toBe('false');
+      expect(document.activeElement).toBe(screen.getByTestId('header-menu-toggle'));
+    });
+
+    it('sets the theme from the menu and closes it with focus on the burger', () => {
+      const onSetTheme = vi.fn();
+      renderHeader({ onSetTheme });
+
+      fireEvent.click(screen.getByTestId('header-menu-toggle'));
+      const menu = screen.getByTestId('header-menu');
+      const darkButton = within(menu).getByLabelText('Dark theme');
+      fireEvent.click(darkButton);
+      expect(onSetTheme).toHaveBeenCalledWith('dark');
+      expect(screen.getByTestId('header-menu-toggle').getAttribute('aria-expanded')).toBe('false');
+      expect(document.activeElement).toBe(screen.getByTestId('header-menu-toggle'));
     });
 
     it('copies the invite link from the menu and closes it', async () => {
