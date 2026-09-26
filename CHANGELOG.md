@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.10.5] - 2026-09-26
 
 ### Added
 - Added an explanation for dealers that they can AFK people
