@@ -124,6 +124,9 @@ export const VotingPanel: React.FC<VotingPanelProps> = ({
         <p className="text-warn-strong text-sm max-w-xs">
           You can see the voting progress and manage the rounds, but you don't participate in voting.
         </p>
+        <p className="text-warn-strong text-sm max-w-xs">
+          You may also switch players to AFK.
+        </p>
       </div>
     </div>
   );
