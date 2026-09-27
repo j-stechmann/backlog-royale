@@ -63,7 +63,7 @@ jobs:
         run: npm run build
         working-directory: frontend
       - name: Run Lighthouse CI
-        run: npx --yes @lhci/cli@0.15.x autorun
+        run: npx --loglevel=error --yes @lhci/cli@0.15.x autorun
         working-directory: frontend
       - name: Upload Lighthouse reports
         if: always()

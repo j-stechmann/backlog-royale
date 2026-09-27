@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 - A fourth CI gate, `lighthouse`: Lighthouse CI (the engine behind Google PageSpeed Insights) runs against the built frontend on every push and PR to `main`/`develop`, hard-gating all four categories (performance, accessibility, best-practices, SEO) at ≥ 0.9, asserted on the median of 3 runs to absorb shared-runner noise ([ADR 0015](docs/adr/0015-lighthouse-performance-gate.md)). HTML/JSON reports upload as a CI artifact; thresholds live in `frontend/lighthouserc.json` and the same command runs locally (`npx @lhci/cli autorun` from `frontend/`, after a build).
 - A meta description tag on the app shell (`frontend/index.html`) — the Lighthouse SEO audit flagged its absence, and a description cannot be injected post-load.
 
+### Fixed
+- The `lighthouse` CI job's first run was noisy with warnings that suggested something was wrong even though the gate passed: LHCI's GitHub-status integration (enabled implicitly by the initial `temporary-public-storage` upload config) warned "GitHub token not set" for a feature this pipeline does not use — the `upload` block was dropped (the gate is the required `lighthouse` check; reports persist as the CI artifact), and `npx --loglevel=error` now suppresses the deprecation notices LHCI's transitive dependency tree (`uuid@8`, `glob@7`, `rimraf@2/3`) prints on every run.
+- A pre-existing ESLint warning on the `frontend` job (`react-hooks/exhaustive-deps` on `genRef.current++` in the `useBacklogRoyale` cleanup, flagged since the hook's generation-counter approach landed) is now silenced with a scoped disable: the rule's suggested fix (copy the ref value into the cleanup) is wrong for a plain generation counter — the cleanup must read and persist the live value.
+
 ## [1.10.5] - 2026-09-26
 
 ### Added
