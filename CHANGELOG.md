@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- A fourth CI gate, `lighthouse`: Lighthouse CI (the engine behind Google PageSpeed Insights) runs against the built frontend on every push and PR to `main`/`develop`, hard-gating all four categories (performance, accessibility, best-practices, SEO) at ≥ 0.9, asserted on the median of 3 runs to absorb shared-runner noise ([ADR 0015](docs/adr/0015-lighthouse-performance-gate.md)). HTML/JSON reports upload as a CI artifact; thresholds live in `frontend/lighthouserc.json` and the same command runs locally (`npx @lhci/cli autorun` from `frontend/`, after a build).
+- A meta description tag on the app shell (`frontend/index.html`) — the Lighthouse SEO audit flagged its absence, and a description cannot be injected post-load.
+
 ## [1.10.5] - 2026-09-26
 
 ### Added

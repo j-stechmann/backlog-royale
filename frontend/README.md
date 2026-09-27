@@ -34,6 +34,14 @@ Deep dives: [architecture](../docs/architecture/frontend.md) · [theming](../doc
 npm run test
 ```
 
+CI additionally gates the built app with [Lighthouse CI](../docs/adr/0015-lighthouse-performance-gate.md) (the engine behind Google PageSpeed Insights) — all four categories at ≥ 0.9. Locally:
+
+```bash
+npm run build && npx @lhci/cli autorun
+```
+
+Thresholds live in `lighthouserc.json`; reports land in `.lighthouseci/` (gitignored).
+
 ## 🛠️ Tech Stack
 
 - **React 19**: Modern component-based UI.
