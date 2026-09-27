@@ -21,7 +21,7 @@ PRs against `main` require the same green CI checks — production is never upda
 
 1. Dependabot opens weekly grouped PRs across **five ecosystems** (npm, gomod, Docker frontend, Docker backend, GitHub Actions — cap of 10 open PRs each), producing up to **six grouped PRs per week**: one minor+patch group per ecosystem, except npm which is split into a production and a development group. Each group targets `develop`.
 2. The `dependabot-auto-merge` workflow fetches PR metadata. If it is not a major bump, it enables auto-merge (`gh pr merge --auto --merge`).
-3. The `backend`, `frontend`, and `docker` CI jobs run. Green → GitHub merges the PR with a merge commit; red → it stays open with the failure visible.
+3. The `backend`, `frontend`, `lighthouse`, and `docker` CI jobs run. Green → GitHub merges the PR with a merge commit; red → it stays open with the failure visible.
 4. Security PRs skip the weekly schedule entirely and arrive one per advisory.
 
 ## The auto-merge workflow's safety properties
@@ -57,5 +57,5 @@ If an auto-merged group breaks something after the fact: revert the merge commit
 | :--- | :--- |
 | `.github/dependabot.yml` | Ecosystems, weekly schedule, groups, PR cap, the `go`-directive ignore (with rationale comments) |
 | `.github/workflows/dependabot-auto-merge.yml` | The auto-merge / label-major workflow |
-| `.github/workflows/ci.yml` | The three gates (`backend`, `frontend`, `docker`) |
+| `.github/workflows/ci.yml` | The four gates (`backend`, `frontend`, `lighthouse`, `docker`) |
 | Branch protection (repo settings) | Required checks; approval on `main` |

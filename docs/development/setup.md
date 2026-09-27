@@ -32,6 +32,7 @@ npm run dev           # Vite dev server
 npm run test          # Vitest, single run (the CI gate)
 npm run lint          # ESLint (the CI gate)
 npm run build         # tsc -b + vite build
+npx @lhci/cli autorun # Lighthouse CI (the CI gate; requires npm run build first)
 ```
 
 - **Never edit `package-lock.json` by hand.** Routine bumps come from grouped Dependabot PRs ([Dependency management](dependencies.md)); security bumps arrive as individual PRs. If you must add a dependency, do it in one commit with a regenerated lockfile and a rationale in the PR description.
@@ -64,6 +65,8 @@ CI additionally runs `npm run build` and a Docker build of both images (the `doc
 ```bash
 docker build backend/ && docker build frontend/
 ```
+
+CI also runs Lighthouse CI against the built frontend ([ADR 0015](../adr/0015-lighthouse-performance-gate.md)) — the `npx @lhci/cli autorun` command above is the same gate. It needs Chrome (auto-detected) and reads thresholds from `frontend/lighthouserc.json`; reports land in `frontend/.lighthouseci/` (gitignored).
 
 ## Pitfalls that actually bite
 
