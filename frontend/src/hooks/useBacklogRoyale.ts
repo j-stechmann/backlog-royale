@@ -129,6 +129,7 @@ export const useBacklogRoyale = (
       connect();
     }
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- genRef is a plain generation counter, not a rendered node; the cleanup must read (and persist) the live value, so the rule's suggested copy would be wrong here.
       genRef.current++;
       ws.current?.close();
       ws.current = null;

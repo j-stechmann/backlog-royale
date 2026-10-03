@@ -6,13 +6,13 @@ The workflows that guard and publish the project. The automation decisions behin
 
 | File | Name | Triggers | Purpose |
 | :--- | :--- | :--- | :--- |
-| `.github/workflows/ci.yml` | CI | push/PR → `main`, `develop` | Build, test, lint, and Docker-build both images |
+| `.github/workflows/ci.yml` | CI | push/PR → `main`, `develop` | Build, test, lint, Lighthouse, and Docker-build both images |
 | `.github/workflows/dependabot-auto-merge.yml` | Dependabot auto-merge | `pull_request_target` | Auto-merge green dependency PRs; label majors |
 | `.github/workflows/docker-publish.yml` | Build and Push Docker Images | push → `main`; tags `v*.*.*` | Publish both images to GHCR |
 
-## CI: the three gates
+## CI: the four gates
 
-All three run on `ubuntu-latest` for every push and PR touching `main` or `develop` (develop coverage added in v1.6.1 so dependency PRs are gated the same as features).
+All four run on `ubuntu-latest` for every push and PR touching `main` or `develop` (develop coverage added in v1.6.1 so dependency PRs are gated the same as features).
 
 ### `backend`
 
@@ -24,12 +24,19 @@ All three run on `ubuntu-latest` for every push and PR touching `main` or `devel
 - `actions/setup-node@v7`, Node 26, npm cache keyed on `frontend/package-lock.json`.
 - `npm ci` → `npm run lint` → `npm run test` → `npm run build`.
 
+### `lighthouse`
+
+- Same setup as `frontend` (`actions/setup-node@v7`, Node 26, npm cache), then `npm ci` → `npm run build`.
+- `npx @lhci/cli@0.15.x autorun` (LHCI's built-in static server over `dist/`, 3 runs, asserted on the **median**) — the same engine Google PageSpeed Insights runs, but against the built app on the runner, so it works on every PR without a deployed URL.
+- Gates all four categories (performance, accessibility, best-practices, SEO) at **score ≥ 0.9**; thresholds live in `frontend/lighthouserc.json` ([ADR 0015](../adr/0015-lighthouse-performance-gate.md)).
+- HTML/JSON reports of every run upload as the `lighthouse-reports` artifact (14-day retention), so a failure is inspectable without re-running.
+
 ### `docker`
 
 - `docker/setup-buildx-action@v4`, then `docker/build-push-action@v7` for both contexts (`./backend`, `./frontend`) with `push: false`.
 - Exists so **base-image bumps are validated before they can merge** (see [ADR 0010](../adr/0010-dependency-automation.md)) — a broken Dockerfile cannot auto-merge.
 
-Branch protection requires all three jobs on every PR; the same checks gate PRs against `main` ([ADR 0014](../adr/0014-solo-maintainer-branch-protection.md)).
+Branch protection requires all four jobs on every PR; the same checks gate PRs against `main` ([ADR 0014](../adr/0014-solo-maintainer-branch-protection.md)).
 
 ## Dependabot auto-merge
 
