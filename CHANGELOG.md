@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Security
+- Patched the open Dependabot alert for `brace-expansion` ([GHSA-q2hr-2g5m-vwhr](https://github.com/advisories/GHSA-q2hr-2g5m-vwhr), medium: quadratic-time expansion of the `{a},b}` rewrite allowing CPU denial of service): the dev-only transitive dependency (via `minimatch` → eslint tooling) was bumped 5.0.9 → 5.0.12 in `frontend/package-lock.json` — lockfile-only, no package.json change, no runtime impact.
+
 ## [1.10.6] - 2026-10-03
 
 ### Added
