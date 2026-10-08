@@ -4,8 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.7] - 2026-10-08
+
 ### Security
 - Patched the open Dependabot alert for `brace-expansion` ([GHSA-q2hr-2g5m-vwhr](https://github.com/advisories/GHSA-q2hr-2g5m-vwhr), medium: quadratic-time expansion of the `{a},b}` rewrite allowing CPU denial of service): the dev-only transitive dependency (via `minimatch` → eslint tooling) was bumped 5.0.9 → 5.0.12 in `frontend/package-lock.json` — lockfile-only, no package.json change, no runtime impact.
+
+### Technical
+- Updated frontend dependencies: lucide-react (1.48.0 → 1.51.0).
+- Updated frontend dev dependencies: @types/node (26.6.3 → 26.6.4), eslint (10.11.0 → 10.12.0), globals (17.12.0 → 17.13.0), source-map-js (1.2.1 → 1.2.2), typescript-eslint (8.70.1 → 8.71.0), vite (8.3.1 → 8.3.2), vitest (5.0.2 → 5.0.3).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.7.
 
 ## [1.10.6] - 2026-10-03
 
