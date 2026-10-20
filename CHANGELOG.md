@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.9] - 2026-10-20
+
+### Technical
+- Updated frontend dependencies: react and react-dom (19.3.0 → 19.3.1), lucide-react (1.55.0 → 1.59.0).
+- Updated frontend dev dependencies: eslint (10.12.0 → 10.13.0), jsdom (30.1.2 → 30.1.3), postcss (8.5.29 → 8.5.30), typescript-eslint (8.71.1 → 8.71.2), vitest (5.0.3 → 5.0.5).
+- Updated frontend build image: node (26.11.1-alpine3.23 → 26.12.0-alpine3.23), runtime image: nginxinc/nginx-unprivileged (1.31.5-alpine3.24 → 1.31.6-alpine3.24).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.9.
+
 ## [1.10.8] - 2026-10-15
 
 ### Technical
