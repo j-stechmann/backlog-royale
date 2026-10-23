@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Security
+- Bumped the frontend Docker builder image: node (26.12.0-alpine3.23 → 26.12.1-alpine3.23), pulling in the Node.js security release of 2026-10-21 that fixes [CVE-2026-111497](https://nvd.nist.gov/vuln/detail/CVE-2026-111497) (high: out-of-bounds write in the bundled Brotli decoder, potentially remotely exploitable via maliciously crafted Brotli-compressed input). The builder is the only Node.js surface in the repo (backend is Go; nginx runtime stage never decompresses Brotli; CI's floating `node-version: 26` already resolves to ≥ 26.12.1) and `npm ci`/`vite build` do not decode untrusted Brotli streams, so practical exposure was limited to the build stage — bumped anyway to keep the version pins off known-vulnerable releases ([Self-hosting](docs/guides/self-hosting.md)).
+
 ## [1.10.9] - 2026-10-20
 
 ### Technical

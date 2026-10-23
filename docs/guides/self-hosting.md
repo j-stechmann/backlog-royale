@@ -16,7 +16,7 @@ Tags follow semver patterns (`1.9.2`, `1.9`, `1`) plus the commit SHA and branch
 | | Build | Runtime | Runs as | Port |
 | :--- | :--- | :--- | :--- | :--- |
 | Backend | `golang:1.27.0-alpine3.23` → `CGO_ENABLED=0` static binary | `alpine:3.24.1` | dedicated `appuser` | 8080 |
-| Frontend | `node:26.8.1-alpine3.23` → `npm ci` + `npm run build` | `nginxinc/nginx-unprivileged:1.31.4-alpine3.24` | nginx-unprivileged (uid 101) | 8080 |
+| Frontend | `node:26.12.1-alpine3.23` → `npm ci` + `npm run build` | `nginxinc/nginx-unprivileged:1.31.4-alpine3.24` | nginx-unprivileged (uid 101) | 8080 |
 
 The frontend image serves **static files only** — it contains no proxy logic and no runtime configuration. `VITE_WS_URL` is baked at build time if set; otherwise the client derives the WebSocket URL at runtime (see [Configuration](../reference/configuration.md)).
 
