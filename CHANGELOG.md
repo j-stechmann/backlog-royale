@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.11] - 2026-10-27
+
+### Technical
+- Updated frontend dependencies: lucide-react (1.59.0 → 1.61.0).
+- Updated frontend dev dependencies: postcss (8.5.30 → 8.5.31), typescript-eslint (8.71.2 → 8.72.0), vite (8.3.4 → 8.3.5).
+- Updated frontend runtime image: nginxinc/nginx-unprivileged (1.31.6-alpine3.24 → 1.31.7-alpine3.24).
+- Updated backend runtime image: alpine (3.24.2 → 3.24.3).
+- Updated the CI GitHub Action: docker/login-action (v4.6.0 → v4.7.0).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.11.
+
 ## [1.10.10] - 2026-10-23
 
 ### Security
