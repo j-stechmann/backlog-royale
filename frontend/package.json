@@ -11,6 +11,9 @@
     "test": "vitest run",
     "preview": "vite preview"
   },
+  "overrides": {
+    "minimatch": "^11.0.4"
+  },
   "dependencies": {
     "lucide-react": "^1.66.0",
     "react": "^19.3.1",
