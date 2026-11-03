@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.13] - 2026-11-03
+
 ### Security
 - Patched the open Dependabot alert for `minimatch` ([alert #25](https://github.com/j-stechmann/backlog-royale/security/dependabot/25), [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249), medium: globparts amplification allowing CPU denial of service): bumped 10.2.6 → 11.0.4. Dependabot had been failing to open a PR for weeks because no fixed 10.x release exists (the advisory covers `< 11.0.1`) and both consumers — `eslint` and `@typescript-eslint/typescript-estree` — still declare `^10`, so no in-range resolution could clear it. `frontend/package.json` now carries a scoped `overrides` entry pinning `minimatch` to `^11.0.4`; ESLint's glob/ignore resolution is unchanged in practice (verified: 37 files linted, no diagnostics) and the package is dev-only — it is not in the app bundle, so there is no runtime impact.
 - Bumped the dev-only `zod` (via `eslint-plugin-react-hooks` → `zod-validation-error`) 4.4.3 → 4.6.7, clearing the high-severity [GHSA-mrhx-c7xc-m3w5](https://github.com/advisories/GHSA-mrhx-c7xc-m3w5) memory-exhaustion advisory. Within the upstream declared range, so the lockfile absorbed it with no `package.json` change.
@@ -12,6 +14,9 @@ All notable changes to this project will be documented in this file.
 ### Docs
 - Corrected the stale Docker base-image pins in the toolchain table ([Development setup](docs/development/setup.md)) and the build-stage table ([Self-hosting](docs/guides/self-hosting.md)) to match the Dockerfiles after the 1.10.12 bumps: golang 1.27.3-alpine3.23, node 26.13.0-alpine3.23, alpine 3.24.3, nginxinc/nginx-unprivileged 1.31.7-alpine3.24.
 - Documented the `overrides` escape hatch (and when not to reach for it) in [Dependency management](docs/development/dependencies.md).
+
+### Technical
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.13.
 
 ## [1.10.12] - 2026-11-03
 
