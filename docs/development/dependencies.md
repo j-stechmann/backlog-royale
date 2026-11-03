@@ -41,6 +41,12 @@ One commit with the regenerated lockfile, tests green, and a rationale in the PR
 
 Bump **all three** places in one change: `backend/go.mod`, `go-version` in `ci.yml`, builder image in `backend/Dockerfile` — then README prerequisites. Dependabot will not do this for you; see [ADR 0011](../adr/0011-go-version-triangle.md).
 
+### When no patched release fits the upstream range
+
+Occasionally an advisory is fixed only in a new **major** of a transitive dependency while its consumers still declare the old major. There is then no resolution that Dependabot (or `npm audit fix`) can produce, and the alert sits open indefinitely — `minimatch` (`< 11.0.1`, with `eslint`/`@typescript-eslint` pinned to `^10`) was the first case, see [CHANGELOG](../../CHANGELOG.md).
+
+Reach for a scoped `overrides` entry in `frontend/package.json` — one package, with the advisory linked in the changelog — and prove it with the usual gates (`npm ci`, `test`, `lint`, `build`). For dev-only tooling this is low-risk; **do not** override runtime dependencies (React, etc.) this way, and drop the entry as soon as upstream widens its range.
+
 ### Untangling a bad grouped PR
 
 If an auto-merged group breaks something after the fact: revert the merge commit on `develop` (revert, not revert-by-red-PR, keeps history linear), let Dependabot re-propose the individual bump when you are ready, and consider pinning the offending package in the relevant `ignore` block with a comment explaining why.
