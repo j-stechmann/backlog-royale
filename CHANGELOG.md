@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.12] - 2026-11-03
+
+### Technical
+- Updated frontend dependencies: lucide-react (1.61.0 → 1.66.0).
+- Updated frontend dev dependencies: @types/node (26.6.5 → 26.6.6), autoprefixer (10.6.1 → 10.6.2), eslint (10.13.0 → 10.14.0), postcss (8.5.31 → 8.5.32), typescript-eslint (8.72.0 → 8.72.1).
+- Updated frontend build image: node (26.12.1-alpine3.23 → 26.13.0-alpine3.23).
+- Updated backend Docker builder image: golang (1.27.2-alpine3.23 → 1.27.3-alpine3.23).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.12.
+
 ## [1.10.11] - 2026-10-27
 
 ### Technical
