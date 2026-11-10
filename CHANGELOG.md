@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.14] - 2026-11-10
+
 ### Technical
 - Updated frontend dependencies: lucide-react (1.66.0 → 1.70.0).
 - Updated frontend dev dependencies: @tailwindcss/postcss (4.3.3 → 4.3.5), @vitejs/plugin-react (6.1.2 → 6.2.1), globals (17.13.0 → 17.14.0), jsdom (30.1.3 → 31.0.0), vite (8.3.5 → 8.3.6), vitest (5.0.5 → 5.1.0).
 - `npm audit` in `frontend/` reports 0 vulnerabilities.
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.14.
 
 ## [1.10.13] - 2026-11-03
 
