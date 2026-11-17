@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.15] - 2026-11-17
+
+### Technical
+- Updated frontend dependencies: lucide-react (1.70.0 → 1.73.0).
+- Updated frontend dev dependencies: @vitejs/plugin-react (6.2.1 → 6.3.0), eslint (10.14.0 → 10.15.0), jsdom (31.0.0 → 31.0.1), postcss (8.5.32 → 8.5.33), typescript-eslint (8.72.1 → 8.72.2), vite (8.3.6 → 8.3.8).
+- Updated frontend build image: node (26.13.0-alpine3.23 → 26.13.1-alpine3.23).
+- Updated backend runtime image: alpine (3.24.3 → 3.24.4).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.15.
+
 ## [1.10.14] - 2026-11-10
 
 ### Technical
