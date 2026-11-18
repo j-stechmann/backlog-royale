@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Security
+- Updated the frontend runtime image to nginx 1.31.9 (`nginxinc/nginx-unprivileged:1.31.7-alpine3.24` → `nginx/nginx-unprivileged:1.31.9-alpine3.24`), which contains the fixes for the `nginx2root` set ([xint.io](https://xint.io/blog/nginx2root-remote-code-execution)). The frontend serves static files over HTTP/1.1 only and has no reachable nginx2root path today, but the pin is bumped so the runtime no longer lags the fixed release. The image moved from the stale `nginxinc` Docker Hub namespace to the official `nginx` namespace; uid 101, port 8080, and default config are unchanged.
+
 ## [1.10.15] - 2026-11-17
 
 ### Technical
