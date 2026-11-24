@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [1.10.17] - 2026-11-24
+
+### Technical
+- Updated frontend dependency: lucide-react (1.73.0 → 1.77.0).
+- Updated frontend dev dependencies: @testing-library/jest-dom (7.0.1 → 8.0.0), autoprefixer (10.6.2 → 10.7.0), eslint-plugin-react-refresh (0.5.7 → 0.5.8), typescript-eslint (8.72.2 → 8.73.0), vitest (5.1.0 → 5.1.1). `@testing-library/jest-dom` 8 requires vitest ≥5; the frontend is on 5.1.1.
+- Updated backend build image: golang (1.27.3-alpine3.23 → 1.27.4-alpine3.23).
+- Bumped `frontend/package.json` and `frontend/package-lock.json` version to 1.10.17.
+
 ## [1.10.16] - 2026-11-19
 
 ### Security
