@@ -49,9 +49,12 @@ git push origin develop
 # 7. Tag (the merge commit on main)
 git checkout main && git pull
 git tag v1.9.3 && git push origin v1.9.3
+
+# 8. Publish the GitHub Release (notes = the CHANGELOG section above)
+gh release create v1.9.3 --title "Release 1.9.3" --notes-file /tmp/release-notes.md --latest
 ```
 
-Steps 6 and 7 are what publish: the tag triggers `docker-publish.yml`, which builds and pushes both images to GHCR with semver + SHA tags ([CI/CD](../operations/ci-cd.md)). Historically the release commit message is `Release x.y.z` and the PRs are titled accordingly; the CHANGELOG dates are the source of truth for release days.
+Steps 6 and 7 are what publish: the tag triggers `docker-publish.yml`, which builds and pushes both images to GHCR with semver + SHA tags ([CI/CD](../operations/ci-cd.md)). Step 8 is what shows up on the repo's Releases page — the tag alone is not a release. Match the existing format: a one-line summary, the version's CHANGELOG section, then `Full notes: [CHANGELOG](…/CHANGELOG.md#anchor)`. Historically the release commit message is `Release x.y.z` and the PRs are titled accordingly; the CHANGELOG dates are the source of truth for release days.
 
 ## Hotfix path
 
@@ -71,6 +74,7 @@ The Dependabot config fix in v1.4.2 followed exactly this path (`b1b5505`, "hotf
 | Security PRs (immediate, individual) | Major dependency updates (labeled `major`, human-reviewed) |
 | Image publishing on `main`/tags | PRs against `main` (CI gate) |
 | CI on `main` + `develop` | The Go version triangle ([ADR 0011](../adr/0011-go-version-triangle.md)) |
+| | Tag push and GitHub Release creation |
 
 ## Release history
 
